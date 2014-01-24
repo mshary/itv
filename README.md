@@ -2,7 +2,7 @@
 A fast, simple yet effective on-wire encryption algorithm for data (preferably plain text) communication over LAN / WAN.
 
 ### History
-This algorithm has its roots in *Caesar Cipher*. The original Cipher suggests that each letter in plain text is replaced by some fixed number of positions down the alphabet. For example with left shift of 3, 'D' would be replaced by 'A', 'E' would become 'B' and so on.
+This algorithm has its roots in *Caesar Cipher*. The original cipher suggests that each letter in plain text is replaced by some fixed number of positions down the alphabet. For example with left shift of 3, 'D' would be replaced by 'A', 'E' would become 'B' and so on.
 
 The Caesar Cipher was first cracked by an Arab scientist Al-Kindi in 9th century through discovery of frequency analysis (some letters are used more often in a language then others, the analysis can easily determine shift value and direction). He proposed a modification to algorithm to have different shift value for each letter with same shift direction (left or right).
 
@@ -83,13 +83,13 @@ Thus, we may have,
 OR Simply,
 
 	ABBA => ACBYYZAF 
-(by using converting integers to letters according to standard ASCII characterset)
+(by converting integers to letters according to standard ASCII character set)
 
 ### Security Note
 - You should properly initialize ITV table before production use, otherwise at least a first few letters of the word will be exposed. A properly initialized ITV table is the one which has no ID exact same as TAG or Value. To achieve this, encrypt a word / sentence which has all letters of ITV table Values, e.g. for ITV table mentioned above, one can encrypt below sentense and discard its output.
-
+<pre>
 	A QUICK BROWN FOX JUMPS OVER THE LAZY DOG.
-
+</pre>
 - Length of encrypted word would be exactly double the length of actual word. You should randomly add a random letter (within same range) at the end of words in each sentence, so that some words has even and others have odd length.
 
 - Space between words and unrecognized letters / symbols / punctuation marks etc. (which are not present in ITV table) should remain as-is in the encrypted sentence.
