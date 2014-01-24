@@ -4,7 +4,7 @@ A fast, simple yet effective on-wire encryption algorithm for data (preferably p
 
 ### History
 
-This algorithm has its roots in Caesar Cipher. The original Cipher suggests that each letter in plaintext is replaced by some fixed number of positions down the alphabet. For example with left shift of 3, 'D' would be replaced by A, 'E' would become 'B' and so on.
+This algorithm has its roots in Caesar Cipher. The original Cipher suggests that each letter in plaintext is replaced by some fixed number of positions down the alphabet. For example with left shift of 3, 'D' would be replaced by 'A', 'E' would become 'B' and so on.
 
 The Caesar Cipher was first cracked by an arab scientist Al-Kindi in 9th century through discovery of frequency analysis (some letters are used more often in a language then others, the anaylsis can easily determine shift value and direction). He proposed a modification to algorithm to have different shift value for each letter with same shift direction (left or right).
 
@@ -29,18 +29,18 @@ Tag should be "randomly" generated value within ID range. For example, consideri
 Thus we have ITV table, having ID, Tag and Value for each letter in character set. We initialize the ITV table by using Tag same as ID. So, an ITV table over capital letter would be,
 
 
-ID    TAG    Value
---    ---    -----
-65    65     A
-66    66     B
-67    67     C
-68    68     D
-69    69     E
-70    70     F
-..    ..     .
+	ID    TAG    Value
+	--    ---    -----
+	65    65     A
+	66    66     B
+	67    67     C
+	68    68     D
+	69    69     E
+	70    70     F
+	..    ..     .
 
-89    89     Y
-90    90     Z
+	89    89     Y
+	90    90     Z
 
 
 ### How Encryption Works?
@@ -53,33 +53,33 @@ Using above ITV Table, suppose we want to encrypt the word "ABBA". The encryptio
 
 3. In ITV record Y, save current ID as TAG and ID of ITV record X as new ID. ITV table becomes,
 
-ID    TAG    Value
---    ---    -----
-65    65     A
-66    66     B
-65    67     C
-68    68     D
-69    69     E
-70    70     F
-..    ..     .
+	ID    TAG    Value
+	--    ---    -----
+	65    65     A
+	66    66     B
+	65    67     C
+	68    68     D
+	69    69     E
+	70    70     F
+	..    ..     .
 
-89    89     Y
-90    90     Z
+	89    89     Y
+	90    90     Z
 
 4. In ITV record X, save current ID as TAG and use generated integer 67 as new ID, ITV table becomes, (note that no duplicate values in columns ID and TAG, the integeral values are merely switches with one another).
 
-ID    TAG    Value
---    ---    -----
-67    65     A
-66    66     B
-65    67     C
-68    68     D
-69    69     E
-70    70     F
-..    ..     .
+	ID    TAG    Value
+	--    ---    -----
+	67    65     A
+	66    66     B
+	65    67     C
+	68    68     D
+	69    69     E
+	70    70     F
+	..    ..     .
 
-89    89     Y
-90    90     Z
+	89    89     Y
+	90    90     Z
 
 5. Thus we have encrypted version of letter 'A' as letter 'C' (current ID of value 'A').
 
@@ -104,7 +104,7 @@ OR Simply,
 
 1. You should properly initialize ITV table before production use, otherwise at least a first few letters of the word will be exposed. A properly initialized ITV table is the one which has no ID exact same as TAG or Value. To achieve this, encrypt a word / sentence which has all letters of ITV table Values, e.g. for ITV table mentioned above, one can encrypt below sentense and discard its output.
 
-A QUICK BROWN FOX JUMPS OVER THE LAZY DOG.
+	A QUICK BROWN FOX JUMPS OVER THE LAZY DOG.
 
 2. Length of encrypted word would be exactly double the length of actual word. You should randomly add a random letter (within same range) at the end of words in each sentence, so that some words has even and others have odd length.
 
