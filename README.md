@@ -53,6 +53,7 @@ Using above ITV Table, suppose we want to encrypt the word "ABBA". The encryptio
 
 3. In ITV record Y, save current ID as TAG and ID of ITV record X as new ID. ITV table becomes,
 
+
 	ID    TAG    Value
 	--    ---    -----
 	65    65     A
@@ -66,7 +67,9 @@ Using above ITV Table, suppose we want to encrypt the word "ABBA". The encryptio
 	89    89     Y
 	90    90     Z
 
-4. In ITV record X, save current ID as TAG and use generated integer 67 as new ID, ITV table becomes, (note that no duplicate values in columns ID and TAG, the integeral values are merely switches with one another).
+
+4. In ITV record X, save current ID as TAG and use generated integer 67 as new ID, ITV table becomes, (note that no duplicate values in columns ID and TAG, the integeral values are merely switches with one another),
+
 
 	ID    TAG    Value
 	--    ---    -----
@@ -80,6 +83,7 @@ Using above ITV Table, suppose we want to encrypt the word "ABBA". The encryptio
 
 	89    89     Y
 	90    90     Z
+
 
 5. Thus we have encrypted version of letter 'A' as letter 'C' (current ID of value 'A').
 
