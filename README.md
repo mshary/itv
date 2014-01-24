@@ -148,6 +148,20 @@ To run the code,
 	
 	./itv
 
+Sample output of Character Base ITV,
+<pre>
+	Plaintext: a quick brown fox jumps over the lazy dog.
+	Encrypted Text: wF s8yWi6n7dBH omK15WemLQ AgW1ZO9 vn510GHVwcE 5hfR3RWYu 0NE2RL qdFNEcusA AUh3jq.
+	Decrypted Text: a quick brown fox jumps over the lazy dog.
+</pre>
+
+Sample output of Word Base ITV,
+<pre>
+	Plaintext: a quick brown fox jumps over the lazy dog.
+	Encrypted Text: 31743 16131 44980 33894 93028 45775 63173 80204 5153 7783 79455 95892 55065 25830 57208 97749 16540 51775. 
+	Decrypted Text: a quick brown fox jumps over the lazy dog. 
+</pre>
+
 To utilize the code in your own projects, import following files in your project,
 
 	itv.h / itv.cpp => defines an ITV record
@@ -158,11 +172,9 @@ For reference implementation of Character Based ITV algorithm, include or read t
 
 	itv_ascii.h / itv_ascii.cpp
 
-
 For reference implementation of Word Based ITV algorithm, include or read through,
 
 	itv_word.h / itv_word.cpp
-
 
 Feel free to add and/or extend given C++ classes (per MPL v2.0 license).
 
