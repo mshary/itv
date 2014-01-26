@@ -4,12 +4,12 @@ A fast, simple yet effective on-wire encryption algorithm for data (preferably p
 ### History
 This algorithm has its roots in *Caesar Cipher*. The original cipher suggests that each letter in plain text is replaced by some fixed number of positions down the alphabet. For example with left shift of 3, 'D' would be replaced by 'A', 'E' would become 'B' and so on.
 
-The Caesar Cipher was first cracked by an Arab scientist Al-Kindi in 9th century through discovery of frequency analysis (some letters are used more often in a language then others, the analysis can easily determine shift value and direction). He proposed a modification to algorithm to have different shift value for each letter with same shift direction (left or right).
+The Caesar Cipher was first cracked by an Arab scientist Al-Kindi in 9th century through discovery of frequency analysis (some letters are used more often in a language then others, the analysis can easily determine shift value and direction). In 15th century, the Polyalphabetic Cipher was introduce, which suggested to use a secret word, each letter in the word was used as shift for plaintext letters (like Caesar Cipher). However in late 19th century, this too was broken down. 
 
-However with advancement in frequency analysis during WWI and WWII, the modified version of Caesar Cipher was broken down. This document explains a further improvement to the cipher using basic computer science concepts.
+On Sept. 1, 1945, Claude Shannon proved mathematically a further enhancement to the cipher which proposes random shift to each letter of plaintext, as the perfect solution for the encryption. It is now known as One-Time Pad encryption. The ITV algorithm is drived from this on-time pad algorithm using some basic Computer Science concepts.
 
 ### What is it?
-ITV stands for ID, Tag and Value. It has two variants character based ITV and word based ITV. Let us understand character based ITV (since it is much similar to Caesar Cipher).
+ITV stands for ID, Tag and Value. It has two variants character based ITV and word based ITV. Let us understand character based ITV (since it is much similar to On-Time Pad encryption).
 
 ## Character Based ITV
 When using character sets in computer, each letter is basically assigned an integer value which is actually used and understood by computers for internal use. For example using ASCII character set, letter 'A' is represented by integer 65, 'B' is 66 and so.
@@ -86,18 +86,20 @@ OR Simply,
 (by converting integers to letters according to standard ASCII character set)
 
 ### Security Note
-- You should properly initialize ITV table before production use, otherwise at least a first few letters of the word will be exposed. A properly initialized ITV table is the one which has no ID exact same as TAG or Value. To achieve this, encrypt a word / sentence which has all letters of ITV table Values, e.g. for ITV table mentioned above, one can encrypt below sentense and discard its output.
+- The strength of encryption heavily depends on quality of random number generator used by the implementation.
+
+- You should properly initialize ITV table before production use. To achieve this, encrypt a word / sentence which has all letters of ITV table Values, e.g. for ITV table mentioned above, one can encrypt below sentense and discard its output.
 <pre>
 	A QUICK BROWN FOX JUMPS OVER THE LAZY DOG.
 </pre>
-- Length of encrypted word would be exactly double the length of actual word. You should randomly add a random letter (within same range) at the end of words in each sentence, so that some words has even and others have odd length.
+- Length of encrypted word would be exactly double the length of actual word. You should randomly add a random letter (within same range) at the end of words in each sentence, so that some words has even and others have odd length. (optional)
 
-- Space between words and unrecognized letters / symbols / punctuation marks etc. (which are not present in ITV table) should remain as-is in the encrypted sentence.
+- Space between words and unrecognized letters / symbols / punctuation marks etc. (which are not present in ITV table) should remain as-is in the encrypted sentence. If you want them to be encrypted too, then add them to ITV table as well.
 
-- For duplex communication, it is recommended that each sender has its own ITV Table. Using single table for on both sides may cause synchronization issues.
+- For two (or more way) communication, it is recommended that each sender has its own ITV Table. Using single table on all sides may cause synchronization issues, though they can be resolve by using advance RPC techniques.
 
 ### How Decryption Works?
-For decryption, one MUST have same version of ITV table, that was used to encrypt the original text.
+For decryption, one MUST have same version of ITV table, that was used to encrypt the original text. This should be transmitted to receiver through different secure medium or channel.
 
 - Take first pair of characters in the encrypted word. Convert both to integers (according to standard ASCII character set).
 
