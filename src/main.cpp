@@ -51,7 +51,7 @@ int use_char_itv(std::string data) {
 	cout << "Plaintext: " << data << endl;
 	cout << "Encrypted Text: " << enc << endl;
 	cout << "Decrypted Text: " << dcr << endl;
-	cout << endl << endl;
+	cout << endl;
 	return 0;
 };
 
@@ -79,7 +79,7 @@ int use_word_itv(std::string data) {
 	cout << "Plaintext: " << data << endl;
 	cout << "Encrypted Text: " << enc << endl;
 	cout << "Decrypted Text: " << dcr << endl;
-	cout << endl << endl;
+	cout << endl;
 	return 0;
 };
 
@@ -91,7 +91,6 @@ int main() {
 
 	std::string str = "a quick brown fox jumps over the lazy dog.";
 
-	cout << endl << endl;
 	use_char_itv(str);
 	use_word_itv(str);
 

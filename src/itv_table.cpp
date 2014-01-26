@@ -21,15 +21,18 @@
 #include "itv_table.h"
 
 ITV_Table::ITV_Table() {
+	min_id = 0;
 	table = new list<ITV>();
 };
 
 ITV_Table::ITV_Table(list<ITV> *table) {
+	min_id = 0;
 	this->table = table;
 };
 
 ITV_Table::ITV_Table(ifstream &ifs, unsigned int min) {
 	this->min_id = min;
+	table = new list<ITV>();
 	this->load(ifs);
 };
 

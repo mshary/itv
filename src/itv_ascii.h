@@ -40,7 +40,7 @@ class ITV_ASCII : public ITV_Table {
 		ITV_ASCII();
 		ITV_ASCII(enum type);
 		ITV_ASCII(std::ifstream &);
-		~ITV_ASCII();
+		virtual ~ITV_ASCII();
 
 		void load(std::ifstream &);
 		void save(std::ofstream &);

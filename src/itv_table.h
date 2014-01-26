@@ -41,7 +41,7 @@ class ITV_Table {
 		ITV_Table();
 		ITV_Table(list<ITV>*);
 		ITV_Table(std::ifstream &, unsigned int);
-		~ITV_Table();
+		virtual ~ITV_Table();
 
 		ITV_Table &operator = (const ITV_Table &);
 		int operator == (const ITV_Table &) const;
