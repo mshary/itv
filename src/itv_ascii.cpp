@@ -118,7 +118,7 @@ std::string ITV_ASCII::encode(std::string str) {
 	std::string::const_iterator i;
 
 	for(i=str.begin(); i!=str.end(); i++) {
-		if (*i == WORD_SEPARATOR && last) {
+		if (*i == ITV_WORD_SEPARATOR && last) {
 			if (ITV_RANDOM_FUNCTION(0, 2)) {
 				enc += std::string(1, get_random_id());
 			};
@@ -152,7 +152,7 @@ std::string ITV_ASCII::decode(std::string enc) {
 		if (this->find_by_id(*i, 0) == NULL) {
 			str += *i;
 			continue;
-		} else if (*(i + 1) == WORD_SEPARATOR) {
+		} else if (*(i + 1) == ITV_WORD_SEPARATOR) {
 			continue;
 		};
 

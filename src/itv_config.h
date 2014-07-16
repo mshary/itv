@@ -38,7 +38,7 @@
 
 #define ITV_SEPARATOR		"\t"
 #define ITV_TERMINATOR		"\n"
-#define WORD_SEPARATOR		32
+#define ITV_WORD_SEPARATOR	32
 
 #define ITV_RANDOM_FUNCTION	get_random
 
