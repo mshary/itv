@@ -18,7 +18,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#include "itv.h"
+#include "itv_config.h"
 
 ITV::ITV() {
 	id = 0;

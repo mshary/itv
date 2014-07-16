@@ -18,35 +18,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef ITV_ASCII_H
-#define ITV_ASCII_H
+#ifndef ITV_CONFIG_H
+#define ITV_CONFIG_H
 
-#include "itv_config.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
-using namespace std;
+#include <algorithm> 
+#include <iterator>
+#include <list>
 
-class ITV_ASCII : public ITV_Table {
-	public:
-		enum type {
-			ASCII_PRINTABLE,
-			ASCII_ALPHANUMERIC,
-			ASCII_ALPHABET,
-			ASCII_NUMERIC,
-			ASCII_OTHER
-		} t;
+#include "itv.h"
+#include "itv_table.h"
+#include "itv_ascii.h"
+#include "itv_words.h"
+#include "itv_utils.h"
 
-		ITV_ASCII();
-		ITV_ASCII(enum type);
-		ITV_ASCII(std::ifstream &);
-		virtual ~ITV_ASCII();
+#define ITV_SEPARATOR		"\t"
+#define ITV_TERMINATOR		"\n"
+#define WORD_SEPARATOR		32
 
-		void load(std::ifstream &);
-		void save(std::ofstream &);
-		void load_ascii_table(enum type);
-
-		virtual std::string encode(std::string);
-		virtual std::string decode(std::string);
-		virtual std::string to_string();
-};
+#define ITV_RANDOM_FUNCTION	get_random
 
 #endif

@@ -18,7 +18,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#include "itv_ascii.h"
+#include "itv_config.h"
 
 ITV_ASCII::ITV_ASCII() {
 	t = ASCII_PRINTABLE;
@@ -119,7 +119,7 @@ std::string ITV_ASCII::encode(std::string str) {
 
 	for(i=str.begin(); i!=str.end(); i++) {
 		if (*i == WORD_SEPARATOR && last) {
-			if (get_random(0, 2)) {
+			if (ITV_RANDOM_FUNCTION(0, 2)) {
 				enc += std::string(1, get_random_id());
 			};
 

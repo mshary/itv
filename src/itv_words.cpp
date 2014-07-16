@@ -18,7 +18,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#include "itv_words.h"
+#include "itv_config.h"
 
 ITV_Words::ITV_Words() {
 	min_id = 0;

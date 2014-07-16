@@ -21,9 +21,7 @@
 #ifndef ITV_WORDS_H
 #define ITV_WORDS_H
 
-#include <sstream>
-#include <iterator>
-#include "itv_table.h"
+#include "itv_config.h"
 
 using namespace std;
 

@@ -21,12 +21,7 @@
 #ifndef ITV_TABLE_H
 #define ITV_TABLE_H
 
-#include <iostream>
-#include <fstream>
-#include <list>
-
-#include "itv.h"
-#include "itv_utils.h"
+#include "itv_config.h"
 
 using namespace std;
 

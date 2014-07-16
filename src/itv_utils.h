@@ -21,9 +21,7 @@
 #ifndef ITV_UTILS_H
 #define ITV_UTILS_H
 
-#include <iostream>
-#include <algorithm> 
-#include "itv.h"
+#include "itv_config.h"
 
 // trim string from start
 static inline std::string &ltrim(std::string &s) {

@@ -21,12 +21,7 @@
 #ifndef ITV_H
 #define ITV_H
 
-#include <iostream>
-#include <sstream>
-#include <string>
-
-#define ITV_SEPARATOR "\t"
-#define ITV_TERMINATOR "\n"
+#include "itv_config.h"
 
 using namespace std;
 

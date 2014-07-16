@@ -18,7 +18,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#include "itv_table.h"
+#include "itv_config.h"
 
 ITV_Table::ITV_Table() {
 	min_id = 0;
@@ -209,7 +209,7 @@ void ITV_Table::restore() {
 };
 
 unsigned int ITV_Table::get_random_id() {
-	unsigned int id = get_random(0, this->table->size());
+	unsigned int id = ITV_RANDOM_FUNCTION(0, this->table->size());
 	list<ITV>::iterator i = this->table->begin();
 	std::advance(i, id);
 	return (*i).get_id();
