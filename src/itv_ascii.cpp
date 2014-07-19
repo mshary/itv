@@ -34,10 +34,11 @@ ITV_ASCII::ITV_ASCII(std::string str) {
 	this->t = ASCII_OTHER;
 	this->table->clear();
 
-	for (int x=0; x<str.length(); x++) {
-		unsigned int id = str.at(x++), val = str.at(x++);
-		if (id < 33 || id > 126) { continue; };
-		this->add(new ITV(id, std::string(1, val)));
+	int len = str.length();
+	while(len % 3 != 0) { len--; };
+
+	for (int x=0; x<len; x++) {
+		this->add(new ITV(str.at(x++), std::string(1, str.at(x++))));
 	};
 
 	if (this->table->size() > 0) {
@@ -86,8 +87,6 @@ void ITV_ASCII::save(ofstream &ofs) {
 };
 
 void ITV_ASCII::load_ascii_table(enum type t) {
-	ITV *itv;
-	unsigned int max_id;
 	this->table->clear();
 
 	switch(t) {

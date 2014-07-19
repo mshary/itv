@@ -38,6 +38,7 @@ ITV_Table::ITV_Table(ifstream &ifs, unsigned int min) {
 
 ITV_Table::~ITV_Table() {
 	// nothing todo here
+	if (this->table) { delete this->table; }
 };
 
 ostream &operator << (ostream &output, const ITV_Table &ptr) {
