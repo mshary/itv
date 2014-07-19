@@ -33,15 +33,19 @@ int use_char_itv(std::string data) {
 	std::string enc = caller->encode(str);
 	//cout << "Sender ITV Table after initialization: " << endl << caller->to_string() << endl;
 
-	ofstream ofcaller("/tmp/callee.txt");
-	caller->save(ofcaller);
-	ofcaller.close();
+	//ofstream ofcaller("/tmp/callee.txt");
+	//caller->save(ofcaller);
+	//ofcaller.close();
 
+	std::string key = caller->dump();
 	enc = caller->encode(data);
 
-	ifstream ifcallee("/tmp/callee.txt");
-	ITV_ASCII *callee = new ITV_ASCII(ifcallee);
-	ifcallee.close();
+	//ifstream ifcallee("/tmp/callee.txt");
+	//ITV_ASCII *callee = new ITV_ASCII(ifcallee);
+	//ifcallee.close();
+
+	cout << "Key: " << key << endl;
+	ITV_ASCII *callee = new ITV_ASCII(key);
 
 	if (callee == NULL) { return 1; }
 

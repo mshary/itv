@@ -30,6 +30,23 @@ ITV_ASCII::ITV_ASCII(enum type t) {
 	load_ascii_table(t);
 };
 
+ITV_ASCII::ITV_ASCII(std::string str) {
+	this->t = ASCII_OTHER;
+	this->table->clear();
+
+	for (int x=0; x<str.length(); x++) {
+		unsigned int id = str.at(x++), val = str.at(x++);
+		if (id < 33 || id > 126) { continue; };
+		this->add(new ITV(id, std::string(1, val)));
+	};
+
+	if (this->table->size() > 0) {
+		this->table->sort();
+		this->table->unique();
+		min_id = this->table->front().get_id();
+	};
+};
+
 ITV_ASCII::ITV_ASCII(ifstream &ifs) {
 	this->t = ASCII_OTHER;
 	this->load(ifs);
@@ -110,6 +127,15 @@ void ITV_ASCII::load_ascii_table(enum type t) {
 		default:
 			min_id = 0;
 	};
+};
+
+std::string ITV_ASCII::dump() {
+	std::stringstream ss;
+	list<ITV>::iterator i;
+	for (i=this->table->begin(); i!=this->table->end(); ++i) {
+		ss << std::string(1, (*i).get_id()) << (*i).get_value() << std::string(1, 32);
+	};
+	return ss.str();
 };
 
 std::string ITV_ASCII::encode(std::string str) {

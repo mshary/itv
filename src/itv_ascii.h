@@ -37,12 +37,14 @@ class ITV_ASCII : public ITV_Table {
 
 		ITV_ASCII();
 		ITV_ASCII(enum type);
+		ITV_ASCII(std::string);
 		ITV_ASCII(std::ifstream &);
 		virtual ~ITV_ASCII();
 
 		void load(std::ifstream &);
 		void save(std::ofstream &);
 		void load_ascii_table(enum type);
+		std::string dump();
 
 		virtual std::string encode(std::string);
 		virtual std::string decode(std::string);
