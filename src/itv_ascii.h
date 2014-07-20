@@ -27,24 +27,18 @@ using namespace std;
 
 class ITV_ASCII : public ITV_Table {
 	public:
-		enum type {
-			ASCII_PRINTABLE,
-			ASCII_ALPHANUMERIC,
-			ASCII_ALPHABET,
-			ASCII_NUMERIC,
-			ASCII_OTHER
-		} t;
-
 		ITV_ASCII();
-		ITV_ASCII(enum type);
 		ITV_ASCII(std::string);
-		ITV_ASCII(std::ifstream &);
+		ITV_ASCII(unsigned int, unsigned int);
 		virtual ~ITV_ASCII();
 
-		void load(std::ifstream &);
-		void save(std::ofstream &);
-		void load_ascii_table(enum type);
-		std::string dump();
+		int load(std::string);
+		int load(unsigned int, unsigned int);
+
+		std::string dump(unsigned int);
+
+		int read(std::string);
+		int write(std::string);
 
 		virtual std::string encode(std::string);
 		virtual std::string decode(std::string);

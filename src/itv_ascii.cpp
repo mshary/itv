@@ -21,20 +21,29 @@
 #include "itv_config.h"
 
 ITV_ASCII::ITV_ASCII() {
-	t = ASCII_PRINTABLE;
-	load_ascii_table(t);
-};
-
-ITV_ASCII::ITV_ASCII(enum type t) {
-	this->t = t;
-	load_ascii_table(t);
+	min_id = 0;
+	table = new list<ITV>();
 };
 
 ITV_ASCII::ITV_ASCII(std::string str) {
-	this->t = ASCII_OTHER;
-	this->table->clear();
+	min_id = 0;
+	table = new list<ITV>();
+	this->load(str);
+};
 
+ITV_ASCII::ITV_ASCII(unsigned int min, unsigned int max) {
+	min_id = 0;
+	table = new list<ITV>();
+	this->load(min, max);
+};
+
+ITV_ASCII::~ITV_ASCII() {
+	// nothing todo here
+};
+
+int ITV_ASCII::load(std::string str) {
 	int len = str.length();
+	if (len < 3) { return 0; };
 	while(len % 3 != 0) { len--; };
 
 	for (int x=0; x<len; x++) {
@@ -46,26 +55,38 @@ ITV_ASCII::ITV_ASCII(std::string str) {
 		this->table->unique();
 		min_id = this->table->front().get_id();
 	};
+
+	return this->table->size();
 };
 
-ITV_ASCII::ITV_ASCII(ifstream &ifs) {
-	this->t = ASCII_OTHER;
-	this->load(ifs);
+int ITV_ASCII::load(unsigned int min, unsigned int max) {
+	if (min > max || max > 255) { return 0; };
+
+	for(int x=min; x<=max; x++) {
+		this->add(new ITV(x, std::string(1, x)));
+	};
+
+	min_id = min;
+	return max - min;
 };
 
-ITV_ASCII::~ITV_ASCII() {
-	// nothing todo here
+std::string ITV_ASCII::dump(unsigned int sep) {
+	std::stringstream ss;
+	list<ITV>::iterator i;
+	for (i=this->table->begin(); i!=this->table->end(); ++i) {
+		ss << std::string(1, (*i).get_id()) << (*i).get_value() << std::string(1, sep);
+	};
+
+	std::string str = ss.str();
+	return str.substr(0, str.length() - 1);
 };
 
-void ITV_ASCII::load(ifstream &ifs) {
-	if (!ifs.is_open()) { return; };
+int ITV_ASCII::read(std::string file) {
+	ifstream ifs(file);
+	if (!ifs.is_open()) { return 0; };
 
-	this->table->clear();
 	std::string line = string();
-
 	while(getline(ifs, line)) {
-		line = trim(line);
-		if (line.size() != 2) { continue; };
 		this->add(new ITV(line.at(0), line.substr(1,1)));
 	};
 
@@ -74,93 +95,36 @@ void ITV_ASCII::load(ifstream &ifs) {
 		this->table->unique();
 		min_id = this->table->front().get_id();
 	};
+
+	ifs.close();
+	return this->table->size();
 };
 
-void ITV_ASCII::save(ofstream &ofs) {
-	if (!ofs.is_open()) { return; };
+int ITV_ASCII::write(std::string file) {
+	ofstream ofs(file);
+	if (!ofs.is_open()) { return 0; };
 	this->table->sort(compare_tags);
 
 	list<ITV>::iterator i;
 	for (i=this->table->begin(); i!=this->table->end(); ++i) {
 		ofs << std::string(1, (*i).get_id()) << (*i).get_value() << endl;
 	};
-};
 
-void ITV_ASCII::load_ascii_table(enum type t) {
-	this->table->clear();
-
-	switch(t) {
-		case ASCII_ALPHABET:
-			min_id = 65;
-			for(int x=65; x<=90; x++) {
-				this->add(new ITV(x, std::string(1, x)));
-			};
-			for(int x=97; x<=122; x++) {
-				this->add(new ITV(x, std::string(1, x)));
-			};
-			break;
-		case ASCII_ALPHANUMERIC:
-			min_id = 48;
-			for(int x=48; x<=57; x++) {
-				this->add(new ITV(x, std::string(1, x)));
-			};
-			for(int x=65; x<=90; x++) {
-				this->add(new ITV(x, std::string(1, x)));
-			};
-			for(int x=97; x<=122; x++) {
-				this->add(new ITV(x, std::string(1, x)));
-			};
-			break;
-		case ASCII_NUMERIC:
-			min_id = 48;
-			for(int x=48; x<=57; x++) {
-				this->add(new ITV(x, std::string(1, x)));
-			};
-			break;
-		case ASCII_PRINTABLE:
-			min_id = 33;
-			for(int x=33; x<=126; x++) {
-				this->add(new ITV(x, std::string(1, x)));
-			};
-			break;
-		default:
-			min_id = 0;
-	};
-};
-
-std::string ITV_ASCII::dump() {
-	std::stringstream ss;
-	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); ++i) {
-		ss << std::string(1, (*i).get_id()) << (*i).get_value() << std::string(1, 32);
-	};
-	return ss.str();
+	ofs.close();
+	return this->table->size();
 };
 
 std::string ITV_ASCII::encode(std::string str) {
-	unsigned int *data, last;
+	unsigned int *data;
 	std::string enc = std::string();
 	std::string::const_iterator i;
 
 	for(i=str.begin(); i!=str.end(); i++) {
-		if (*i == ITV_WORD_SEPARATOR && last) {
-			if (ITV_RANDOM_FUNCTION(0, 2)) {
-				enc += std::string(1, get_random_id());
-			};
-
-			enc += *i;
-			continue;
-		};
-
-		data = this->convert(std::string(1,*i), get_random_id());
-
+		data = this->convert(std::string(1, *i), get_random_id());
 		if (data == NULL) {
 			enc += *i;
-			last = 0;
-			continue;
 		} else {
 			enc += std::string(1, data[0]) + std::string(1, data[1]);
-			last = *i;
 		};
 	};
 
@@ -176,8 +140,6 @@ std::string ITV_ASCII::decode(std::string enc) {
 	for(i=enc.begin(); i!=enc.end(); i++) {
 		if (this->find_by_id(*i, 0) == NULL) {
 			str += *i;
-			continue;
-		} else if (*(i + 1) == ITV_WORD_SEPARATOR) {
 			continue;
 		};
 

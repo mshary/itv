@@ -24,8 +24,9 @@
 #include "itv_utils.h"
 
 int use_char_itv(std::string data) {
-	ITV_ASCII *caller = new ITV_ASCII(ITV_ASCII::ASCII_ALPHANUMERIC);
-	if (caller == NULL) { return 1; }
+	ITV_ASCII *caller = new ITV_ASCII();
+	caller->load(65, 90);
+	caller->load(97, 122);
 
 	std::string str = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
@@ -33,21 +34,16 @@ int use_char_itv(std::string data) {
 	std::string enc = caller->encode(str);
 	//cout << "Sender ITV Table after initialization: " << endl << caller->to_string() << endl;
 
-	//ofstream ofcaller("/tmp/callee.txt");
-	//caller->save(ofcaller);
-	//ofcaller.close();
+	caller->write("/tmp/callee.txt");
 
-	std::string key = caller->dump();
+	std::string key = caller->dump(':');
 	enc = caller->encode(data);
 
-	//ifstream ifcallee("/tmp/callee.txt");
-	//ITV_ASCII *callee = new ITV_ASCII(ifcallee);
-	//ifcallee.close();
+	//ITV_ASCII *callee = new ITV_ASCII();
+	//callee->read("/tmp/callee.txt");
 
 	cout << "Key: " << key << endl;
 	ITV_ASCII *callee = new ITV_ASCII(key);
-
-	if (callee == NULL) { return 1; }
 
 	//cout << "Receiver ITV Table after initialization: " << endl << callee->to_string() << endl;
 	std::string dcr = callee->decode(enc);
@@ -56,6 +52,7 @@ int use_char_itv(std::string data) {
 	cout << "Encrypted Text: " << enc << endl;
 	cout << "Decrypted Text: " << dcr << endl;
 	cout << endl;
+
 	return 0;
 };
 
@@ -84,6 +81,7 @@ int use_word_itv(std::string data) {
 	cout << "Encrypted Text: " << enc << endl;
 	cout << "Decrypted Text: " << dcr << endl;
 	cout << endl;
+
 	return 0;
 };
 
@@ -96,7 +94,7 @@ int main() {
 	std::string str = "a quick brown fox jumps over the lazy dog.";
 
 	use_char_itv(str);
-	use_word_itv(str);
+	//use_word_itv(str);
 
 	//cout << "Enter data to encrypt: ";
 	//getline(cin, str);
