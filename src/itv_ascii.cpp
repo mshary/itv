@@ -44,7 +44,6 @@ ITV_ASCII::~ITV_ASCII() {
 int ITV_ASCII::load(std::string str) {
 	int len = str.length();
 	if (len < 3) { return 0; };
-	while(len % 3 != 0) { len--; };
 
 	for (int x=0; x<len; x++) {
 		this->add(new ITV(str.at(x++), std::string(1, str.at(x++))));

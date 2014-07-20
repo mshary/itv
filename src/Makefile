@@ -8,11 +8,16 @@ CFLAGS=-Wall -Werror -g -ansi -pedantic -std=c89
 CCFLAGS=-Wall -Werror -g
 LDFLAGS=-g -Wall -lstdc++
 
-OBJS=itv.o itv_ascii.o itv_table.o itv_words.o main.o
+OBJS=itv.o itv_ascii.o itv_table.o itv_words.o itv_wrapper.o main.o
 PROG=itv
 
 all: $(PROG)
 default: all
+
+wrapper:
+	$(CC) $(CCFLAGS) -c itv.cpp itv_ascii.cpp itv_table.cpp itv_words.cpp itv_wrapper.cpp
+	$(CC) $(CFLAGS) -c main.c
+	$(CC) $(OBJS) $(LDFLAGS) -o itv
 
 %.o: %.cpp
 	$(CC) $(CCFLAGS) -c $<
