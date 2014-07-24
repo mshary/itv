@@ -79,6 +79,9 @@ std::string ITV_Words::encode(std::string str) {
 	std::stringstream enc;
 	list<string>::iterator i;
 
+	enc << std::hex;
+	enc << std::setiosflags(std::ios::showbase);
+
 	for(i=words.begin(); i!=words.end(); i++) {
 		char first = 0, last = 0;
 		std::string word = *i;
@@ -130,8 +133,8 @@ std::string ITV_Words::decode(std::string enc) {
 			next = next.substr(0, len - 1);
 		} else { last = 0; };
 
-		x = atoi((word).c_str());
-		y = atoi((next).c_str());
+		x = strtoul ((word).c_str(), NULL, 0);
+		y = strtoul ((next).c_str(), NULL, 0);
 		data = this->revert(x, y);
 
 		if (data.empty()) { continue; };
