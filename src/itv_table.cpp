@@ -48,27 +48,27 @@ ITV_Table& ITV_Table::operator=(const ITV_Table &rhs) {
 	return *this;
 };
 
-int ITV_Table::operator==(const ITV_Table &rhs) const {
+bool ITV_Table::operator==(const ITV_Table &rhs) const {
 	return (table == rhs.table);
 };
 
-int ITV_Table::operator!=(const ITV_Table &rhs) const {
+bool ITV_Table::operator!=(const ITV_Table &rhs) const {
 	return !(table == rhs.table);
 };
 
-int ITV_Table::operator<=(const ITV_Table &rhs) const {
+bool ITV_Table::operator<=(const ITV_Table &rhs) const {
 	return ((table < rhs.table) || (table == rhs.table));
 };
 
-int ITV_Table::operator>=(const ITV_Table &rhs) const {
+bool ITV_Table::operator>=(const ITV_Table &rhs) const {
 	return ((rhs.table < table) || (table == rhs.table));
 };
 
-int ITV_Table::operator<(const ITV_Table &rhs) const {
+bool ITV_Table::operator<(const ITV_Table &rhs) const {
 	return (table < rhs.table);
 };
 
-int ITV_Table::operator>(const ITV_Table &rhs) const {
+bool ITV_Table::operator>(const ITV_Table &rhs) const {
 	return (rhs.table < table);
 };
 
@@ -77,36 +77,37 @@ list<ITV>* ITV_Table::get_table() {
 };
 
 void ITV_Table::set_table(list<ITV> *table) {
+	if (this->table) { delete this->table; };
 	this->table = table;
 };
 
-void ITV_Table::add(ITV *element) {
+bool ITV_Table::add(ITV *element) {
 	if (element) {
 		this->table->push_back(*element);
+		return true;
 	};
+	return false;
 };
 
-int ITV_Table::remove(ITV *element) {
+bool ITV_Table::remove(ITV *element) {
 	if (this->exists(element)) {
 		this->table->remove(*element);
-		return 1;
+		return true;
 	};
-
-	return 0;
+	return false;
 };
 
-int ITV_Table::exists(ITV *element) {
+bool ITV_Table::exists(ITV *element) {
 	list<ITV>::iterator i;
 	for (i=this->table->begin(); i!=this->table->end(); ++i) {
 		if (*i == *element) {
-			return 1;
+			return true;
 		};
 	};
-
-	return 0;
+	return false;
 };
 
-ITV* ITV_Table::find_by_id(unsigned int id, bool reverse_direction) {
+ITV* ITV_Table::find_by_id(size_t id, bool reverse_direction) {
 	list<ITV>::iterator i;
 	if (reverse_direction) {
 		for (i=this->table->end(); i!=this->table->begin(); --i) {
@@ -121,11 +122,10 @@ ITV* ITV_Table::find_by_id(unsigned int id, bool reverse_direction) {
 			};
 		};
 	};
-
 	return NULL;
 };
 
-ITV* ITV_Table::find_by_tag(unsigned int tag, bool reverse_direction) {
+ITV* ITV_Table::find_by_tag(size_t tag, bool reverse_direction) {
 	list<ITV>::iterator i;
 	if (reverse_direction) {
 		for (i=this->table->end(); i!=this->table->begin(); --i) {
@@ -140,7 +140,6 @@ ITV* ITV_Table::find_by_tag(unsigned int tag, bool reverse_direction) {
 			};
 		};
 	};
-
 	return NULL;
 };
 
@@ -159,12 +158,11 @@ ITV* ITV_Table::find_by_value(std::string value, bool reverse_direction) {
 			};
 		};
 	};
-
 	return NULL;
 }
 
-unsigned int* ITV_Table::convert(std::string value, unsigned int next) {
-	unsigned int *retval = new unsigned int[2];
+size_t* ITV_Table::convert(std::string value, size_t next) {
+	size_t *retval = new size_t[2];
 	ITV *itv_current = this->find_by_value(value, 0);
 	ITV *itv_next = this->find_by_id(next, 0);
 
@@ -178,7 +176,7 @@ unsigned int* ITV_Table::convert(std::string value, unsigned int next) {
 	return retval;
 };
 
-std::string ITV_Table::revert(unsigned int current, unsigned int next) {
+std::string ITV_Table::revert(size_t current, size_t next) {
 	ITV *itv_current = this->find_by_id(current, 0);
 	ITV *itv_next = this->find_by_id(next, 0);
 
@@ -203,16 +201,16 @@ void ITV_Table::restore() {
 	};
 };
 
-unsigned int ITV_Table::get_random_id() {
-	unsigned int id = get_random(0, this->table->size() - 1);
+size_t ITV_Table::get_random_id() {
+	size_t id = get_random(0, this->table->size() - 1);
 	list<ITV>::iterator i = this->table->begin();
 	std::advance(i, id);
 	return (*i).get_id();
 };
 
-unsigned int ITV_Table::get_random(unsigned int min, unsigned int max) {
+size_t ITV_Table::get_random(size_t min, size_t max) {
 	std::random_device generator;
-	std::uniform_int_distribution<int> distribution(min, max);
+	std::uniform_int_distribution<size_t> distribution(min, max);
 	return distribution(generator);
 };
 

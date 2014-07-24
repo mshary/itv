@@ -31,7 +31,7 @@ ITV_ASCII::ITV_ASCII(std::string str) {
 	this->load(str);
 };
 
-ITV_ASCII::ITV_ASCII(unsigned int min, unsigned int max) {
+ITV_ASCII::ITV_ASCII(size_t min, size_t max) {
 	min_id = 0;
 	table = new list<ITV>();
 	this->load(min, max);
@@ -42,11 +42,11 @@ ITV_ASCII::~ITV_ASCII() {
 	if (this->table) { delete this->table; }
 };
 
-int ITV_ASCII::load(std::string str) {
-	int len = str.length();
+size_t ITV_ASCII::load(std::string str) {
+	size_t len = str.length();
 	if (len < 3) { return 0; };
 
-	for (int x=0; x<len; x++) {
+	for (size_t x=0; x<len; x++) {
 		this->add(new ITV(str.at(x++), std::string(1, str.at(x++))));
 	};
 
@@ -59,10 +59,10 @@ int ITV_ASCII::load(std::string str) {
 	return this->table->size();
 };
 
-int ITV_ASCII::load(unsigned int min, unsigned int max) {
+size_t ITV_ASCII::load(size_t min, size_t max) {
 	if (min > max || max > 255) { return 0; };
 
-	for(int x=min; x<=max; x++) {
+	for(size_t x=min; x<=max; x++) {
 		this->add(new ITV(x, std::string(1, x)));
 	};
 
@@ -70,7 +70,7 @@ int ITV_ASCII::load(unsigned int min, unsigned int max) {
 	return max - min;
 };
 
-std::string ITV_ASCII::dump(unsigned int sep) {
+std::string ITV_ASCII::dump(char sep) {
 	std::stringstream ss;
 	this->table->sort(compare_tags);
 
@@ -83,7 +83,7 @@ std::string ITV_ASCII::dump(unsigned int sep) {
 	return str.substr(0, str.length() - 1);
 };
 
-unsigned int ITV_ASCII::read(std::string file) {
+size_t ITV_ASCII::read(std::string file) {
 	ifstream ifs(file);
 	if (!ifs.is_open()) { return 0; };
 
@@ -102,7 +102,7 @@ unsigned int ITV_ASCII::read(std::string file) {
 	return this->table->size();
 };
 
-unsigned int ITV_ASCII::write(std::string file) {
+size_t ITV_ASCII::write(std::string file) {
 	ofstream ofs(file);
 	if (!ofs.is_open()) { return 0; };
 	this->table->sort(compare_tags);
@@ -117,7 +117,7 @@ unsigned int ITV_ASCII::write(std::string file) {
 };
 
 std::string ITV_ASCII::encode(std::string str) {
-	unsigned int *data;
+	size_t *data;
 	std::string enc = std::string();
 	std::string::const_iterator i;
 
@@ -134,7 +134,7 @@ std::string ITV_ASCII::encode(std::string str) {
 };
 
 std::string ITV_ASCII::decode(std::string enc) {
-	unsigned int x, y;
+	size_t x, y;
 	std::string data;
 	std::string str = std::string();
 	std::string::const_iterator i;

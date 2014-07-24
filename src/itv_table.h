@@ -29,7 +29,7 @@ class ITV_Table {
 	friend ostream &operator << (ostream &, const ITV_Table &);
 
 	protected:
-		unsigned int min_id;
+		size_t min_id;
 		list<ITV> *table;
 
 	public:
@@ -38,35 +38,35 @@ class ITV_Table {
 		virtual ~ITV_Table();
 
 		ITV_Table &operator = (const ITV_Table &);
-		int operator == (const ITV_Table &) const;
-		int operator != (const ITV_Table &) const;
-		int operator <= (const ITV_Table &) const;
-		int operator >= (const ITV_Table &) const;
-		int operator  < (const ITV_Table &) const;
-		int operator  > (const ITV_Table &) const;
+		bool operator == (const ITV_Table &) const;
+		bool operator != (const ITV_Table &) const;
+		bool operator <= (const ITV_Table &) const;
+		bool operator >= (const ITV_Table &) const;
+		bool operator  < (const ITV_Table &) const;
+		bool operator  > (const ITV_Table &) const;
 
 		list<ITV>* get_table();
 		void set_table(list<ITV>*);
 
-		void add(ITV*);
-		int remove(ITV*);
-		int exists(ITV*);
+		bool add(ITV*);
+		bool remove(ITV*);
+		bool exists(ITV*);
 
-		ITV* find_by_id(unsigned int, bool);
-		ITV* find_by_tag(unsigned int, bool);
+		ITV* find_by_id(size_t, bool);
+		ITV* find_by_tag(size_t, bool);
 		ITV* find_by_value(std::string, bool);
 
-		unsigned int* convert(std::string, unsigned int);
-		std::string revert(unsigned int, unsigned int);
+		size_t* convert(std::string, size_t);
+		std::string revert(size_t, size_t);
 
 		void clear();
 		void restore();
 
-		unsigned int get_random_id();
-		unsigned int get_random(unsigned int, unsigned int);
+		size_t get_random_id();
+		size_t get_random(size_t, size_t);
 
-		virtual unsigned int read(std::string) = 0;
-		virtual unsigned int write(std::string) = 0;
+		virtual size_t read(std::string) = 0;
+		virtual size_t write(std::string) = 0;
 
 		virtual std::string encode(std::string) = 0;
 		virtual std::string decode(std::string) = 0;

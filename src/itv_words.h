@@ -28,13 +28,13 @@ using namespace std;
 class ITV_Words : public ITV_Table {
 	public:
 		ITV_Words();
-		ITV_Words(std::string, unsigned int);
+		ITV_Words(std::string, size_t);
 		~ITV_Words();
 
 		list<string> get_words(std::string);
 
-		unsigned int read(std::string);
-		unsigned int write(std::string);
+		size_t read(std::string);
+		size_t write(std::string);
 
 		std::string encode(std::string);
 		std::string decode(std::string);

@@ -30,32 +30,32 @@ class ITV {
 	friend istream &operator >> (istream &, ITV &);
 
 	protected:
-		unsigned int id;
-		unsigned int tag;
+		size_t id;
+		size_t tag;
 		std::string value;
 
 	public:
 		ITV();
 		ITV(const ITV &);
-		ITV(unsigned int, std::string);
-		ITV(unsigned int, unsigned int, std::string);
+		ITV(size_t, std::string);
+		ITV(size_t, size_t, std::string);
 		~ITV();
 
 		ITV &operator = (const ITV &);
-		int operator == (const ITV &) const;
-		int operator != (const ITV &) const;
-		int operator <= (const ITV &) const;
-		int operator >= (const ITV &) const;
-		int operator  < (const ITV &) const;
-		int operator  > (const ITV &) const;
+		bool operator == (const ITV &) const;
+		bool operator != (const ITV &) const;
+		bool operator <= (const ITV &) const;
+		bool operator >= (const ITV &) const;
+		bool operator  < (const ITV &) const;
+		bool operator  > (const ITV &) const;
 
-		unsigned int replace(unsigned int);
+		size_t replace(size_t);
 
-		unsigned int get_id();
-		void set_id(unsigned int);
+		size_t get_id();
+		void set_id(size_t);
 
-		unsigned int get_tag();
-		void set_tag(unsigned int);
+		size_t get_tag();
+		void set_tag(size_t);
 
 		std::string get_value();
 		void set_value(std::string);

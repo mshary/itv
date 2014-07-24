@@ -29,16 +29,16 @@ class ITV_ASCII : public ITV_Table {
 	public:
 		ITV_ASCII();
 		ITV_ASCII(std::string);
-		ITV_ASCII(unsigned int, unsigned int);
+		ITV_ASCII(size_t, size_t);
 		virtual ~ITV_ASCII();
 
-		int load(std::string);
-		int load(unsigned int, unsigned int);
+		size_t load(std::string);
+		size_t load(size_t, size_t);
 
-		std::string dump(unsigned int);
+		std::string dump(char);
 
-		unsigned int read(std::string);
-		unsigned int write(std::string);
+		size_t read(std::string);
+		size_t write(std::string);
 
 		std::string encode(std::string);
 		std::string decode(std::string);
