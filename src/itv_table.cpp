@@ -30,12 +30,6 @@ ITV_Table::ITV_Table(list<ITV> *table) {
 	this->table = table;
 };
 
-ITV_Table::ITV_Table(ifstream &ifs, unsigned int min) {
-	this->min_id = min;
-	table = new list<ITV>();
-	this->load(ifs);
-};
-
 ITV_Table::~ITV_Table() {
 	// nothing todo here
 	if (this->table) { delete this->table; }
@@ -210,35 +204,15 @@ void ITV_Table::restore() {
 };
 
 unsigned int ITV_Table::get_random_id() {
-	unsigned int id = ITV_RANDOM_FUNCTION(0, this->table->size());
+	unsigned int id = get_random(0, this->table->size() - 1);
 	list<ITV>::iterator i = this->table->begin();
 	std::advance(i, id);
 	return (*i).get_id();
 };
 
-void ITV_Table::load(ifstream &ifs) {
-	if (!ifs.is_open()) { return; };
-	this->table->clear();
-
-	unsigned int x = min_id;
-	std::string line = string();
-
-	while(getline(ifs, line)) {
-		this->add(new ITV(x++, trim(line)));
-	};
-
-	if (this->table->size() > 0) {
-		this->table->unique();
-	};
-};
-
-void ITV_Table::save(ofstream &ofs) {
-	if (!ofs.is_open()) { return; };
-	this->table->sort(compare_ids);
-
-	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); ++i) {
-		ofs << (*i).get_value() << endl;
-	};
+unsigned int ITV_Table::get_random(unsigned int min, unsigned int max) {
+	std::random_device generator;
+	std::uniform_int_distribution<int> distribution(min, max);
+	return distribution(generator);
 };
 

@@ -22,15 +22,18 @@
 
 ITV_Words::ITV_Words() {
 	min_id = 0;
+	table = new list<ITV>();
 };
 
-ITV_Words::ITV_Words(ifstream &ifs, unsigned int min) {
+ITV_Words::ITV_Words(std::string file, unsigned int min) {
 	min_id = min;
-	this->load(ifs);
+	table = new list<ITV>();
+	this->read(file);
 };
 
 ITV_Words::~ITV_Words() {
 	// nothing todo here
+	if (this->table) { delete this->table; }
 };
 
 list<string> ITV_Words::get_words(std::string sentence) {
@@ -38,6 +41,35 @@ list<string> ITV_Words::get_words(std::string sentence) {
 	istringstream iss(sentence);
 	copy(istream_iterator<string>(iss), istream_iterator<string>(), back_inserter<list<string> >(words));
 	return words;
+};
+
+unsigned int ITV_Words::read(std::string file) {
+	ifstream ifs(file);
+	if (!ifs.is_open()) { return 0; };
+
+	unsigned int x = this->min_id;
+	std::string line = string();
+
+	while(getline(ifs, line)) {
+		this->add(new ITV(x++, trim(line)));
+	};
+
+	ifs.close();
+	return this->table->size();
+};
+
+unsigned int ITV_Words::write(std::string file) {
+	ofstream ofs(file);
+	if (!ofs.is_open()) { return 0; };
+	this->table->sort(compare_ids);
+
+	list<ITV>::iterator i;
+	for (i=this->table->begin(); i!=this->table->end(); ++i) {
+		ofs << (*i).get_value() << endl;
+	};
+
+	ofs.close();
+	return this->table->size();
 };
 
 std::string ITV_Words::encode(std::string str) {

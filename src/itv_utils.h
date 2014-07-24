@@ -40,21 +40,6 @@ static inline std::string &trim(std::string &s) {
 	return ltrim(rtrim(s));
 };
 
-// random number between min and max values
-static inline unsigned int get_random(unsigned int min, unsigned int max) {
-	int base_random = rand();
-	if (RAND_MAX == base_random) {
-		return get_random(min, max);
-	};
-
-	int range = max - min, remainder = RAND_MAX % range, bucket = RAND_MAX / range;
-	if (base_random < RAND_MAX - remainder) {
-		return min + base_random/bucket;
-	};
-
-	return get_random(min, max);
-};
-
 static inline bool compare_ids(ITV &first, ITV &second) {
 	return (first.get_id() <  second.get_id());
 };

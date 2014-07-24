@@ -28,6 +28,7 @@
 
 #include <algorithm> 
 #include <iterator>
+#include <random>
 #include <list>
 
 #include "itv.h"
@@ -36,10 +37,7 @@
 #include "itv_words.h"
 #include "itv_utils.h"
 
-#define ITV_SEPARATOR		"\t"
-#define ITV_TERMINATOR		"\n"
-#define ITV_WORD_SEPARATOR	32
-
-#define ITV_RANDOM_FUNCTION	get_random
+#define ITV_SEPARATOR	"\t"
+#define ITV_TERMINATOR	"\n"
 
 #endif

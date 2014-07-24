@@ -25,6 +25,7 @@
 
 int use_char_itv(std::string data) {
 	ITV_ASCII *caller = new ITV_ASCII();
+	caller->load(48, 57);
 	caller->load(65, 90);
 	caller->load(97, 122);
 
@@ -57,24 +58,15 @@ int use_char_itv(std::string data) {
 };
 
 int use_word_itv(std::string data) {
-	ifstream ifcaller("./wordsEn.txt");
-	ITV_Words *caller = new ITV_Words(ifcaller, 0);
-	ifcaller.close();
-	if (caller == NULL) { return 1; }
+	ITV_Words *caller = new ITV_Words("./wordsEn.txt", 0);
 
 	std::string str = "a quick brown fox jumps over the lazy dog";
 	std::string enc = caller->encode(str);
 
-	ofstream ofcaller("/tmp/caller.txt");
-	caller->save(ofcaller);
-	ofcaller.close();
-
+	caller->write("/tmp/caller.txt");
 	enc = caller->encode(data);
 
-	ifstream ifcallee("/tmp/caller.txt");
-	ITV_Words *callee = new ITV_Words(ifcallee, 0);
-	ifcallee.close();
-
+	ITV_Words *callee = new ITV_Words("/tmp/caller.txt", 0);
 	std::string dcr = callee->decode(enc);
 
 	cout << "Plaintext: " << data << endl;
@@ -94,7 +86,7 @@ int main() {
 	std::string str = "a quick brown fox jumps over the lazy dog.";
 
 	use_char_itv(str);
-	//use_word_itv(str);
+	use_word_itv(str);
 
 	//cout << "Enter data to encrypt: ";
 	//getline(cin, str);

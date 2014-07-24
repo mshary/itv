@@ -39,6 +39,7 @@ ITV_ASCII::ITV_ASCII(unsigned int min, unsigned int max) {
 
 ITV_ASCII::~ITV_ASCII() {
 	// nothing todo here
+	if (this->table) { delete this->table; }
 };
 
 int ITV_ASCII::load(std::string str) {
@@ -71,6 +72,8 @@ int ITV_ASCII::load(unsigned int min, unsigned int max) {
 
 std::string ITV_ASCII::dump(unsigned int sep) {
 	std::stringstream ss;
+	this->table->sort(compare_tags);
+
 	list<ITV>::iterator i;
 	for (i=this->table->begin(); i!=this->table->end(); ++i) {
 		ss << std::string(1, (*i).get_id()) << (*i).get_value() << std::string(1, sep);
@@ -80,7 +83,7 @@ std::string ITV_ASCII::dump(unsigned int sep) {
 	return str.substr(0, str.length() - 1);
 };
 
-int ITV_ASCII::read(std::string file) {
+unsigned int ITV_ASCII::read(std::string file) {
 	ifstream ifs(file);
 	if (!ifs.is_open()) { return 0; };
 
@@ -99,7 +102,7 @@ int ITV_ASCII::read(std::string file) {
 	return this->table->size();
 };
 
-int ITV_ASCII::write(std::string file) {
+unsigned int ITV_ASCII::write(std::string file) {
 	ofstream ofs(file);
 	if (!ofs.is_open()) { return 0; };
 	this->table->sort(compare_tags);

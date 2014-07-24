@@ -35,7 +35,6 @@ class ITV_Table {
 	public:
 		ITV_Table();
 		ITV_Table(list<ITV>*);
-		ITV_Table(std::ifstream &, unsigned int);
 		virtual ~ITV_Table();
 
 		ITV_Table &operator = (const ITV_Table &);
@@ -64,9 +63,10 @@ class ITV_Table {
 		void restore();
 
 		unsigned int get_random_id();
+		unsigned int get_random(unsigned int, unsigned int);
 
-		void load(std::ifstream &);
-		void save(std::ofstream &);
+		virtual unsigned int read(std::string) = 0;
+		virtual unsigned int write(std::string) = 0;
 
 		virtual std::string encode(std::string) = 0;
 		virtual std::string decode(std::string) = 0;

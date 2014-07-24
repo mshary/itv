@@ -37,12 +37,12 @@ class ITV_ASCII : public ITV_Table {
 
 		std::string dump(unsigned int);
 
-		int read(std::string);
-		int write(std::string);
+		unsigned int read(std::string);
+		unsigned int write(std::string);
 
-		virtual std::string encode(std::string);
-		virtual std::string decode(std::string);
-		virtual std::string to_string();
+		std::string encode(std::string);
+		std::string decode(std::string);
+		std::string to_string();
 };
 
 #endif

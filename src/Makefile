@@ -31,3 +31,4 @@ $(PROG): $(OBJS)
 clean:
 	rm -f $(OBJS)
 	rm -f $(PROG)
+	rm -f *~
