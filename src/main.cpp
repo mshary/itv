@@ -18,14 +18,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#include <sys/time.h>
 #include "itv_ascii.h"
 #include "itv_words.h"
 #include "itv_utils.h"
 
 int use_char_itv(std::string data) {
 	ITV_ASCII *caller = new ITV_ASCII();
-	caller->load(48, 57);
 	caller->load(65, 90);
 	caller->load(97, 122);
 
@@ -79,10 +77,6 @@ int use_word_itv(std::string data) {
 
 
 int main() {
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	srandom(tv.tv_usec);
-
 	std::string str = "a quick brown fox jumps over the lazy dog.";
 
 	use_char_itv(str);

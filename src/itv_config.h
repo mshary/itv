@@ -41,4 +41,6 @@
 #define ITV_SEPARATOR	"\t"
 #define ITV_TERMINATOR	"\n"
 
+#define AUTO_LEARN		1
+
 #endif

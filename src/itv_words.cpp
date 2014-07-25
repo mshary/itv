@@ -77,11 +77,9 @@ std::string ITV_Words::encode(std::string str) {
 	list<string> words = this->get_words(str);
 
 	std::stringstream enc;
+	enc << std::hex << std::showbase << std::uppercase;
+
 	list<string>::iterator i;
-
-	enc << std::hex;
-	enc << std::setiosflags(std::ios::showbase);
-
 	for(i=words.begin(); i!=words.end(); i++) {
 		char first = 0, last = 0;
 		std::string word = *i;
@@ -97,7 +95,14 @@ std::string ITV_Words::encode(std::string str) {
 		} else { last = 0; };
 
 		data = this->convert(word, get_random_id());
-		if (data == NULL) { continue; };
+		if (data == NULL) {
+#if AUTO_LEARN > 0
+			size_t id = this->table->size();
+			this->add(new ITV(id, word));
+			enc << id << " " << word << " ";
+#endif
+			continue;
+		};
 
 		if (first) { enc << first; };
 		enc << data[0] << " " << data[1];
@@ -106,7 +111,8 @@ std::string ITV_Words::encode(std::string str) {
 		enc << " ";
 	};
 
-	return enc.str();
+	std::string s = enc.str();
+	return s.substr(0, s.length() - 1);
 };
 
 std::string ITV_Words::decode(std::string enc) {
@@ -137,7 +143,15 @@ std::string ITV_Words::decode(std::string enc) {
 		y = strtoul ((next).c_str(), NULL, 0);
 		data = this->revert(x, y);
 
-		if (data.empty()) { continue; };
+		if (data.empty()) {
+#if AUTO_LEARN > 0
+			if ((y == 0) && (this->find_by_id(x, 0) == NULL)) {
+				this->add(new ITV(x, next));
+				str += next + " ";
+			};
+#endif
+			continue;
+		};
 
 		if (first) { str += first; };
 		str += data;
@@ -146,7 +160,7 @@ std::string ITV_Words::decode(std::string enc) {
 		str	+= " ";
 	};
 
-	return str;
+	return str.substr(0, str.length() - 1);
 };
 
 std::string ITV_Words::to_string() {

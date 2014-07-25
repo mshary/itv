@@ -124,6 +124,9 @@ std::string ITV_ASCII::encode(std::string str) {
 	for(i=str.begin(); i!=str.end(); i++) {
 		data = this->convert(std::string(1, *i), get_random_id());
 		if (data == NULL) {
+#if AUTO_LEARN > 0
+			this->add(new ITV(*i, std::string(1, *i)));
+#endif
 			enc += *i;
 		} else {
 			enc += std::string(1, data[0]) + std::string(1, data[1]);
@@ -141,6 +144,9 @@ std::string ITV_ASCII::decode(std::string enc) {
 
 	for(i=enc.begin(); i!=enc.end(); i++) {
 		if (this->find_by_id(*i, 0) == NULL) {
+#if AUTO_LEARN > 0
+			this->add(new ITV(*i, std::string(1, *i)));
+#endif
 			str += *i;
 			continue;
 		};

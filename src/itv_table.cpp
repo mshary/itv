@@ -108,6 +108,8 @@ bool ITV_Table::exists(ITV *element) {
 };
 
 ITV* ITV_Table::find_by_id(size_t id, bool reverse_direction) {
+	if(this->table->empty()) { return NULL; };
+
 	list<ITV>::iterator i;
 	if (reverse_direction) {
 		for (i=this->table->end(); i!=this->table->begin(); --i) {
@@ -126,6 +128,8 @@ ITV* ITV_Table::find_by_id(size_t id, bool reverse_direction) {
 };
 
 ITV* ITV_Table::find_by_tag(size_t tag, bool reverse_direction) {
+	if(this->table->empty()) { return NULL; };
+
 	list<ITV>::iterator i;
 	if (reverse_direction) {
 		for (i=this->table->end(); i!=this->table->begin(); --i) {
@@ -144,6 +148,8 @@ ITV* ITV_Table::find_by_tag(size_t tag, bool reverse_direction) {
 };
 
 ITV* ITV_Table::find_by_value(std::string value, bool reverse_direction) {
+	if(this->table->empty()) { return NULL; };
+
 	list<ITV>::iterator i;
 	if (reverse_direction) {
 		for (i=this->table->end(); i!=this->table->begin(); --i) {
@@ -202,6 +208,8 @@ void ITV_Table::restore() {
 };
 
 size_t ITV_Table::get_random_id() {
+	if (this->table->empty()) { return 0; };
+
 	size_t id = get_random(0, this->table->size() - 1);
 	list<ITV>::iterator i = this->table->begin();
 	std::advance(i, id);
