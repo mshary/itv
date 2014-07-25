@@ -37,4 +37,34 @@ extern "C" {
 		strcpy(buf, str.c_str());
 		return str.length();
 	};
+
+	CITV_Words* itv_words_new() {
+		ITV_Words *itv = new ITV_Words();
+		return (CITV_Words*) itv;
+	};
+
+	CITV_Words* itv_words_init(const char* file, size_t min_id) {
+		ITV_Words *itv = new ITV_Words(file, min_id);
+		return (CITV_Words*) itv;
+	};
+
+	size_t itv_words_save(const CITV_Words* obj, const char* file) {
+		ITV_Words *itv = (ITV_Words*) obj;
+		return itv->write(file);
+	};
+
+	size_t itv_words_encode(const CITV_Words* obj, const char* msg, char* buf) {
+		ITV_Words *itv = (ITV_Words*) obj;
+		std::string str = itv->encode(msg);
+		strcpy(buf, str.c_str());
+		return str.length();
+	};
+
+	size_t itv_words_decode(const CITV_Words* obj, const char* msg, char* buf) {
+		ITV_Words *itv = (ITV_Words*) obj;
+		std::string str = itv->decode(msg);
+		strcpy(buf, str.c_str());
+		return str.length();
+	};
+
 };

@@ -18,9 +18,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#include "itv_ascii.h"
-#include "itv_words.h"
-#include "itv_utils.h"
+#include "itv_config.h"
 
 int use_char_itv(std::string data) {
 	ITV_ASCII *caller = new ITV_ASCII();

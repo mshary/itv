@@ -1,4 +1,5 @@
 typedef void CITV_ASCII;
+typedef void CITV_Words;
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,6 +13,13 @@ extern "C" {
 
 	size_t itv_ascii_encode(const CITV_ASCII*, const char*, char*);
 	size_t itv_ascii_decode(const CITV_ASCII*, const char*, char*);
+
+	CITV_Words* itv_words_new();
+	CITV_Words* itv_words_init(const char*, size_t);
+
+	size_t itv_words_save(const CITV_Words*, const char*);
+	size_t itv_words_encode(const CITV_Words*, const char*, char*);
+	size_t itv_words_decode(const CITV_Words*, const char*, char*);
 
 #ifdef __cplusplus
 }
