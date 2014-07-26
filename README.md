@@ -150,6 +150,8 @@ To run the code,
 	
 	./itv
 
+From v2.0 onwards there is a C wrapper, which exports basic functionality to applications written in C.
+
 Sample output of Character Base ITV,
 <pre>
 	Plaintext: a quick brown fox jumps over the lazy dog.
@@ -160,7 +162,7 @@ Sample output of Character Base ITV,
 Sample output of Word Base ITV,
 <pre>
 	Plaintext: a quick brown fox jumps over the lazy dog.
-	Encrypted Text: 31743 16131 44980 33894 93028 45775 63173 80204 5153 7783 79455 95892 55065 25830 57208 97749 16540 51775. 
+	Encrypted Text: 0XDE11 0X4D4E 0X1442 0X41D1 0X17A7F 0X108A4 0XBA59 0X13ABA 0X145C1 0X3809 0X86C0 0XD8E2 0X8CA0 0XD57D 0X11372 0X11B6B 0XEF3C 0XB715. 
 	Decrypted Text: a quick brown fox jumps over the lazy dog. 
 </pre>
 
@@ -177,6 +179,8 @@ For reference implementation of Character Based ITV algorithm, include or read t
 For reference implementation of Word Based ITV algorithm, include or read through,
 
 	itv_word.h / itv_word.cpp
+
+For sample usage read through main.cpp (in C++) or main.c (in C).
 
 Feel free to add and/or extend given C++ classes (per MPL v2.0 license).
 
