@@ -60,14 +60,20 @@ int use_word_itv(std::string data) {
 	std::string enc = caller->encode(str);
 
 	caller->write("/tmp/caller.txt");
+	size_t enc_size = caller->get_expected_length(str, 0);
 	enc = caller->encode(data);
 
 	ITV_Words *callee = new ITV_Words("/tmp/caller.txt", 0);
+	size_t dcr_size = callee->get_expected_length(enc, 1);
 	std::string dcr = callee->decode(enc);
 
 	cout << "Plaintext: " << data << endl;
 	cout << "Encrypted Text: " << enc << endl;
 	cout << "Decrypted Text: " << dcr << endl;
+	cout << "Expected size of encrypted text: " << enc_size << endl;
+	cout << "Actual size of encrypted text: " << enc.length() << endl;
+	cout << "Expected size of decrypted text: " << dcr_size << endl;
+	cout << "Actual size of decrypted text: " << dcr.length() << endl;
 	cout << endl;
 
 	return 0;

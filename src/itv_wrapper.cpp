@@ -67,4 +67,9 @@ extern "C" {
 		return str.length();
 	};
 
+	size_t itv_words_get_expected_length(const CITV_Words* obj, const char* msg, int decrypt) {
+		ITV_Words *itv = (ITV_Words*) obj;
+		return itv->get_expected_length(msg, decrypt);
+	};
+
 };

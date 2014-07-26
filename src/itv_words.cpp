@@ -43,6 +43,23 @@ list<string> ITV_Words::get_words(std::string sentence) {
 	return words;
 };
 
+size_t ITV_Words::get_expected_length(std::string sentence, bool decrypt) {
+	if (sentence.empty()) { return 0; };
+
+	list<string> words = this->get_words(sentence);
+	size_t count = words.size();
+
+	if (decrypt) {
+		std::string str = *std::max_element(words.begin(), words.end());
+		return ((count / 2 * str.length()) - (count / 2));
+	} else {
+		std::stringstream enc;
+		enc << std::hex << std::showbase << std::uppercase;
+		enc << this->table->size();
+		return (((count * enc.str().length()) * 2) + (count * 2));
+	};
+};
+
 size_t ITV_Words::read(std::string file) {
 	ifstream ifs(file);
 	if (!ifs.is_open()) { return 0; };

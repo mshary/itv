@@ -20,6 +20,7 @@ extern "C" {
 	size_t itv_words_save(const CITV_Words*, const char*);
 	size_t itv_words_encode(const CITV_Words*, const char*, char*);
 	size_t itv_words_decode(const CITV_Words*, const char*, char*);
+	size_t itv_words_get_expected_length(const CITV_Words*, const char*, int);
 
 #ifdef __cplusplus
 }

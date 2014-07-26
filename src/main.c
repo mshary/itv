@@ -4,12 +4,12 @@
 #include "itv_wrapper.h"
 
 #define MAX_KEY_LEN		255*3+1
-#define MAX_WORDS_LEN	1024
 
 int main() {
 	char *data = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 	char *msg = "a quick brown fox jumps over the lazy dog.";
 	char *buf = NULL, *key = NULL, *enc = NULL, *dec = NULL;
+	size_t len = 0;
 
 	CITV_ASCII *itv = itv_ascii_new();
 	CITV_Words *words = itv_words_init("./wordsEn.txt", 0);
@@ -44,9 +44,10 @@ int main() {
 
 	free(enc);
 	free(dec);
-	printf("\n\n");
+	printf("\n");
 
-	enc = malloc(MAX_WORDS_LEN);
+	len = itv_words_get_expected_length(words, msg, 0);
+	enc = malloc(len);
 	itv_words_encode(words, msg, enc);
 	printf("MSG: %s\nENC: %s\n", msg, enc);
 
@@ -55,7 +56,8 @@ int main() {
 
 	words = itv_words_init("./wordsEn.txt", 0);
 
-	dec = malloc(MAX_WORDS_LEN);
+	len = itv_words_get_expected_length(words, enc, 1);
+	dec = malloc(len);
 	itv_words_decode(words, enc, dec);
 	printf("DEC: %s\n", dec);
 
@@ -64,6 +66,7 @@ int main() {
 
 	free(enc);
 	free(dec);
+	printf("\n");
 
 	return 0;
 }

@@ -32,6 +32,7 @@ class ITV_Words : public ITV_Table {
 		~ITV_Words();
 
 		list<string> get_words(std::string);
+		size_t get_expected_length(std::string, bool);
 
 		size_t read(std::string);
 		size_t write(std::string);
