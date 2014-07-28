@@ -25,9 +25,9 @@ ITV_Table::ITV_Table() {
 	table = new list<ITV>();
 };
 
-ITV_Table::ITV_Table(list<ITV> *table) {
+ITV_Table::ITV_Table(list<ITV> &table) {
 	min_id = 0;
-	this->table = table;
+	this->table = &table;
 };
 
 ITV_Table::~ITV_Table() {
@@ -72,35 +72,35 @@ bool ITV_Table::operator>(const ITV_Table &rhs) const {
 	return (rhs.table < table);
 };
 
-list<ITV>* ITV_Table::get_table() {
+const list<ITV>* ITV_Table::get_table() {
 	return this->table;
 };
 
-void ITV_Table::set_table(list<ITV> *table) {
+void ITV_Table::set_table(const list<ITV> &table) {
 	if (this->table) { delete this->table; };
-	this->table = table;
+	this->table = (list<ITV>*)&table;
 };
 
-bool ITV_Table::add(ITV *element) {
-	if (element) {
-		this->table->push_back(*element);
+bool ITV_Table::add(const ITV &element) {
+	if (&element) {
+		this->table->push_back(element);
 		return true;
 	};
 	return false;
 };
 
-bool ITV_Table::remove(ITV *element) {
+bool ITV_Table::remove(const ITV &element) {
 	if (this->exists(element)) {
-		this->table->remove(*element);
+		this->table->remove(element);
 		return true;
 	};
 	return false;
 };
 
-bool ITV_Table::exists(ITV *element) {
+bool ITV_Table::exists(const ITV &element) {
 	list<ITV>::iterator i;
 	for (i=this->table->begin(); i!=this->table->end(); ++i) {
-		if (*i == *element) {
+		if (*i == element) {
 			return true;
 		};
 	};
@@ -147,7 +147,7 @@ ITV* ITV_Table::find_by_tag(size_t tag, bool reverse_direction) {
 	return NULL;
 };
 
-ITV* ITV_Table::find_by_value(std::string value, bool reverse_direction) {
+ITV* ITV_Table::find_by_value(const std::string &value, bool reverse_direction) {
 	if(this->table->empty()) { return NULL; };
 
 	list<ITV>::iterator i;
@@ -167,7 +167,7 @@ ITV* ITV_Table::find_by_value(std::string value, bool reverse_direction) {
 	return NULL;
 }
 
-size_t* ITV_Table::convert(std::string value, size_t next) {
+size_t* ITV_Table::convert(const std::string &value, size_t next) {
 	size_t *retval = new size_t[2];
 	ITV *itv_current = this->find_by_value(value, 0);
 	ITV *itv_next = this->find_by_id(next, 0);
@@ -182,7 +182,7 @@ size_t* ITV_Table::convert(std::string value, size_t next) {
 	return retval;
 };
 
-std::string ITV_Table::revert(size_t current, size_t next) {
+const std::string ITV_Table::revert(size_t current, size_t next) {
 	ITV *itv_current = this->find_by_id(current, 0);
 	ITV *itv_next = this->find_by_id(next, 0);
 

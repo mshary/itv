@@ -32,13 +32,13 @@ ITV::ITV(const ITV &src) {
 	value = src.value;
 };
 
-ITV::ITV(size_t id, std::string value) {
+ITV::ITV(size_t id, const std::string &value) {
 	this->id = id;
 	this->tag = id;
 	this->value = value;
 };
 
-ITV::ITV(size_t id, size_t tag, std::string value) {
+ITV::ITV(size_t id, size_t tag, const std::string &value) {
 	this->id = id;
 	this->tag = tag;
 	this->value = value;
@@ -115,11 +115,11 @@ void ITV::set_tag(size_t tag) {
 	this->tag = tag;
 };
 
-std::string ITV::get_value() {
+const std::string ITV::get_value() {
 	return this->value;
 };
 
-void ITV::set_value(std::string value) {
+void ITV::set_value(const std::string &value) {
 	this->value = value;
 };
 
@@ -131,7 +131,7 @@ void ITV::restore() {
 	this->id = this->tag;
 };
 
-std::string ITV::to_string() {
+const std::string ITV::to_string() {
 	std::stringstream ss;
 	ss << this->id << ITV_SEPARATOR << this->value << ITV_TERMINATOR;
 	return ss.str();

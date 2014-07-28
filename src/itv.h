@@ -37,8 +37,8 @@ class ITV {
 	public:
 		ITV();
 		ITV(const ITV &);
-		ITV(size_t, std::string);
-		ITV(size_t, size_t, std::string);
+		ITV(size_t, const std::string&);
+		ITV(size_t, size_t, const std::string&);
 		~ITV();
 
 		ITV &operator = (const ITV &);
@@ -57,13 +57,13 @@ class ITV {
 		size_t get_tag();
 		void set_tag(size_t);
 
-		std::string get_value();
-		void set_value(std::string);
+		const std::string get_value();
+		void set_value(const std::string&);
 
 		void clear();
 		void restore();
 
-		std::string to_string();
+		const std::string to_string();
 };
 
 #endif

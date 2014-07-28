@@ -47,7 +47,7 @@ size_t ITV_ASCII::load(std::string str) {
 	if (len < 3) { return 0; };
 
 	for (size_t x=0; x<len; x++) {
-		this->add(new ITV(str.at(x++), std::string(1, str.at(x++))));
+		this->add(ITV(str.at(x++), std::string(1, str.at(x++))));
 	};
 
 	if (this->table->size() > 0) {
@@ -63,7 +63,7 @@ size_t ITV_ASCII::load(size_t min, size_t max) {
 	if (min > max || max > 255) { return 0; };
 
 	for(size_t x=min; x<=max; x++) {
-		this->add(new ITV(x, std::string(1, x)));
+		this->add(ITV(min + (max - x), std::string(1, x)));
 	};
 
 	min_id = min;
@@ -83,13 +83,13 @@ std::string ITV_ASCII::dump(char sep) {
 	return str.substr(0, str.length() - 1);
 };
 
-size_t ITV_ASCII::read(std::string file) {
+size_t ITV_ASCII::read(const std::string &file) {
 	ifstream ifs(file);
 	if (!ifs.is_open()) { return 0; };
 
 	std::string line = string();
 	while(getline(ifs, line)) {
-		this->add(new ITV(line.at(0), line.substr(1,1)));
+		this->add(ITV(line.at(0), line.substr(1,1)));
 	};
 
 	if (this->table->size() > 0) {
@@ -102,7 +102,7 @@ size_t ITV_ASCII::read(std::string file) {
 	return this->table->size();
 };
 
-size_t ITV_ASCII::write(std::string file) {
+size_t ITV_ASCII::write(const std::string &file) {
 	ofstream ofs(file);
 	if (!ofs.is_open()) { return 0; };
 	this->table->sort(compare_tags);
@@ -116,7 +116,7 @@ size_t ITV_ASCII::write(std::string file) {
 	return this->table->size();
 };
 
-std::string ITV_ASCII::encode(std::string str) {
+const std::string ITV_ASCII::encode(const std::string &str) {
 	size_t *data;
 	std::string enc = std::string();
 	std::string::const_iterator i;
@@ -125,7 +125,7 @@ std::string ITV_ASCII::encode(std::string str) {
 		data = this->convert(std::string(1, *i), get_random_id());
 		if (data == NULL) {
 #if AUTO_LEARN > 0
-			this->add(new ITV(*i, std::string(1, *i)));
+			this->add(ITV(*i, std::string(1, *i)));
 #endif
 			enc += *i;
 		} else {
@@ -136,7 +136,7 @@ std::string ITV_ASCII::encode(std::string str) {
 	return enc;
 };
 
-std::string ITV_ASCII::decode(std::string enc) {
+const std::string ITV_ASCII::decode(const std::string &enc) {
 	size_t x, y;
 	std::string data;
 	std::string str = std::string();
@@ -145,7 +145,7 @@ std::string ITV_ASCII::decode(std::string enc) {
 	for(i=enc.begin(); i!=enc.end(); i++) {
 		if (this->find_by_id(*i, 0) == NULL) {
 #if AUTO_LEARN > 0
-			this->add(new ITV(*i, std::string(1, *i)));
+			this->add(ITV(*i, std::string(1, *i)));
 #endif
 			str += *i;
 			continue;
@@ -165,7 +165,7 @@ std::string ITV_ASCII::decode(std::string enc) {
 	return str;
 };
 
-std::string ITV_ASCII::to_string() {
+const std::string ITV_ASCII::to_string() {
 	std::string str = std::string();
 	this->table->sort(compare_tags);
 

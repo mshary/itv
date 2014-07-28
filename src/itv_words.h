@@ -28,18 +28,18 @@ using namespace std;
 class ITV_Words : public ITV_Table {
 	public:
 		ITV_Words();
-		ITV_Words(std::string, size_t);
+		ITV_Words(const std::string&, size_t);
 		~ITV_Words();
 
-		list<string> get_words(std::string);
-		size_t get_expected_length(std::string, bool);
+		list<string> get_words(const std::string&);
+		size_t get_expected_length(const std::string&, bool);
 
-		size_t read(std::string);
-		size_t write(std::string);
+		size_t read(const std::string&);
+		size_t write(const std::string&);
 
-		std::string encode(std::string);
-		std::string decode(std::string);
-		std::string to_string();
+		const std::string encode(const std::string&);
+		const std::string decode(const std::string&);
+		const std::string to_string();
 };
 
 #endif

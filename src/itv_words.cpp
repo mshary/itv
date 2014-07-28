@@ -25,7 +25,7 @@ ITV_Words::ITV_Words() {
 	table = new list<ITV>();
 };
 
-ITV_Words::ITV_Words(std::string file, size_t min) {
+ITV_Words::ITV_Words(const std::string &file, size_t min) {
 	min_id = min;
 	table = new list<ITV>();
 	this->read(file);
@@ -36,14 +36,14 @@ ITV_Words::~ITV_Words() {
 	if (this->table) { delete this->table; }
 };
 
-list<string> ITV_Words::get_words(std::string sentence) {
+list<string> ITV_Words::get_words(const std::string &sentence) {
 	list<string> words;
 	istringstream iss(sentence);
 	copy(istream_iterator<string>(iss), istream_iterator<string>(), back_inserter<list<string> >(words));
 	return words;
 };
 
-size_t ITV_Words::get_expected_length(std::string sentence, bool decrypt) {
+size_t ITV_Words::get_expected_length(const std::string &sentence, bool decrypt) {
 	if (sentence.empty()) { return 0; };
 
 	list<string> words = this->get_words(sentence);
@@ -60,7 +60,7 @@ size_t ITV_Words::get_expected_length(std::string sentence, bool decrypt) {
 	};
 };
 
-size_t ITV_Words::read(std::string file) {
+size_t ITV_Words::read(const std::string &file) {
 	ifstream ifs(file);
 	if (!ifs.is_open()) { return 0; };
 
@@ -68,14 +68,14 @@ size_t ITV_Words::read(std::string file) {
 	std::string line = string();
 
 	while(getline(ifs, line)) {
-		this->add(new ITV(x++, trim(line)));
+		this->add(ITV(x++, trim(line)));
 	};
 
 	ifs.close();
 	return this->table->size();
 };
 
-size_t ITV_Words::write(std::string file) {
+size_t ITV_Words::write(const std::string &file) {
 	ofstream ofs(file);
 	if (!ofs.is_open()) { return 0; };
 	this->table->sort(compare_ids);
@@ -89,7 +89,7 @@ size_t ITV_Words::write(std::string file) {
 	return this->table->size();
 };
 
-std::string ITV_Words::encode(std::string str) {
+const std::string ITV_Words::encode(const std::string &str) {
 	size_t *data;
 	list<string> words = this->get_words(str);
 
@@ -115,7 +115,7 @@ std::string ITV_Words::encode(std::string str) {
 		if (data == NULL) {
 #if AUTO_LEARN > 0
 			size_t id = this->table->size();
-			this->add(new ITV(id, word));
+			this->add(ITV(id, word));
 			enc << id << " " << word << " ";
 #endif
 			continue;
@@ -132,7 +132,7 @@ std::string ITV_Words::encode(std::string str) {
 	return s.substr(0, s.length() - 1);
 };
 
-std::string ITV_Words::decode(std::string enc) {
+const std::string ITV_Words::decode(const std::string &enc) {
 	size_t x, y;
 	std::string data;
 	list<string> words = this->get_words(enc);
@@ -163,7 +163,7 @@ std::string ITV_Words::decode(std::string enc) {
 		if (data.empty()) {
 #if AUTO_LEARN > 0
 			if ((y == 0) && (this->find_by_id(x, 0) == NULL)) {
-				this->add(new ITV(x, next));
+				this->add(ITV(x, next));
 				str += next + " ";
 			};
 #endif
@@ -180,7 +180,7 @@ std::string ITV_Words::decode(std::string enc) {
 	return str.substr(0, str.length() - 1);
 };
 
-std::string ITV_Words::to_string() {
+const std::string ITV_Words::to_string() {
 	std::string str = std::string();
 	this->table->sort();
 

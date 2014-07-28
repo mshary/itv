@@ -22,16 +22,17 @@
 
 int use_char_itv(std::string data) {
 	ITV_ASCII *caller = new ITV_ASCII();
+	caller->load(48, 57);
 	caller->load(65, 90);
 	caller->load(97, 122);
 
-	std::string str = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+	std::string str = ""; //"!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 	//cout << "Sender ITV Table before initialization: " << endl << caller->to_string() << endl;
 	std::string enc = caller->encode(str);
 	//cout << "Sender ITV Table after initialization: " << endl << caller->to_string() << endl;
 
-	caller->write("/tmp/callee.txt");
+	//caller->write("/tmp/callee.txt");
 
 	std::string key = caller->dump(':');
 	enc = caller->encode(data);
