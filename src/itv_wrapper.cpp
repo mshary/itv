@@ -20,22 +20,28 @@ extern "C" {
 	size_t itv_ascii_dump(const CITV_ASCII* obj, char sep, char* buf) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->dump(sep);
-		strcpy(buf, str.c_str());
-		return str.length();
+		size_t len = str.length();
+		strncpy(buf, str.c_str(), len);
+		buf[len] = '\0';
+		return len;
 	};
 
 	size_t itv_ascii_encode(const CITV_ASCII* obj, const char* msg, char* buf) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->encode(msg);
-		strcpy(buf, str.c_str());
-		return str.length();
+		size_t len = str.length();
+		strncpy(buf, str.c_str(), len);
+		buf[len] = '\0';
+		return len;
 	};
 
 	size_t itv_ascii_decode(const CITV_ASCII* obj, const char* msg, char* buf) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->decode(msg);
-		strcpy(buf, str.c_str());
-		return str.length();
+		size_t len = str.length();
+		strncpy(buf, str.c_str(), len);
+		buf[len] = '\0';
+		return len;
 	};
 
 	CITV_Words* itv_words_new() {
@@ -56,15 +62,19 @@ extern "C" {
 	size_t itv_words_encode(const CITV_Words* obj, const char* msg, char* buf) {
 		ITV_Words *itv = (ITV_Words*) obj;
 		std::string str = itv->encode(msg);
-		strcpy(buf, str.c_str());
-		return str.length();
+		size_t len = str.length();
+		strncpy(buf, str.c_str(), len);
+		buf[len] = '\0';
+		return len;
 	};
 
 	size_t itv_words_decode(const CITV_Words* obj, const char* msg, char* buf) {
 		ITV_Words *itv = (ITV_Words*) obj;
 		std::string str = itv->decode(msg);
-		strcpy(buf, str.c_str());
-		return str.length();
+		size_t len = str.length();
+		strncpy(buf, str.c_str(), len);
+		buf[len] = '\0';
+		return len;
 	};
 
 	size_t itv_words_get_expected_length(const CITV_Words* obj, const char* msg, int decrypt) {
