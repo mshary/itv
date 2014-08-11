@@ -47,7 +47,8 @@ size_t ITV_ASCII::load(std::string str) {
 	if (len < 3) { return 0; };
 
 	for (size_t x=0; x<len; x++) {
-		this->add(ITV(str.at(x++), std::string(1, str.at(x++))));
+		size_t y = x++, z = x++;
+		this->add(ITV(str.at(y), std::string(1, str.at(z))));
 	};
 
 	if (this->table->size() > 0) {
