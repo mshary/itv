@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 typedef void CITV_ASCII;
 typedef void CITV_Words;

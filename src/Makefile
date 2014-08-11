@@ -5,7 +5,7 @@
 # modification, are permitted per Mozilla Public License v2.0.
 #
 CFLAGS=-Wall -Werror -g -ansi -pedantic -std=c89
-CCFLAGS=-Wall -Werror -g
+CCFLAGS=-Wall -Werror -g -std=c++11
 LDFLAGS=-g -Wall -lstdc++
 
 OBJS=itv.o itv_ascii.o itv_table.o itv_words.o itv_wrapper.o main.o
