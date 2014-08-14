@@ -32,6 +32,8 @@
 #include <random>
 #include <list>
 
+#include <zlib.h>
+
 #include "itv.h"
 #include "itv_table.h"
 #include "itv_ascii.h"

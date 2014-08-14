@@ -6,7 +6,7 @@
 #
 CFLAGS=-Wall -Werror -g -ansi -pedantic -std=c89
 CCFLAGS=-Wall -Werror -g -std=c++11
-LDFLAGS=-g -Wall -lstdc++
+LDFLAGS=-g -Wall -lstdc++ -lz
 
 OBJS=itv.o itv_ascii.o itv_table.o itv_words.o itv_wrapper.o main.o
 PROG=itv

@@ -17,31 +17,34 @@ extern "C" {
 		return itv->load(min, max);
 	};
 
-	size_t itv_ascii_dump(const CITV_ASCII* obj, char sep, char* buf) {
+	const char* itv_ascii_dump(const CITV_ASCII* obj, char sep) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->dump(sep);
 		size_t len = str.length();
-		strncpy(buf, str.c_str(), len);
-		buf[len] = '\0';
-		return len;
+		char* res = (char*) malloc(len + 1);
+		strncpy(res, str.c_str(), len);
+		res[len] = '\0';
+		return res;
 	};
 
-	size_t itv_ascii_encode(const CITV_ASCII* obj, const char* msg, char* buf) {
+	const char* itv_ascii_encode(const CITV_ASCII* obj, const char* msg) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->encode(msg);
 		size_t len = str.length();
-		strncpy(buf, str.c_str(), len);
-		buf[len] = '\0';
-		return len;
+		char* res = (char*) malloc(len + 1);
+		strncpy(res, str.c_str(), len);
+		res[len] = '\0';
+		return res;
 	};
 
-	size_t itv_ascii_decode(const CITV_ASCII* obj, const char* msg, char* buf) {
+	const char* itv_ascii_decode(const CITV_ASCII* obj, const char* msg) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->decode(msg);
 		size_t len = str.length();
-		strncpy(buf, str.c_str(), len);
-		buf[len] = '\0';
-		return len;
+		char* res = (char*) malloc(len + 1);
+		strncpy(res, str.c_str(), len);
+		res[len] = '\0';
+		return res;
 	};
 
 	CITV_Words* itv_words_new() {
@@ -59,27 +62,28 @@ extern "C" {
 		return itv->write(file);
 	};
 
-	size_t itv_words_encode(const CITV_Words* obj, const char* msg, char* buf) {
+	const char* itv_words_encode(const CITV_Words* obj, const char* msg) {
 		ITV_Words *itv = (ITV_Words*) obj;
 		std::string str = itv->encode(msg);
 		size_t len = str.length();
-		strncpy(buf, str.c_str(), len);
-		buf[len] = '\0';
-		return len;
+		char* res = (char*) malloc(len + 1);
+		strncpy(res, str.c_str(), len);
+		res[len] = '\0';
+		return res;
 	};
 
-	size_t itv_words_decode(const CITV_Words* obj, const char* msg, char* buf) {
+	const char* itv_words_decode(const CITV_Words* obj, const char* msg) {
 		ITV_Words *itv = (ITV_Words*) obj;
 		std::string str = itv->decode(msg);
 		size_t len = str.length();
-		strncpy(buf, str.c_str(), len);
-		buf[len] = '\0';
-		return len;
+		char* res = (char*) malloc(len + 1);
+		strncpy(res, str.c_str(), len);
+		res[len] = '\0';
+		return res;
 	};
 
 	size_t itv_words_get_expected_length(const CITV_Words* obj, const char* msg, int decrypt) {
 		ITV_Words *itv = (ITV_Words*) obj;
 		return itv->get_expected_length(msg, decrypt);
 	};
-
 };

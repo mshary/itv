@@ -52,4 +52,69 @@ static inline bool is_symbol(char c) {
 	return ((c < 48 || c > 57) && (c < 65 || c > 90) && (c < 97 || c > 122));
 };
 
+static inline std::string compress(const std::string &str, bool gz, int level = Z_BEST_COMPRESSION) {
+	int ret;
+	z_stream *zstr;
+
+	zstr = (z_stream*) malloc(sizeof(*zstr));
+	memset(zstr, 0, sizeof(*zstr));
+
+	ret = (gz) ? deflateInit2(zstr, level, Z_DEFLATED, MAX_WBITS + 16, 9, Z_DEFAULT_STRATEGY) : deflateInit(zstr, level);
+
+	if (ret != Z_OK) {
+		return std::string();
+	};
+
+	zstr->next_in = (Bytef*)str.data();
+	zstr->avail_in = str.size();
+
+	char buf[32768];
+	std::string output;
+
+	do {
+		zstr->next_out = reinterpret_cast<Bytef*>(buf);
+		zstr->avail_out = sizeof(buf);
+		ret = deflate(zstr, Z_FINISH);
+		if (output.size() < zstr->total_out) {
+			output.append(buf, zstr->total_out - output.size());
+		};
+	} while (ret == Z_OK);
+
+	deflateEnd(zstr);
+	return (ret != Z_STREAM_END) ? std::string() : output;
+};
+
+static inline std::string decompress(const std::string &str, bool gz) {
+	int ret;
+	z_stream *zstr;
+
+	zstr = (z_stream*) malloc(sizeof(*zstr));
+	memset(zstr, 0, sizeof(*zstr));
+
+	ret = (gz) ? inflateInit2(zstr, MAX_WBITS + 16) : inflateInit(zstr);
+
+	if (ret != Z_OK) {
+		return std::string();
+	};
+
+	zstr->next_in = (Bytef*)str.data();
+	zstr->avail_in = str.size();
+
+	char buf[32768];
+	std::string output;
+
+	do {
+		zstr->next_out = reinterpret_cast<Bytef*>(buf);
+		zstr->avail_out = sizeof(buf);
+		//ret = inflate(zstr, Z_NO_FLUSH);
+		ret = inflate(zstr, 0);
+		if (output.size() < zstr->total_out) {
+			output.append(buf, zstr->total_out - output.size());
+		};
+	} while (ret == Z_OK);
+
+	inflateEnd(zstr);
+	return (ret != Z_STREAM_END) ? std::string() : output;
+};
+
 #endif
