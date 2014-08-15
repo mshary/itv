@@ -47,6 +47,11 @@ extern "C" {
 		return res;
 	};
 
+	size_t itv_ascii_get_random(const CITV_ASCII* obj, size_t min, size_t max) {
+		ITV_ASCII *itv = (ITV_ASCII*) obj;
+		return itv->get_random(min, max);
+	};
+
 	CITV_Words* itv_words_new() {
 		ITV_Words *itv = new ITV_Words();
 		return (CITV_Words*) itv;

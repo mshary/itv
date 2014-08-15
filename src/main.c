@@ -28,7 +28,7 @@ int main() {
 
 	itv = itv_ascii_init(key);
 	dec = (char*) itv_ascii_decode(itv, enc);
-	printf("DEC: %s\n", dec);
+	printf("DEC: %s\nRandom: %lu\n", dec, itv_ascii_get_random(itv, 1, 255));
 
 	free(itv);
 	itv = NULL;

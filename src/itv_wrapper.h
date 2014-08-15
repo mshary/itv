@@ -17,6 +17,7 @@ extern "C" {
 
 	const char* itv_ascii_encode(const CITV_ASCII*, const char*);
 	const char* itv_ascii_decode(const CITV_ASCII*, const char*);
+	size_t itv_ascii_get_random(const CITV_ASCII*, size_t, size_t);
 
 	CITV_Words* itv_words_new();
 	CITV_Words* itv_words_init(const char*, size_t);
