@@ -32,6 +32,7 @@
 #include <random>
 #include <list>
 
+#include <string.h>
 #include <zlib.h>
 
 #include "itv.h"
