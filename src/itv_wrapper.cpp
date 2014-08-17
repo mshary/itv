@@ -20,25 +20,28 @@ extern "C" {
 	const char* itv_ascii_dump(const CITV_ASCII* obj, char sep) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->dump(sep);
-		char* res = new char[str.size()];
-		strcpy(res, str.c_str());
-		return res;
+		size_t len = str.size() + 1;
+		char* res = new char[len];
+		memset(res, '\0', len);
+		return strcpy(res, str.c_str());
 	};
 
 	const char* itv_ascii_encode(const CITV_ASCII* obj, const char* msg) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->encode(msg);
-		char* res = new char[str.size()];
-		strcpy(res, str.c_str());
-		return res;
+		size_t len = str.size() + 1;
+		char* res = new char[len];
+		memset(res, '\0', len);
+		return strcpy(res, str.c_str());
 	};
 
 	const char* itv_ascii_decode(const CITV_ASCII* obj, const char* msg) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->decode(msg);
-		char* res = new char[str.size()];
-		strcpy(res, str.c_str());
-		return res;
+		size_t len = str.size() + 1;
+		char* res = new char[len];
+		memset(res, '\0', len);
+		return strcpy(res, str.c_str());
 	};
 
 	size_t itv_ascii_get_random(const CITV_ASCII* obj, size_t min, size_t max) {
@@ -64,17 +67,19 @@ extern "C" {
 	const char* itv_words_encode(const CITV_Words* obj, const char* msg) {
 		ITV_Words *itv = (ITV_Words*) obj;
 		std::string str = itv->encode(msg);
-		char* res = new char[str.size()];
-		strcpy(res, str.c_str());
-		return res;
+		size_t len = str.size() + 1;
+		char* res = new char[len];
+		memset(res, '\0', len);
+		return strcpy(res, str.c_str());
 	};
 
 	const char* itv_words_decode(const CITV_Words* obj, const char* msg) {
 		ITV_Words *itv = (ITV_Words*) obj;
 		std::string str = itv->decode(msg);
-		char* res = new char[str.size()];
-		strcpy(res, str.c_str());
-		return res;
+		size_t len = str.size() + 1;
+		char* res = new char[len];
+		memset(res, '\0', len);
+		return strcpy(res, str.c_str());
 	};
 
 	size_t itv_words_get_expected_length(const CITV_Words* obj, const char* msg, int decrypt) {
