@@ -44,7 +44,7 @@ ITV_ASCII::~ITV_ASCII() {
 
 size_t ITV_ASCII::load(std::string str) {
 	size_t len = str.length();
-	if (len < 3) { return 0; };
+	if ((len % 3) != 2) { return 0; };
 
 	for (size_t x=0; x<len; x++) {
 		size_t y = x++, z = x++;
@@ -122,7 +122,7 @@ const std::string ITV_ASCII::encode(const std::string &str) {
 	std::string enc = std::string();
 	std::string::const_iterator i;
 
-	for(i=str.begin(); i!=str.end(); i++) {
+	for(i=str.begin(); i!=str.end(); ++i) {
 		data = this->convert(std::string(1, *i), get_random_id());
 		if (data == NULL) {
 #if AUTO_LEARN > 0
@@ -143,7 +143,7 @@ const std::string ITV_ASCII::decode(const std::string &enc) {
 	std::string str = std::string();
 	std::string::const_iterator i;
 
-	for(i=enc.begin(); i!=enc.end(); i++) {
+	for(i=enc.begin(); i!=enc.end(); ++i) {
 		if (this->find_by_id(*i, 0) == NULL) {
 #if AUTO_LEARN > 0
 			this->add(ITV(*i, std::string(1, *i)));
