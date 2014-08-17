@@ -20,30 +20,24 @@ extern "C" {
 	const char* itv_ascii_dump(const CITV_ASCII* obj, char sep) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->dump(sep);
-		size_t len = str.length();
-		char* res = (char*) malloc(len + 1);
-		strncpy(res, str.c_str(), len);
-		res[len] = '\0';
+		char* res = new char[str.size()];
+		strcpy(res, str.c_str());
 		return res;
 	};
 
 	const char* itv_ascii_encode(const CITV_ASCII* obj, const char* msg) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->encode(msg);
-		size_t len = str.length();
-		char* res = (char*) malloc(len + 1);
-		strncpy(res, str.c_str(), len);
-		res[len] = '\0';
+		char* res = new char[str.size()];
+		strcpy(res, str.c_str());
 		return res;
 	};
 
 	const char* itv_ascii_decode(const CITV_ASCII* obj, const char* msg) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
 		std::string str = itv->decode(msg);
-		size_t len = str.length();
-		char* res = (char*) malloc(len + 1);
-		strncpy(res, str.c_str(), len);
-		res[len] = '\0';
+		char* res = new char[str.size()];
+		strcpy(res, str.c_str());
 		return res;
 	};
 
@@ -70,20 +64,16 @@ extern "C" {
 	const char* itv_words_encode(const CITV_Words* obj, const char* msg) {
 		ITV_Words *itv = (ITV_Words*) obj;
 		std::string str = itv->encode(msg);
-		size_t len = str.length();
-		char* res = (char*) malloc(len + 1);
-		strncpy(res, str.c_str(), len);
-		res[len] = '\0';
+		char* res = new char[str.size()];
+		strcpy(res, str.c_str());
 		return res;
 	};
 
 	const char* itv_words_decode(const CITV_Words* obj, const char* msg) {
 		ITV_Words *itv = (ITV_Words*) obj;
 		std::string str = itv->decode(msg);
-		size_t len = str.length();
-		char* res = (char*) malloc(len + 1);
-		strncpy(res, str.c_str(), len);
-		res[len] = '\0';
+		char* res = new char[str.size()];
+		strcpy(res, str.c_str());
 		return res;
 	};
 
