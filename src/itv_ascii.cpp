@@ -76,7 +76,7 @@ std::string ITV_ASCII::dump(char sep) {
 	this->table->sort(compare_tags);
 
 	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); ++i) {
+	for (i=this->table->begin(); i!=this->table->end(); i++) {
 		ss << std::string(1, (*i).get_id()) << (*i).get_value() << std::string(1, sep);
 	};
 
@@ -109,7 +109,7 @@ size_t ITV_ASCII::write(const std::string &file) {
 	this->table->sort(compare_tags);
 
 	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); ++i) {
+	for (i=this->table->begin(); i!=this->table->end(); i++) {
 		ofs << std::string(1, (*i).get_id()) << (*i).get_value() << endl;
 	};
 
@@ -122,7 +122,7 @@ const std::string ITV_ASCII::encode(const std::string &str) {
 	std::string enc = std::string();
 	std::string::const_iterator i;
 
-	for(i=str.begin(); i!=str.end(); ++i) {
+	for(i=str.begin(); i!=str.end(); i++) {
 		data = this->convert(std::string(1, *i), get_random_id());
 		if (data == NULL) {
 #if AUTO_LEARN > 0
@@ -143,7 +143,7 @@ const std::string ITV_ASCII::decode(const std::string &enc) {
 	std::string str = std::string();
 	std::string::const_iterator i;
 
-	for(i=enc.begin(); i!=enc.end(); ++i) {
+	for(i=enc.begin(); i!=enc.end(); i++) {
 		if (this->find_by_id(*i, 0) == NULL) {
 #if AUTO_LEARN > 0
 			this->add(ITV(*i, std::string(1, *i)));
@@ -171,7 +171,7 @@ const std::string ITV_ASCII::to_string() {
 	this->table->sort(compare_tags);
 
 	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); ++i) {
+	for (i=this->table->begin(); i!=this->table->end(); i++) {
 		str += (*i).to_string();
 	};
 	return str;

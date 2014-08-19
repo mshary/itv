@@ -22,8 +22,7 @@
 
 int use_char_itv(std::string data) {
 	ITV_ASCII *caller = new ITV_ASCII();
-	caller->load(48, 57);
-	caller->load(65, 90);
+	caller->load(43, 90);
 	caller->load(97, 122);
 
 	std::string str = ""; //"!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";

@@ -81,7 +81,7 @@ size_t ITV_Words::write(const std::string &file) {
 	this->table->sort(compare_ids);
 
 	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); ++i) {
+	for (i=this->table->begin(); i!=this->table->end(); i++) {
 		ofs << (*i).get_value() << endl;
 	};
 
@@ -97,7 +97,7 @@ const std::string ITV_Words::encode(const std::string &str) {
 	enc << std::hex << std::showbase << std::uppercase;
 
 	list<string>::iterator i;
-	for(i=words.begin(); i!=words.end(); ++i) {
+	for (i=words.begin(); i!=words.end(); i++) {
 		char first = 0, last = 0;
 		std::string word = *i;
 		size_t len = word.length();
@@ -140,7 +140,7 @@ const std::string ITV_Words::decode(const std::string &enc) {
 	std::string str = std::string();
 	list<string>::iterator i;
 
-	for(i=words.begin(); i!=words.end(); ++i) {
+	for(i=words.begin(); i!=words.end(); i++) {
 		char first = 0, last = 0;
 		std::string word = *i, next = *(++i);
 		size_t len = word.length();
@@ -185,7 +185,7 @@ const std::string ITV_Words::to_string() {
 	this->table->sort();
 
 	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); ++i) {
+	for (i=this->table->begin(); i!=this->table->end(); i++) {
 		str += (*i).to_string();
 	};
 	return str;

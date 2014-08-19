@@ -37,7 +37,7 @@ ITV_Table::~ITV_Table() {
 
 ostream &operator << (ostream &output, const ITV_Table &ptr) {
 	list<ITV>::iterator i;
-	for (i=ptr.table->begin(); i!=ptr.table->end(); ++i) {
+	for (i=ptr.table->begin(); i!=ptr.table->end(); i++) {
 			output << *i;
 	};
 	return output;
@@ -99,7 +99,7 @@ bool ITV_Table::remove(const ITV &element) {
 
 bool ITV_Table::exists(const ITV &element) {
 	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); ++i) {
+	for (i=this->table->begin(); i!=this->table->end(); i++) {
 		if (*i == element) {
 			return true;
 		};
@@ -112,13 +112,13 @@ ITV* ITV_Table::find_by_id(size_t id, bool reverse_direction) {
 
 	list<ITV>::iterator i;
 	if (reverse_direction) {
-		for (i=this->table->end(); i!=this->table->begin(); --i) {
+		for (i=this->table->end(); i!=this->table->begin(); i--) {
 			if ((*i).get_id() == id) {
 				return &(*i);
 			};
 		};
 	} else {
-		for (i=this->table->begin(); i!=this->table->end(); ++i) {
+		for (i=this->table->begin(); i!=this->table->end(); i++) {
 			if ((*i).get_id() == id) {
 				return &(*i);
 			};
@@ -132,13 +132,13 @@ ITV* ITV_Table::find_by_tag(size_t tag, bool reverse_direction) {
 
 	list<ITV>::iterator i;
 	if (reverse_direction) {
-		for (i=this->table->end(); i!=this->table->begin(); --i) {
+		for (i=this->table->end(); i!=this->table->begin(); i--) {
 			if ((*i).get_tag() == tag) {
 				return &(*i);
 			};
 		};
 	} else {
-		for (i=this->table->begin(); i!=this->table->end(); ++i) {
+		for (i=this->table->begin(); i!=this->table->end(); i++) {
 			if ((*i).get_tag() == tag) {
 				return &(*i);
 			};
@@ -152,13 +152,13 @@ ITV* ITV_Table::find_by_value(const std::string &value, bool reverse_direction) 
 
 	list<ITV>::iterator i;
 	if (reverse_direction) {
-		for (i=this->table->end(); i!=this->table->begin(); --i) {
+		for (i=this->table->end(); i!=this->table->begin(); i--) {
 			if (!value.compare((*i).get_value())) {
 				return &(*i);
 			};
 		};
 	} else {
-		for (i=this->table->begin(); i!=this->table->end(); ++i) {
+		for (i=this->table->begin(); i!=this->table->end(); i++) {
 			if (!value.compare((*i).get_value())) {
 				return &(*i);
 			};
@@ -195,14 +195,14 @@ const std::string ITV_Table::revert(size_t current, size_t next) {
 
 void ITV_Table::clear() {
 	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); ++i) {
+	for (i=this->table->begin(); i!=this->table->end(); i++) {
 		(*i).clear();
 	};
 };
 
 void ITV_Table::restore() {
 	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); ++i) {
+	for (i=this->table->begin(); i!=this->table->end(); i++) {
 		(*i).restore();
 	};
 };
