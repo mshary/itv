@@ -54,7 +54,7 @@ static inline bool is_symbol(char c) {
 	return ((c < 48 || c > 57) && (c < 65 || c > 90) && (c < 97 || c > 122));
 };
 
-static inline std::string& do_compress(std::string &str, bool gz, int level = Z_BEST_COMPRESSION) {
+static inline std::string do_compress(std::string &str, bool gz, int level = Z_BEST_COMPRESSION) {
 	int ret;
 	z_stream zstr;
 
@@ -81,10 +81,10 @@ static inline std::string& do_compress(std::string &str, bool gz, int level = Z_
 	} while (ret == Z_OK);
 
 	deflateEnd(&zstr);
-	return (ret != Z_STREAM_END) ? str : str = output;
+	return (ret != Z_STREAM_END) ? str : output;
 };
 
-static inline std::string& do_decompress(std::string &str, bool gz) {
+static inline std::string do_decompress(std::string &str, bool gz) {
 	int ret;
 	z_stream zstr;
 
@@ -111,7 +111,7 @@ static inline std::string& do_decompress(std::string &str, bool gz) {
 	} while (ret == Z_OK);
 
 	inflateEnd(&zstr);
-	return (ret != Z_STREAM_END) ? str : str = output;
+	return (ret != Z_STREAM_END) ? str : output;
 };
 
 #endif

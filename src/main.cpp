@@ -92,10 +92,8 @@ int main() {
 	use_char_itv(str);
 	use_word_itv(str);
 
-	std::string def = str;
-	do_compress(def, 1);
-	std::string inf = def;
-	do_decompress(inf, 1);
+	std::string def = do_compress(str, 1);
+	std::string inf = do_decompress(def, 1);
 	cout << "Compressed Text: " << def << endl;
 	cout << "Decompressed Text: " << inf << endl;
 	cout << endl;
