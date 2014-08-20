@@ -89,7 +89,7 @@ size_t ITV_Words::write(const std::string &file) {
 	return this->table->size();
 };
 
-const std::string ITV_Words::encode(const std::string &str) {
+const std::string& ITV_Words::encode(std::string &str) {
 	size_t *data;
 	list<string> words = this->get_words(str);
 
@@ -129,10 +129,10 @@ const std::string ITV_Words::encode(const std::string &str) {
 	};
 
 	std::string s = enc.str();
-	return s.substr(0, s.length() - 1);
+	return str = s.substr(0, s.length() - 1);
 };
 
-const std::string ITV_Words::decode(const std::string &enc) {
+const std::string& ITV_Words::decode(std::string &enc) {
 	size_t x, y;
 	std::string data;
 	list<string> words = this->get_words(enc);
@@ -177,7 +177,7 @@ const std::string ITV_Words::decode(const std::string &enc) {
 		str	+= " ";
 	};
 
-	return str.substr(0, str.length() - 1);
+	return enc = str.substr(0, str.length() - 1);
 };
 
 const std::string ITV_Words::to_string() {

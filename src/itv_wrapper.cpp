@@ -8,7 +8,8 @@ extern "C" {
 	};
 
 	CITV_ASCII* itv_ascii_init(const char* key) {
-		ITV_ASCII *itv = new ITV_ASCII(std::string(key));
+		std::string str = std::string(key);
+		ITV_ASCII *itv = new ITV_ASCII(str);
 		return (CITV_ASCII*) itv;
 	};
 
@@ -28,7 +29,8 @@ extern "C" {
 
 	const char* itv_ascii_encode(const CITV_ASCII* obj, const char* msg) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
-		std::string str = itv->encode(msg);
+		std::string str = std::string(msg);
+		itv->encode(str);
 		size_t len = str.size() + 1;
 		char* res = new char[len];
 		memset(res, '\0', len);
@@ -37,7 +39,8 @@ extern "C" {
 
 	const char* itv_ascii_decode(const CITV_ASCII* obj, const char* msg) {
 		ITV_ASCII *itv = (ITV_ASCII*) obj;
-		std::string str = itv->decode(msg);
+		std::string str = std::string(msg);
+		itv->decode(str);
 		size_t len = str.size() + 1;
 		char* res = new char[len];
 		memset(res, '\0', len);
@@ -66,7 +69,8 @@ extern "C" {
 
 	const char* itv_words_encode(const CITV_Words* obj, const char* msg) {
 		ITV_Words *itv = (ITV_Words*) obj;
-		std::string str = itv->encode(msg);
+		std::string str = std::string(msg);
+		itv->encode(str);
 		size_t len = str.size() + 1;
 		char* res = new char[len];
 		memset(res, '\0', len);
@@ -75,7 +79,8 @@ extern "C" {
 
 	const char* itv_words_decode(const CITV_Words* obj, const char* msg) {
 		ITV_Words *itv = (ITV_Words*) obj;
-		std::string str = itv->decode(msg);
+		std::string str = std::string(msg);
+		itv->decode(str);
 		size_t len = str.size() + 1;
 		char* res = new char[len];
 		memset(res, '\0', len);

@@ -25,16 +25,18 @@ int use_char_itv(std::string data) {
 	caller->load(43, 90);
 	caller->load(97, 122);
 
-	std::string str = ""; //"!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+	std::string str = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 	//cout << "Sender ITV Table before initialization: " << endl << caller->to_string() << endl;
-	std::string enc = caller->encode(str);
+	std::string enc = str;
+	caller->encode(enc);
 	//cout << "Sender ITV Table after initialization: " << endl << caller->to_string() << endl;
 
 	//caller->write("/tmp/callee.txt");
 
 	std::string key = caller->dump(':');
-	enc = caller->encode(data);
+	enc = data;
+	caller->encode(enc);
 
 	//ITV_ASCII *callee = new ITV_ASCII();
 	//callee->read("/tmp/callee.txt");
@@ -43,7 +45,8 @@ int use_char_itv(std::string data) {
 	ITV_ASCII *callee = new ITV_ASCII(key);
 
 	//cout << "Receiver ITV Table after initialization: " << endl << callee->to_string() << endl;
-	std::string dcr = callee->decode(enc);
+	std::string dcr = enc;
+	callee->decode(dcr);
 
 	cout << "Plaintext: " << data << endl;
 	cout << "Encrypted Text: " << enc << endl;
@@ -57,15 +60,18 @@ int use_word_itv(std::string data) {
 	ITV_Words *caller = new ITV_Words("./wordsEn.txt", 0);
 
 	std::string str = "a quick brown fox jumps over the lazy dog";
-	std::string enc = caller->encode(str);
+	std::string enc = str;
+	caller->encode(enc);
 
 	caller->write("/tmp/caller.txt");
 	//size_t enc_size = caller->get_expected_length(str, 0);
-	enc = caller->encode(data);
+	enc = data;
+	caller->encode(enc);
 
 	ITV_Words *callee = new ITV_Words("/tmp/caller.txt", 0);
 	//size_t dcr_size = callee->get_expected_length(enc, 1);
-	std::string dcr = callee->decode(enc);
+	std::string dcr = enc;
+	callee->decode(dcr);
 
 	cout << "Plaintext: " << data << endl;
 	cout << "Encrypted Text: " << enc << endl;

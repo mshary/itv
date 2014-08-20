@@ -37,8 +37,8 @@ class ITV_Words : public ITV_Table {
 		size_t read(const std::string&);
 		size_t write(const std::string&);
 
-		const std::string encode(const std::string&);
-		const std::string decode(const std::string&);
+		const std::string& encode(std::string&);
+		const std::string& decode(std::string&);
 		const std::string to_string();
 };
 

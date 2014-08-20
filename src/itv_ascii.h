@@ -28,11 +28,11 @@ using namespace std;
 class ITV_ASCII : public ITV_Table {
 	public:
 		ITV_ASCII();
-		ITV_ASCII(std::string);
+		ITV_ASCII(std::string&);
 		ITV_ASCII(size_t, size_t);
 		virtual ~ITV_ASCII();
 
-		size_t load(std::string);
+		size_t load(std::string&);
 		size_t load(size_t, size_t);
 
 		std::string dump(char);
@@ -40,8 +40,8 @@ class ITV_ASCII : public ITV_Table {
 		size_t read(const std::string&);
 		size_t write(const std::string&);
 
-		const std::string encode(const std::string&);
-		const std::string decode(const std::string&);
+		const std::string& encode(std::string&);
+		const std::string& decode(std::string&);
 		const std::string to_string();
 };
 

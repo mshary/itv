@@ -25,7 +25,7 @@ ITV_ASCII::ITV_ASCII() {
 	table = new list<ITV>();
 };
 
-ITV_ASCII::ITV_ASCII(std::string str) {
+ITV_ASCII::ITV_ASCII(std::string &str) {
 	min_id = 0;
 	table = new list<ITV>();
 	this->load(str);
@@ -42,7 +42,7 @@ ITV_ASCII::~ITV_ASCII() {
 	if (this->table) { delete this->table; }
 };
 
-size_t ITV_ASCII::load(std::string str) {
+size_t ITV_ASCII::load(std::string &str) {
 	size_t len = str.length();
 	if ((len % 3) != 2) { return 0; };
 
@@ -67,7 +67,12 @@ size_t ITV_ASCII::load(size_t min, size_t max) {
 		this->add(ITV(min + (max - x), std::string(1, x)));
 	};
 
-	min_id = min;
+	if (this->table->size() > 0) {
+		this->table->sort();
+		this->table->unique();
+		min_id = this->table->front().get_id();
+	};
+
 	return max - min;
 };
 
@@ -117,7 +122,7 @@ size_t ITV_ASCII::write(const std::string &file) {
 	return this->table->size();
 };
 
-const std::string ITV_ASCII::encode(const std::string &str) {
+const std::string& ITV_ASCII::encode(std::string &str) {
 	size_t *data;
 	std::string enc = std::string();
 	std::string::const_iterator i;
@@ -134,10 +139,10 @@ const std::string ITV_ASCII::encode(const std::string &str) {
 		};
 	};
 
-	return enc;
+	return str = enc;
 };
 
-const std::string ITV_ASCII::decode(const std::string &enc) {
+const std::string& ITV_ASCII::decode(std::string &enc) {
 	size_t x, y;
 	std::string data;
 	std::string str = std::string();
@@ -163,7 +168,7 @@ const std::string ITV_ASCII::decode(const std::string &enc) {
 		str += data;
 	};
 
-	return str;
+	return enc = str;
 };
 
 const std::string ITV_ASCII::to_string() {
