@@ -26,6 +26,9 @@ extern "C" {
 	const char* itv_words_decode(const CITV_Words*, const char*);
 	size_t itv_words_get_expected_length(const CITV_Words*, const char*, int);
 
+	void do_deflate(const char* in, char* out, size_t *out_len);
+	void do_inflate(const char* in, char* out, size_t *out_len);
+
 #ifdef __cplusplus
 }
 #endif

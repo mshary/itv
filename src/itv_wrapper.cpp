@@ -95,6 +95,38 @@ extern "C" {
 		return itv->get_expected_length(msg, decrypt);
 	};
 
+	void do_deflate(const char* in, char* out, size_t *out_len) {
+		z_stream defstream;
+		defstream.zalloc = Z_NULL;
+		defstream.zfree = Z_NULL;
+		defstream.opaque = Z_NULL;
+		defstream.avail_in = (uInt)strlen(in)+1;
+		defstream.next_in = (Bytef *)in;
+		defstream.avail_out = (uInt)*out_len;
+		defstream.next_out = (Bytef *)out;
+
+		deflateInit(&defstream, Z_BEST_COMPRESSION);
+		deflate(&defstream, Z_FINISH);
+		deflateEnd(&defstream);
+		*out_len = defstream.total_out;
+	};
+
+	void do_inflate(const char* in, char* out, size_t *out_len) {
+		z_stream infstream;
+		infstream.zalloc = Z_NULL;
+		infstream.zfree = Z_NULL;
+		infstream.opaque = Z_NULL;
+		infstream.avail_in = (uInt)strlen(in)+1;
+		infstream.next_in = (Bytef *)in;
+		infstream.avail_out = (uInt)*out_len;
+		infstream.next_out = (Bytef *)out;
+
+		inflateInit(&infstream);
+		inflate(&infstream, Z_NO_FLUSH);
+		inflateEnd(&infstream);
+		*out_len = infstream.total_out;
+	};
+
 #ifdef __cplusplus
 };
 #endif

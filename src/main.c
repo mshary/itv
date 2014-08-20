@@ -9,6 +9,8 @@ int main() {
 	char *data = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 	char *msg = "a quick brown fox jumps over the lazy dog.";
 	char *buf = NULL, *key = NULL, *enc = NULL, *dec = NULL;
+	char inf[1024], def[1024];
+	size_t len = 1024;
 
 	CITV_ASCII *itv = itv_ascii_new();
 	CITV_Words *words = itv_words_init("./wordsEn.txt", 0);
@@ -50,6 +52,12 @@ int main() {
 	words = NULL;
 
 	printf("\n");
+
+	do_deflate(msg, def, &len);
+	printf("MSG: %s\nDeflate: %.*s\n", msg, (int)len, def);
+	len = 1024;
+	do_inflate(def, inf, &len);
+	printf("Inflate: %.*s\n", (int)len, inf);
 
 	free(key);
 	free(enc);
