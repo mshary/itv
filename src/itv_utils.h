@@ -104,7 +104,7 @@ static inline std::string& do_decompress(std::string &str, bool gz) {
 	do {
 		zstr.next_out = reinterpret_cast<Bytef*>(buf);
 		zstr.avail_out = sizeof(buf);
-		ret = inflate(&zstr, Z_NO_FLUSH);
+		ret = inflate(&zstr, 0);
 		if (output.size() < zstr.total_out) {
 			output.append(buf, zstr.total_out - output.size());
 		};

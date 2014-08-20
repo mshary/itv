@@ -1,7 +1,10 @@
 #include "itv_config.h"
 #include "itv_wrapper.h"
 
+#ifdef __cplusplus
 extern "C" {
+#endif
+
 	CITV_ASCII* itv_ascii_new() {
 		ITV_ASCII *itv = new ITV_ASCII();
 		return (CITV_ASCII*) itv;
@@ -91,4 +94,7 @@ extern "C" {
 		ITV_Words *itv = (ITV_Words*) obj;
 		return itv->get_expected_length(msg, decrypt);
 	};
+
+#ifdef __cplusplus
 };
+#endif
