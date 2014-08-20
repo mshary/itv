@@ -18,43 +18,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef ITV_UTILS_H
-#define ITV_UTILS_H
 
-#include "itv_config.h"
+#include "itv_utils.h"
 
 using namespace::std;
 
 // trim string from start
-static inline std::string &ltrim(std::string &s) {
+std::string &ltrim(std::string &s) {
 	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
 	return s;
 };
 
 // trim string from end
-static inline std::string &rtrim(std::string &s) {
+std::string &rtrim(std::string &s) {
 	s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
 	return s;
 };
 
 // trim string from both ends
-static inline std::string &trim(std::string &s) {
+std::string &trim(std::string &s) {
 	return ltrim(rtrim(s));
 };
 
-static inline bool compare_ids(ITV &first, ITV &second) {
+bool compare_ids(ITV &first, ITV &second) {
 	return (first.get_id() <  second.get_id());
 };
 
-static inline bool compare_tags(ITV &first, ITV &second) {
+bool compare_tags(ITV &first, ITV &second) {
 	return (first.get_tag() <  second.get_tag());
 };
 
-static inline bool is_symbol(char c) {
+bool is_symbol(char c) {
 	return ((c < 48 || c > 57) && (c < 65 || c > 90) && (c < 97 || c > 122));
 };
 
-static inline std::string do_compress(std::string &str, bool gz, int level = Z_BEST_COMPRESSION) {
+std::string do_compress(std::string &str, bool gz, int level) {
 	int ret;
 	z_stream zstr;
 
@@ -84,7 +82,7 @@ static inline std::string do_compress(std::string &str, bool gz, int level = Z_B
 	return (ret != Z_STREAM_END) ? str : output;
 };
 
-static inline std::string do_decompress(std::string &str, bool gz) {
+std::string do_decompress(std::string &str, bool gz) {
 	int ret;
 	z_stream zstr;
 
@@ -114,4 +112,3 @@ static inline std::string do_decompress(std::string &str, bool gz) {
 	return (ret != Z_STREAM_END) ? str : output;
 };
 
-#endif
