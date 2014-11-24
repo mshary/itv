@@ -7,4 +7,4 @@
 
 from distutils.core import setup, Extension
 setup(name='itv', version='1.0',  \
-      ext_modules=[Extension(name = 'itv', sources = ['../src/itv.cpp', '../src/itv_ascii.cpp', '../src/itv_table.cpp', '../src/itv_utils.cpp', 'PyITV.cpp'], include_dirs = ['../src'], extra_compile_args = ['-std=c++11', '-fPIC'], extra_link_args = ['-lstdc++', '-lz', '-std=c++11'])])
+      ext_modules=[Extension(name = 'itv', sources = ['../src/itv.cpp', '../src/itv_ascii.cpp', '../src/itv_table.cpp', '../src/itv_utils.cpp', 'PyITV.cpp'], include_dirs = ['../src'], extra_compile_args = ['-std=c++11', '-fPIC'], extra_link_args = ['-lstdc++', '-lz'])])
