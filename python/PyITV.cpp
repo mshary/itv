@@ -26,7 +26,7 @@ PyObject* ascii_encode(PyObject *self, PyObject *args) {
 	const char *input, *key, sep = ':';
 	unsigned char auto_learn = 0;
 
-	if (!PyArg_ParseTuple(args, "scsb", &key, &sep, &input, &auto_learn)) {
+	if (!PyArg_ParseTuple(args, "zcsb", &key, &sep, &input, &auto_learn)) {
 		return NULL;
 	};
 
@@ -34,7 +34,7 @@ PyObject* ascii_encode(PyObject *self, PyObject *args) {
 	std::string in = std::string(input);
 	ITV_ASCII *itv;
 
-	if (key == NULL || strlen(key) <= 1) {
+	if (key == NULL) {
 		itv = new ITV_ASCII(32, 126);
 		orig_key = itv->dump(sep);
 	} else {
@@ -52,7 +52,7 @@ PyObject* ascii_decode(PyObject *self, PyObject *args) {
 	const char *input, *key, sep = ':';
 	unsigned char auto_learn = 0;
 
-	if (!PyArg_ParseTuple(args, "scsb", &key, &sep, &input, &auto_learn)) {
+	if (!PyArg_ParseTuple(args, "zcsb", &key, &sep, &input, &auto_learn)) {
 		return NULL;
 	};
 
@@ -60,7 +60,7 @@ PyObject* ascii_decode(PyObject *self, PyObject *args) {
 	std::string in = std::string(input);
 	ITV_ASCII *itv;
 
-	if (key == NULL || strlen(key) <= 1) {
+	if (key == NULL) {
 		itv = new ITV_ASCII(32, 126);
 		orig_key = itv->dump(sep);
 	} else {
