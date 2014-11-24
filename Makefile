@@ -10,6 +10,12 @@ all:
 	cd tests; make all
 	cp -a src/libitv.so .
 
+install:
+	cd src; make install
+
+uninstall:
+	cd src; make uninstall
+
 clean:
 	cd src; make clean
 	cd tests; make clean

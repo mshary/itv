@@ -11,6 +11,10 @@ LDFLAGS=-g -Wall -lstdc++ -lz -shared
 OBJS=itv.o itv_ascii.o itv_table.o itv_words.o itv_wrapper.o itv_utils.o
 PROG=libitv.so
 
+PREFIX=/usr
+INCDIR=$(PREFIX)/include/itv
+LIBDIR=$(PREFIX)/lib
+
 all: $(PROG)
 default: all
 
@@ -26,6 +30,17 @@ wrapper:
 
 $(PROG): $(OBJS)
 	$(CC) $(OBJS) $(LDFLAGS) -o $@
+
+install: $(PROG)
+	mkdir -p $(INCDIR)
+	mkdir -p $(LIBDIR)
+	install -m 0644 *.h $(INCDIR)
+	install -m 0755 $(PROG) $(LIBDIR)
+	ldconfig
+
+uninstall:
+	rm -fr $(INCDIR)
+	rm -fr $(LIBDIR)/$(PROG)
 
 clean:
 	rm -f $(OBJS)
