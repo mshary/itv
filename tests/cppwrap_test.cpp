@@ -38,7 +38,7 @@ int use_char_itv(std::string data) {
 
 	std::string key = caller->dump(':');
 	enc = data;
-	caller->encode(enc);
+	caller->encode(enc, 1);
 
 	//ITV_ASCII *callee = new ITV_ASCII();
 	//callee->read("/tmp/callee.txt");
@@ -48,7 +48,7 @@ int use_char_itv(std::string data) {
 
 	//cout << "Receiver ITV Table after initialization: " << endl << callee->to_string() << endl;
 	std::string dcr = enc;
-	callee->decode(dcr);
+	callee->decode(dcr, 1);
 
 	cout << "Plaintext: " << data << endl;
 	cout << "Encrypted Text: " << enc << endl;
@@ -89,9 +89,10 @@ int use_word_itv(std::string data) {
 
 
 int main() {
-	std::string str = "a quick brown fox jumps over the lazy dog.";
-
+	std::string str = "ﻒﺘﺤﺗ ﻢﻛﺎﺘﺑ ﺍﻼﻘﺗﺭﺎﻋ ﻒﻳ ﺕﻮﻨﺳ ﺎﻠﻳﻮﻣ ﺍﻸﺣﺩ ﺄﻣﺎﻣ ﺎﻠﻧﺎﺨﺒﻴﻧ ﻒﻳ ﺃﻮﻟ ﺎﻨﺘﺧﺎﺑﺎﺗ ﺮﺋﺎﺴﻳﺓ ﺖﻋﺩﺪﻳﺓ ﻢﻧﺫ ﺙﻭﺭﺓ 2011";
 	use_char_itv(str);
+
+	str = "a quick brown fox jumps over the lazy dog.";
 	use_word_itv(str);
 
 	std::string def = do_compress(str, 1);
