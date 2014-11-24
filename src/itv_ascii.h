@@ -42,6 +42,9 @@ class ITV_ASCII : public ITV_Table {
 
 		const std::string& encode(std::string&);
 		const std::string& decode(std::string&);
+
+		const std::string& encode(std::string&, bool);
+		const std::string& decode(std::string&, bool);
 		const std::string to_string();
 };
 

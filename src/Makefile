@@ -6,18 +6,17 @@
 #
 CFLAGS=-Wall -Werror -g -ansi -pedantic -std=c89
 CCFLAGS=-Wall -Werror -g -std=c++11
-LDFLAGS=-g -Wall -lstdc++ -lz
+LDFLAGS=-g -Wall -lstdc++ -lz -shared
 
-OBJS=itv.o itv_ascii.o itv_table.o itv_words.o itv_wrapper.o main.o itv_utils.o
-PROG=itv
+OBJS=itv.o itv_ascii.o itv_table.o itv_words.o itv_wrapper.o itv_utils.o
+PROG=libitv.so
 
 all: $(PROG)
 default: all
 
 wrapper:
 	$(CC) $(CCFLAGS) -c itv.cpp itv_ascii.cpp itv_table.cpp itv_words.cpp itv_wrapper.cpp itv_utils.cpp
-	$(CC) $(CFLAGS) -c main.c
-	$(CC) $(OBJS) $(LDFLAGS) -o itv
+	$(CC) $(OBJS) $(LDFLAGS) -o $(PROG)
 
 %.o: %.cpp
 	$(CC) $(CCFLAGS) -c $<

@@ -19,6 +19,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #include "itv_config.h"
+#include "itv_words.h"
 
 ITV_Words::ITV_Words() {
 	min_id = 0;

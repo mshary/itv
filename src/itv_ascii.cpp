@@ -19,6 +19,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #include "itv_config.h"
+#include "itv_ascii.h"
 
 ITV_ASCII::ITV_ASCII() {
 	min_id = 0;
@@ -123,6 +124,10 @@ size_t ITV_ASCII::write(const std::string &file) {
 };
 
 const std::string& ITV_ASCII::encode(std::string &str) {
+	return this->encode(str, false);
+};
+
+const std::string& ITV_ASCII::encode(std::string &str, bool auto_learn) {
 	size_t *data;
 	std::string enc = std::string();
 	std::string::const_iterator i;
@@ -130,9 +135,7 @@ const std::string& ITV_ASCII::encode(std::string &str) {
 	for(i=str.begin(); i!=str.end(); i++) {
 		data = this->convert(std::string(1, *i), get_random_id());
 		if (data == NULL) {
-#if AUTO_LEARN > 0
-			this->add(ITV(*i, std::string(1, *i)));
-#endif
+			if (auto_learn) { this->add(ITV(*i, std::string(1, *i))); };
 			enc += *i;
 		} else {
 			enc += std::string(1, data[0]) + std::string(1, data[1]);
@@ -143,6 +146,10 @@ const std::string& ITV_ASCII::encode(std::string &str) {
 };
 
 const std::string& ITV_ASCII::decode(std::string &enc) {
+	return this->decode(enc, false);
+};
+
+const std::string& ITV_ASCII::decode(std::string &enc, bool auto_learn) {
 	size_t x, y;
 	std::string data;
 	std::string str = std::string();
@@ -150,9 +157,7 @@ const std::string& ITV_ASCII::decode(std::string &enc) {
 
 	for(i=enc.begin(); i!=enc.end(); i++) {
 		if (this->find_by_id(*i, 0) == NULL) {
-#if AUTO_LEARN > 0
-			this->add(ITV(*i, std::string(1, *i)));
-#endif
+			if (auto_learn) { this->add(ITV(*i, std::string(1, *i))); };
 			str += *i;
 			continue;
 		};

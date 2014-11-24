@@ -32,18 +32,13 @@
 #include <random>
 #include <list>
 
-#include <string.h>
 #include <zlib.h>
 
 #include "itv.h"
 #include "itv_table.h"
-#include "itv_ascii.h"
-#include "itv_words.h"
 #include "itv_utils.h"
 
 #define ITV_SEPARATOR	"\t"
 #define ITV_TERMINATOR	"\n"
-
-#define AUTO_LEARN		1
 
 #endif
