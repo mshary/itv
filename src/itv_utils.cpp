@@ -64,7 +64,7 @@ std::string do_compress(std::string &str, bool gz, int level) {
 	};
 
 	zstr.next_in = (Bytef*)str.data();
-	zstr.avail_in = str.size();
+	zstr.avail_in = (unsigned int)str.size();
 
 	char buf[32768];
 	std::string output;
@@ -94,7 +94,7 @@ std::string do_decompress(std::string &str, bool gz) {
 	};
 
 	zstr.next_in = (Bytef*)str.data();
-	zstr.avail_in = str.size();
+	zstr.avail_in = (unsigned int)str.size();
 
 	char buf[32768];
 	std::string output;
