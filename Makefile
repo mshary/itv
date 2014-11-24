@@ -8,7 +8,7 @@
 all:
 	cd src; make all
 	cd tests; make all
-	ln -s src/libitv.so
+	cp -a src/libitv.so .
 
 clean:
 	cd src; make clean

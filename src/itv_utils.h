@@ -21,6 +21,7 @@
 #ifndef ITV_UTILS_H
 #define ITV_UTILS_H
 
+#include <string.h>
 #include "itv_config.h"
 
 using namespace::std;

@@ -15,7 +15,7 @@ all:
 	$(CC) cppwrap_test.o $(LDFLAGS) -o cppwrap_test
 	$(CC) $(CFLAGS) -c cwrap_test.c
 	$(CC) cwrap_test.o $(LDFLAGS) -o cwrap_test
-	ln -s ../src/libitv.so
+	cp -a ../src/libitv.so .
 
 clean:
 	cd ../src; make clean
