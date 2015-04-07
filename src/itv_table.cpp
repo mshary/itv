@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
+ * Copyright (c) 2013-2015, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
  *
  * All rights reserved.
  *
@@ -18,15 +18,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#include "itv_config.h"
+#include <algorithm>
+
+#include "itv_table.h"
+#include "itv_utils.h"
 
 ITV_Table::ITV_Table() {
-	min_id = 0;
-	table = new list<ITV>();
+	this->table = new std::list<ITV>();
 };
 
-ITV_Table::ITV_Table(list<ITV> &table) {
-	min_id = 0;
+ITV_Table::ITV_Table(std::list<ITV> &table) {
 	this->table = &table;
 };
 
@@ -35,142 +36,100 @@ ITV_Table::~ITV_Table() {
 	if (this->table) { delete this->table; }
 };
 
-ostream &operator << (ostream &output, const ITV_Table &ptr) {
-	list<ITV>::iterator i;
-	for (i=ptr.table->begin(); i!=ptr.table->end(); i++) {
-			output << *i;
-	};
-	return output;
-};
-
 ITV_Table& ITV_Table::operator=(const ITV_Table &rhs) {
-	table = rhs.table;
+	this->table = rhs.table;
 	return *this;
 };
 
 bool ITV_Table::operator==(const ITV_Table &rhs) const {
-	return (table == rhs.table);
+	return (this->table == rhs.table);
 };
 
 bool ITV_Table::operator!=(const ITV_Table &rhs) const {
-	return !(table == rhs.table);
+	return (this->table != rhs.table);
 };
 
 bool ITV_Table::operator<=(const ITV_Table &rhs) const {
-	return ((table < rhs.table) || (table == rhs.table));
+	return (this->table <= rhs.table);
 };
 
 bool ITV_Table::operator>=(const ITV_Table &rhs) const {
-	return ((rhs.table < table) || (table == rhs.table));
+	return (this->table >= rhs.table);
 };
 
 bool ITV_Table::operator<(const ITV_Table &rhs) const {
-	return (table < rhs.table);
+	return (this->table < rhs.table);
 };
 
 bool ITV_Table::operator>(const ITV_Table &rhs) const {
-	return (rhs.table < table);
+	return (this->table > rhs.table);
 };
 
-const list<ITV>* ITV_Table::get_table() {
+const std::list<ITV>* ITV_Table::get_table() {
 	return this->table;
 };
 
-void ITV_Table::set_table(const list<ITV> &table) {
-	if (this->table) { delete this->table; };
-	this->table = (list<ITV>*)&table;
+void ITV_Table::set_table(const std::list<ITV> &table) {
+	this->table = (std::list<ITV>*)&table;
 };
 
 bool ITV_Table::add(const ITV &element) {
-	if (&element) {
+	if (&element && !this->exists(element)) {
 		this->table->push_back(element);
 		return true;
 	};
 	return false;
 };
 
-bool ITV_Table::remove(const ITV &element) {
-	if (this->exists(element)) {
+void ITV_Table::remove(const ITV &element) {
+	if (&element) {
 		this->table->remove(element);
-		return true;
 	};
-	return false;
 };
 
 bool ITV_Table::exists(const ITV &element) {
-	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); i++) {
-		if (*i == element) {
-			return true;
-		};
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
+		if ((*i) == element) { return true; };
 	};
 	return false;
 };
 
-ITV* ITV_Table::find_by_id(size_t id, bool reverse_direction) {
-	if(this->table->empty()) { return NULL; };
-
-	list<ITV>::iterator i;
-	if (reverse_direction) {
-		for (i=this->table->end(); i!=this->table->begin(); i--) {
-			if ((*i).get_id() == id) {
-				return &(*i);
-			};
-		};
-	} else {
-		for (i=this->table->begin(); i!=this->table->end(); i++) {
-			if ((*i).get_id() == id) {
-				return &(*i);
-			};
+ITV* ITV_Table::find_by_id(size_t id) {
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
+		if ((*i).get_id() == id) {
+			return &(*i);
 		};
 	};
 	return NULL;
 };
 
-ITV* ITV_Table::find_by_tag(size_t tag, bool reverse_direction) {
-	if(this->table->empty()) { return NULL; };
-
-	list<ITV>::iterator i;
-	if (reverse_direction) {
-		for (i=this->table->end(); i!=this->table->begin(); i--) {
-			if ((*i).get_tag() == tag) {
-				return &(*i);
-			};
-		};
-	} else {
-		for (i=this->table->begin(); i!=this->table->end(); i++) {
-			if ((*i).get_tag() == tag) {
-				return &(*i);
-			};
+ITV* ITV_Table::find_by_tag(size_t tag) {
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
+		if ((*i).get_tag() == tag) {
+			return &(*i);
 		};
 	};
 	return NULL;
 };
 
-ITV* ITV_Table::find_by_value(const std::string &value, bool reverse_direction) {
-	if(this->table->empty()) { return NULL; };
-
-	list<ITV>::iterator i;
-	if (reverse_direction) {
-		for (i=this->table->end(); i!=this->table->begin(); i--) {
-			if (!value.compare((*i).get_value())) {
-				return &(*i);
-			};
-		};
-	} else {
-		for (i=this->table->begin(); i!=this->table->end(); i++) {
-			if (!value.compare((*i).get_value())) {
-				return &(*i);
-			};
+ITV* ITV_Table::find_by_value(size_t value) {
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
+		if ((*i).get_value() == value) {
+			return &(*i);
 		};
 	};
 	return NULL;
 }
 
-size_t* ITV_Table::convert(const std::string &value, size_t next) {
+size_t* ITV_Table::convert(size_t value, size_t next) {
 	size_t *retval = new size_t[2];
-	ITV *itv_current = this->find_by_value(value, 0);
-	ITV *itv_next = this->find_by_id(next, 0);
+	ITV *itv_current = NULL, *itv_next = NULL;
+
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
+		if ((*i).get_value() == value) { itv_current = &(*i); };
+		if ((*i).get_id() == next) { itv_next = &(*i); };
+		if (itv_current != NULL && itv_next != NULL) { break; };
+	};
 
 	if (itv_current == NULL || itv_next == NULL) { return NULL; }
 	itv_next->replace(itv_current->get_id());
@@ -178,47 +137,88 @@ size_t* ITV_Table::convert(const std::string &value, size_t next) {
 
 	retval[0] = itv_current->get_tag();
 	retval[1] = itv_next->get_tag();
-
 	return retval;
 };
 
-const std::string ITV_Table::revert(size_t current, size_t next) {
-	ITV *itv_current = this->find_by_id(current, 0);
-	ITV *itv_next = this->find_by_id(next, 0);
+size_t* ITV_Table::revert(size_t current, size_t next) {
+	ITV *itv_current = NULL, *itv_next = NULL;
+	size_t *retval = new size_t[1];
 
-	if (itv_current == NULL || itv_next == NULL) { return ""; }
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
+		if ((*i).get_id() == current) { itv_current = &(*i); };
+		if ((*i).get_id() == next) { itv_next = &(*i); };
+		if (itv_current != NULL && itv_next != NULL) { break; };
+	};
+
+	if (itv_current == NULL || itv_next == NULL) { return NULL; }
 	itv_current->replace(next);
 	itv_next->replace(current);
 
-	return itv_current->get_value();
+	retval[0] = itv_current->get_value();
+	return retval;
 }
 
 void ITV_Table::clear() {
-	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); i++) {
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
 		(*i).clear();
 	};
 };
 
 void ITV_Table::restore() {
-	list<ITV>::iterator i;
-	for (i=this->table->begin(); i!=this->table->end(); i++) {
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
 		(*i).restore();
 	};
+};
+
+void ITV_Table::shuffle() {
+	std::list<size_t>* msg = new std::list<size_t>();
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
+		msg->push_back((*i).get_value());
+	};
+	this->encode(*msg);
 };
 
 size_t ITV_Table::get_random_id() {
 	if (this->table->empty()) { return 0; };
 
 	size_t id = get_random(0, this->table->size() - 1);
-	list<ITV>::iterator i = this->table->begin();
+	auto i = this->table->begin();
 	std::advance(i, id);
 	return (*i).get_id();
 };
 
-size_t ITV_Table::get_random(size_t min, size_t max) {
-	std::random_device generator;
-	std::uniform_int_distribution<size_t> distribution(min, max);
-	return distribution(generator);
+std::list<size_t>* ITV_Table::encode(std::list<size_t>& msg) {
+	std::list<size_t> *ret = new std::list<size_t>();
+	size_t *data;
+
+	for (auto i=msg.begin(); i!= msg.end(); i++) {
+		data = this->convert(*i, get_random_id());
+		if (data == NULL) {
+			ret->push_back(*i);
+		} else {
+			ret->push_back(data[0]);
+			ret->push_back(data[1]);
+		};
+	};
+
+	return ret;
 };
+
+std::list<size_t>* ITV_Table::decode(std::list<size_t>& msg) {
+	std::list<size_t> *ret = new std::list<size_t>();
+	size_t x, y, *z;
+
+	for (auto i=msg.begin(); i!= msg.end(); i++) {
+		x = *i++; y = *i;
+		z = this->revert(x, y);
+		if (z == NULL) {
+			ret->push_back(*(--i));
+			continue;
+		};
+		ret->push_back(z[0]);
+	};
+
+	return ret;
+};
+
 

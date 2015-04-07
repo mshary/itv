@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
+ * Copyright (c) 2013-2015, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
  *
  * All rights reserved.
  *
@@ -18,12 +18,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#include "itv_config.h"
+#include "itv.h"
 
 ITV::ITV() {
 	id = 0;
 	tag = 0;
-	value = "";
+	value = 0;
 };
 
 ITV::ITV(const ITV &src) {
@@ -32,64 +32,59 @@ ITV::ITV(const ITV &src) {
 	value = src.value;
 };
 
-ITV::ITV(size_t id, const std::string &value) {
+ITV::ITV(size_t id, size_t value) {
 	this->id = id;
 	this->tag = id;
 	this->value = value;
 };
 
-ITV::ITV(size_t id, size_t tag, const std::string &value) {
+ITV::ITV(size_t id, size_t tag, size_t value) {
 	this->id = id;
 	this->tag = tag;
 	this->value = value;
 };
 
 ITV::~ITV() {
-	// nothing todo
-};
-
-ostream &operator << (ostream &output, const ITV &itv) {
-	output << itv.id << ITV_SEPARATOR << itv.tag << ITV_SEPARATOR << itv.value << ITV_TERMINATOR;
-	return output;
-};
-
-istream &operator >> (istream &input, ITV &itv) {
-	size_t id, tag;
-	std::string value;
-	input >> id >> tag >> value;
-	itv = ITV(id, tag, value);
-	return input;
+	// nothing todo here
 };
 
 ITV& ITV::operator=(const ITV &rhs) {
 	this->id = rhs.id;
 	this->tag = rhs.tag;
-	this->value = rhs.tag;
+	this->value = rhs.value;
 	return *this;
 };
 
 bool ITV::operator==(const ITV &rhs) const {
-	return (!this->value.compare(rhs.value));
+	return (this->value == rhs.value);
 };
 
 bool ITV::operator!=(const ITV &rhs) const {
-	return (this->value.compare(rhs.value));
+	return (this->value != rhs.value);
 };
 
 bool ITV::operator<=(const ITV &rhs) const {
-	return (this->value.compare(rhs.value) <= 0);
+	return (this->value <= rhs.value);
 };
 
 bool ITV::operator>=(const ITV &rhs) const {
-	return (this->value.compare(rhs.value) >= 0);
+	return (this->value >= rhs.value);
 };
 
 bool ITV::operator<(const ITV &rhs) const {
-	return (this->value.compare(rhs.value) < 0);
+	return (this->value < rhs.value);
 };
 
 bool ITV::operator>(const ITV &rhs) const {
-	return (this->value.compare(rhs.value) > 0);
+	return (this->value > rhs.value);
+};
+
+void ITV::clear() {
+	this->tag = this->id;
+};
+
+void ITV::restore() {
+	this->id = this->tag;
 };
 
 size_t ITV::replace(size_t id) {
@@ -115,25 +110,19 @@ void ITV::set_tag(size_t tag) {
 	this->tag = tag;
 };
 
-const std::string ITV::get_value() {
+size_t ITV::get_value() {
 	return this->value;
 };
 
-void ITV::set_value(const std::string &value) {
+void ITV::set_value(size_t value) {
 	this->value = value;
 };
 
-void ITV::clear() {
-	this->tag = this->id;
+bool compare_ids(ITV &first, ITV &second) {
+	return (first.get_id() <  second.get_id());
 };
 
-void ITV::restore() {
-	this->id = this->tag;
-};
-
-const std::string ITV::to_string() {
-	std::stringstream ss;
-	ss << this->id << ITV_SEPARATOR << this->value << ITV_TERMINATOR;
-	return ss.str();
+bool compare_tags(ITV &first, ITV &second) {
+	return (first.get_tag() <  second.get_tag());
 };
 

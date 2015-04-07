@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
+ * Copyright (c) 2013-2015, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
  *
  * All rights reserved.
  *
@@ -18,8 +18,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+#include <random>
+#include <algorithm> 
 
 #include "itv_utils.h"
+
+#define IS_IN_RANGE(c, f, l)    (((c) >= (f)) && ((c) <= (l)))
 
 using namespace::std;
 
@@ -40,75 +44,139 @@ std::string &trim(std::string &s) {
 	return ltrim(rtrim(s));
 };
 
-bool compare_ids(ITV &first, ITV &second) {
-	return (first.get_id() <  second.get_id());
+// generate a random number from 0 to given number
+size_t generate_random(size_t max) {
+	return get_random(0, max);
 };
 
-bool compare_tags(ITV &first, ITV &second) {
-	return (first.get_tag() <  second.get_tag());
+// generate a random number within range
+size_t get_random(size_t min, size_t max) {
+	std::random_device generator;
+	std::uniform_int_distribution<size_t> distribution(min, max);
+	return distribution(generator);
 };
 
-bool is_symbol(char c) {
-	return ((c < 48 || c > 57) && (c < 65 || c > 90) && (c < 97 || c > 122));
+// split string into deque according to given delimiter
+std::deque<std::string>* split(std::string& s, std::string& delimiter) {
+	size_t last = 0, next = 0;
+	std::deque<std::string>* ret = new deque<std::string>();
+	while ((next = s.find(delimiter, last)) != string::npos) {
+		ret->push_back(s.substr(last, next-last));
+		last = next + 1;
+	};
+	ret->push_back(s.substr(last));
+	return ret;
 };
 
-std::string do_compress(std::string &str, bool gz, int level) {
-	int ret;
-	z_stream zstr;
+// convert codepoint to utf8 char
+std::string to_utf8(size_t cp) {
+	std::string str = std::string();
 
-	memset(&zstr, 0, sizeof(zstr));
-	ret = (gz) ? deflateInit2(&zstr, level, Z_DEFLATED, MAX_WBITS + 16, 9, Z_DEFAULT_STRATEGY) : deflateInit(&zstr, level);
-
-	if (ret != Z_OK) {
-		return str;
+	if (cp <= 0x7f) {
+		str.append(1, static_cast<char>(cp));
+	} else if (cp <= 0x7ff) {
+		str.append(1, static_cast<char>(0xc0 | ((cp >> 6) & 0x1f)));
+		str.append(1, static_cast<char>(0x80 | (cp & 0x3f)));
+	} else if (cp <= 0xffff) {
+		str.append(1, static_cast<char>(0xe0 | ((cp >> 12) & 0x0f)));
+		str.append(1, static_cast<char>(0x80 | ((cp >> 6) & 0x3f)));
+		str.append(1, static_cast<char>(0x80 | (cp & 0x3f)));
+	} else {
+		str.append(1, static_cast<char>(0xf0 | ((cp >> 18) & 0x07)));
+		str.append(1, static_cast<char>(0x80 | ((cp >> 12) & 0x3f)));
+		str.append(1, static_cast<char>(0x80 | ((cp >> 6) & 0x3f)));
+		str.append(1, static_cast<char>(0x80 | (cp & 0x3f)));
 	};
 
-	zstr.next_in = (Bytef*)str.data();
-	zstr.avail_in = (unsigned int)str.size();
-
-	char buf[32768];
-	std::string output;
-
-	do {
-		zstr.next_out = reinterpret_cast<Bytef*>(buf);
-		zstr.avail_out = sizeof(buf);
-		ret = deflate(&zstr, Z_FINISH);
-		if (output.size() < zstr.total_out) {
-			output.append(buf, zstr.total_out - output.size());
-		};
-	} while (ret == Z_OK);
-
-	deflateEnd(&zstr);
-	return (ret != Z_STREAM_END) ? str : output;
+	return str;
 };
 
-std::string do_decompress(std::string &str, bool gz) {
-	int ret;
-	z_stream zstr;
+// convert codepoints to utf8 string
+std::string to_utf8(std::list<size_t>& msg) {
+	std::string str = std::string();
 
-	memset(&zstr, 0, sizeof(zstr));
-	ret = (gz) ? inflateInit2(&zstr, MAX_WBITS + 16) : inflateInit(&zstr);
-
-	if (ret != Z_OK) {
-		return str;
+	for (auto i=msg.begin(); i!=msg.end(); i++) {
+		str += to_utf8(*i);
 	};
 
-	zstr.next_in = (Bytef*)str.data();
-	zstr.avail_in = (unsigned int)str.size();
+    return str;
+};
 
-	char buf[32768];
-	std::string output;
+// convert utf8 string to codepoints
+std::list<size_t>* from_utf8(std::string& msg) {
+	unsigned char c1, c2, *ptr = (unsigned char*) msg.c_str();
+	std::list<size_t> *ret = new std::list<size_t>();
+	size_t len = msg.length();
 
-	do {
-		zstr.next_out = reinterpret_cast<Bytef*>(buf);
-		zstr.avail_out = sizeof(buf);
-		ret = inflate(&zstr, 0);
-		if (output.size() < zstr.total_out) {
-			output.append(buf, zstr.total_out - output.size());
+	while (len) {
+		size_t uc = 0, seqlen = 0;
+		if (len < 1) { return ret; };
+		c1 = ptr[0];
+
+		if ((c1 & 0x80) == 0) {
+			uc = (size_t) (c1 & 0x7F);
+			seqlen = 1;
+		} else if ((c1 & 0xE0) == 0xC0) {
+			uc = (size_t) (c1 & 0x1F);
+			seqlen = 2;
+		} else if ((c1 & 0xF0) == 0xE0) {
+			uc = (size_t) (c1 & 0x0F);
+			seqlen = 3;
+		} else if ((c1 & 0xF8) == 0xF0) {
+			uc = (size_t) (c1 & 0x07);
+			seqlen = 4;
+		} else {
+			break;
 		};
-	} while (ret == Z_OK);
 
-	inflateEnd(&zstr);
-	return (ret != Z_STREAM_END) ? str : output;
+		if (seqlen > len) { return ret; };
+
+		for (size_t i = 1; i < seqlen; ++i) {
+			c1 = ptr[i];
+			if ((c1 & 0xC0) != 0x80) { return ret; };
+		};
+
+		switch (seqlen) {
+			case 2: {
+				c1 = ptr[0];
+				if (!IS_IN_RANGE(c1, 0xC2, 0xDF)) { return ret; };
+				break;
+			};
+
+			case 3: {
+				c1 = ptr[0];
+				c2 = ptr[1];
+
+				if (((c1 == 0xE0) && !IS_IN_RANGE(c2, 0xA0, 0xBF)) ||
+					((c1 == 0xED) && !IS_IN_RANGE(c2, 0x80, 0x9F)) ||
+					(!IS_IN_RANGE(c1, 0xE1, 0xEC) && !IS_IN_RANGE(c1, 0xEE, 0xEF))) {
+					return ret;
+				};
+
+				break;
+			};
+
+			case 4: {
+				c1 = ptr[0];
+				c2 = ptr[1];
+
+				if (((c1 == 0xF0) && !IS_IN_RANGE(c2, 0x90, 0xBF)) ||
+					((c1 == 0xF4) && !IS_IN_RANGE(c2, 0x80, 0x8F)) ||
+					(!IS_IN_RANGE(c1, 0xF1, 0xF3))) {
+					return ret;
+				};
+
+				break;
+			};
+		};
+
+		for (size_t i = 1; i < seqlen; ++i) { uc = ((uc << 6) | (size_t)(ptr[i] & 0x3F)); };
+		ret->push_back(uc);
+
+		ptr += seqlen;
+		len -= seqlen;
+	};
+
+	return ret;
 };
 

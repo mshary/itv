@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2014, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
+# Copyright (c) 2013-2015, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -8,7 +8,8 @@ CFLAGS=-Wall -Werror -g -fPIC -ansi -pedantic -std=c89
 CCFLAGS=-Wall -Werror -g -fPIC -std=c++11
 LDFLAGS=-g -Wall -lstdc++ -lz -shared
 
-OBJS=itv.o itv_ascii.o itv_table.o itv_words.o itv_wrapper.o itv_utils.o
+#OBJS=itv.o itv_ascii.o itv_table.o itv_words.o itv_wrapper.o itv_utils.o
+OBJS=itv.o itv_table.o itv_characters.o itv_utils.o
 PROG=libitv.so
 
 PREFIX=/usr
@@ -19,7 +20,7 @@ all: $(PROG)
 default: all
 
 wrapper:
-	$(CC) $(CCFLAGS) -c itv.cpp itv_ascii.cpp itv_table.cpp itv_words.cpp itv_wrapper.cpp itv_utils.cpp
+	$(CC) $(CCFLAGS) -c itv.cpp itv_table.cpp itv_characters.cpp itv_utils.cpp
 	$(CC) $(OBJS) $(LDFLAGS) -o $(PROG)
 
 %.o: %.cpp
@@ -45,4 +46,4 @@ uninstall:
 clean:
 	rm -f $(OBJS)
 	rm -f $(PROG)
-	rm -f *~
+	rm -f *~ itv

@@ -18,53 +18,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef ITV_TABLE_H
-#define ITV_TABLE_H
+#ifndef ITV_CHARACTERS_H
+#define ITV_CHARACTERS_H
 
-#include <list>
-#include "itv.h"
+#include "itv_table.h"
 
 using namespace std;
 
-class ITV_Table {
-	protected:
-		std::list<ITV> *table;
-
+class ITV_Characters : public ITV_Table {
 	public:
-		ITV_Table();
-		ITV_Table(std::list<ITV> &);
-		virtual ~ITV_Table();
+		ITV_Characters();
+		~ITV_Characters();
 
-		ITV_Table &operator = (const ITV_Table &);
-		bool operator == (const ITV_Table &) const;
-		bool operator != (const ITV_Table &) const;
-		bool operator <= (const ITV_Table &) const;
-		bool operator >= (const ITV_Table &) const;
-		bool operator  < (const ITV_Table &) const;
-		bool operator  > (const ITV_Table &) const;
+		ITV_Characters(size_t, size_t);
+		ITV_Characters(size_t, size_t, size_t);
+		ITV_Characters(std::string, std::string);
 
-		const std::list<ITV>* get_table();
-		void set_table(const std::list<ITV>&);
+		size_t load(size_t, size_t);
+		size_t load(size_t, size_t, size_t);
+		size_t load(std::string, std::string);
 
-		bool add(const ITV&);
-		bool exists(const ITV&);
-		void remove(const ITV&);
+		std::string dump(std::string);
 
-		ITV* find_by_id(size_t);
-		ITV* find_by_tag(size_t);
-		ITV* find_by_value(size_t);
+		size_t read(const std::string, std::string);
+		size_t write(const std::string, std::string);
 
-		size_t* convert(size_t, size_t);
-		size_t* revert(size_t, size_t);
-
-		void clear();
-		void restore();
-		void shuffle();
-
-		size_t get_random_id();
-
-		std::list<size_t>* encode(std::list<size_t>&);
-		std::list<size_t>* decode(std::list<size_t>&);
+		const std::string to_string();
 };
 
 #endif

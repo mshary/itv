@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
+ * Copyright (c) 2013-2015, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
  *
  * All rights reserved.
  *
@@ -21,24 +21,21 @@
 #ifndef ITV_H
 #define ITV_H
 
-#include "itv_config.h"
+#include <iostream>
 
 using namespace std;
 
 class ITV {
-	friend ostream &operator << (ostream &, const ITV &);
-	friend istream &operator >> (istream &, ITV &);
-
 	protected:
 		size_t id;
 		size_t tag;
-		std::string value;
+		size_t value;
 
 	public:
 		ITV();
 		ITV(const ITV &);
-		ITV(size_t, const std::string&);
-		ITV(size_t, size_t, const std::string&);
+		ITV(size_t, size_t);
+		ITV(size_t, size_t, size_t);
 		~ITV();
 
 		ITV &operator = (const ITV &);
@@ -49,6 +46,8 @@ class ITV {
 		bool operator  < (const ITV &) const;
 		bool operator  > (const ITV &) const;
 
+		void clear();
+		void restore();
 		size_t replace(size_t);
 
 		size_t get_id();
@@ -57,13 +56,11 @@ class ITV {
 		size_t get_tag();
 		void set_tag(size_t);
 
-		const std::string get_value();
-		void set_value(const std::string&);
-
-		void clear();
-		void restore();
-
-		const std::string to_string();
+		size_t get_value();
+		void set_value(size_t);
 };
+
+bool compare_ids(ITV &first, ITV &second);
+bool compare_tags(ITV &first, ITV &second);
 
 #endif

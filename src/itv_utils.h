@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
+ * Copyright (c) 2013-2015, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
  *
  * All rights reserved.
  *
@@ -21,28 +21,36 @@
 #ifndef ITV_UTILS_H
 #define ITV_UTILS_H
 
-#include <string.h>
-#include "itv_config.h"
+#include <deque>
+#include <list>
 
 using namespace::std;
 
 // trim string from start
-std::string &ltrim(std::string &s);
+std::string &ltrim(std::string&);
 
 // trim string from end
-std::string &rtrim(std::string &s);
+std::string &rtrim(std::string&);
 
 // trim string from both ends
-std::string &trim(std::string &s);
+std::string &trim(std::string&);
 
-bool compare_ids(ITV &first, ITV &second);
+// generate a random number from 0 to given number
+size_t generate_random(size_t);
 
-bool compare_tags(ITV &first, ITV &second);
+// generate a random number within range
+size_t get_random(size_t, size_t);
 
-bool is_symbol(char c);
+// split string into deque according to given delimiter
+std::deque<std::string>* split(std::string&, std::string&);
 
-std::string do_compress(std::string &str, bool gz, int level = Z_BEST_COMPRESSION);
+// convert codepoint to utf8 char
+std::string to_utf8(size_t);
 
-std::string do_decompress(std::string &str, bool gz);
+// convert codepoints to utf8 string
+std::string to_utf8(std::list<size_t>&);
+
+// convert utf8 string to codepoints
+std::list<size_t>* from_utf8(std::string&);
 
 #endif
