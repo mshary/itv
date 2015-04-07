@@ -1,76 +1,84 @@
 # ITV Encryption Algorithm
-A fast, simple yet effective on-wire encryption algorithm for data (preferably plain text) communication over LAN / WAN.
+A fast, simple yet effective encryption algorithm for data communication over computer networks.
 
 ### History
-This algorithm has its roots in *Caesar Cipher*. The original cipher suggests that each letter in plain text is replaced by some fixed number of positions down the alphabet. For example with left shift of 3, 'D' would be replaced by 'A', 'E' would become 'B' and so on.
+This algorithm has its roots in *Caesar Cipher*. The original cipher suggests that each letter in plain text is replaced by some fixed number of positions down the alphabet. For example, with left shift of 3, 'D' would be replaced by 'A', 'E' would become 'B' and so on.
 
-The Caesar Cipher was first cracked by an Arab scientist Al-Kindi in 9th century through discovery of frequency analysis (some letters are used more often in a language then others, the analysis can easily determine shift value and direction). In 15th century, the Polyalphabetic Cipher was introduce, which suggested to use a secret word, each letter in the word was used as shift for plaintext letters (like Caesar Cipher). However in late 19th century, this too was broken down. 
+The *Caesar Cipher* was first cracked by an Arab scientist Al-Kindi in 9th century through discovery of frequency analysis (some letters are used more frequently in a language then others, the analysis can easily determine shift value and direction). In 15th century, the *Polyalphabetic Cipher* was introduce, which suggested to use a secret word, each letter in the word was used as shift for plaintext letters (like *Caesar Cipher*). However in late 19th century, this too was broken down. 
 
-On Sept. 1, 1945, Claude Shannon proved mathematically a further enhancement to the cipher which proposes random shift to each letter of plaintext, as the perfect solution for the encryption. It is now known as One-Time Pad encryption. The ITV algorithm is drived from this on-time pad algorithm using some basic Computer Science concepts.
+On Sept. 1, 1945, Claude Shannon proved mathematically a further enhancement to the cipher, which proposes random shift to each letter of plaintext, as the perfect solution for the encryption. It is now known as *One-Time Pad Encryption*. The ITV algorithm is intends to extend and apply this *One-Time Pad Encryption* using some basic Computer Science concepts.
 
 ### What is it?
-ITV stands for ID, Tag and Value. It has two variants character based ITV and word based ITV. Let us understand character based ITV (since it is much similar to On-Time Pad encryption).
+ITV stands for **ID**, **Tag** and **Value**. It has two variants character based ITV and word based ITV. Let us understand character based ITV (since it is easier to understand for anyone already familiar with *One-Time Pad Encryption*).
 
 ## Character Based ITV
-When using character sets in computer, each letter is basically assigned an integer value which is actually used and understood by computers for internal use. For example using ASCII character set, letter 'A' is represented by integer 65, 'B' is 66 and so.
+When using character sets in computer, each letter is basically assigned an integer value, which is actually used and understood by computers for internal use. For example, using ASCII character set, letter 'A' is represented by integer 65, 'B' is 66 and so on.
 
-In ITV algorithm we define integer 65 as "ID" and letter A as its "Value". Thus entire ASCII character set is just a table of IDs and their Values. We add another column to this table, namely the "Tag".
-
-Tag should be "randomly" generated value within ID range. For example, considering all capital letters in ASCII, we have first ID as 65 (for value A) and last is 90 (for letter Z). So any random value within range 65 - 90 can be used as a Tag.
+In ITV algorithm, we define a table with three columns. The first column represents the numeric value of characters, this column is known as the **ID** of each character. The second column also holds numeric value randomly generated within range of **ID** column, this column is known as the **Tag**. The third column contains the actual character, which we call the **Value** column.
 
 ### ITV Table
-Thus we have ITV table, having ID, Tag and Value for each letter in character set. We initialize the ITV table by using Tag same as ID. So, an ITV table over capital letter would be,
-<pre>
-	ID    TAG    Value
-	--    ---    -----
-	65    65     A
-	66    66     B
-	67    67     C
-	68    68     D
-	69    69     E
-	70    70     F
-	..    ..     .
-	89    89     Y
-	90    90     Z
-</pre>
+So considering, numeric values *65, 66, 67 ... 90* as **ID** and letter *A, B, C ... Z* as respective **Value**, we can define **ITV Table** over ASCII character set. As for **Tag** column, it should be random but non-repeated number within range *65 - 90* but for simplicity lets assume it is same as **ID** column for now.
+
+Thus we have ITV Table with ID, Tag and Value for each letter in English character set. This would look something like this,
+
+````
+    ID    TAG    Value
+    --    ---    -----
+    65    65     A
+    66    66     B
+    67    67     C
+    68    68     D
+    69    69     E
+    70    70     F
+    ..    ..     .
+    89    89     Y
+    90    90     Z
+````
 
 ### How Encryption Works?
 Using above ITV Table, suppose we want to encrypt the word "ABBA". The encryption is done as follows,
 
-- Determine ITV table row for first letter of the word as Value, in this case, first letter is 'A'. Let call it ITV record X.
-- Generate a random integer say 67, within range 65 - 90. Determine ITV table row which has ID = 67. Let call it ITV record Y.
-- In ITV record Y, save current ID as TAG and ID of ITV record X as new ID. ITV table becomes,
-<pre>
-	ID    TAG    Value
-	--    ---    -----
-	65    65     A
-	66    66     B
-	65    67     C
-	68    68     D
-	69    69     E
-	70    70     F
-	..    ..     .
-	89    89     Y
-	90    90     Z
-</pre>
-- In ITV record X, save current ID as TAG and use generated integer 67 as new ID, ITV table becomes, (note that no duplicate values in columns ID and TAG, the integeral values are merely switches with one another),
-<pre>
-	ID    TAG    Value
-	--    ---    -----
-	67    65     A
-	66    66     B
-	65    67     C
-	68    68     D
-	69    69     E
-	70    70     F
-	..    ..     .
-	89    89     Y
-	90    90     Z
-</pre>
-- Thus we have encrypted version of letter 'A' as letter 'C' (current ID of value 'A').
-- Similarly we encrypt next letter 'B' to get letter 'Y'.
+- Take the first letter, in this case 'A', and find the corresponding row in ITV Table which has this letter in *Value* column. Lets call it ITV Table record X.
+- Generate a random number; say 67, within range 65 - 90. 
+- Determine ITV table row which has *ID* = 67. Let call it ITV record Y.
+- In ITV Table record Y, save current ID as TAG and ID of ITV record X as new ID. ITV table becomes,
 
-- The third letter is again 'B'. Although previously we determined encrypted value for 'B' as 'Y' but we repeat the above process to get a different letter say 'Z'. It is important to repeat the above process for every single character in the word, no matter how many times it is repeated in the word. This will ensure frequency analysis to fail since each letter will have 26^26 substitution possibilities.
+````
+    ID    TAG    Value
+    --    ---    -----
+    65    65     A
+    66    66     B
+    65    67     C
+    68    68     D
+    69    69     E
+    70    70     F
+    ..    ..     .
+    89    89     Y
+    90    90     Z
+````
+
+- Now in ITV Table record X, save current ID as TAG and use generated number 67 as new *ID*. ITV Table becomes,
+
+````
+    ID    TAG    Value
+    --    ---    -----
+    67    65     A
+    66    66     B
+    65    67     C
+    68    68     D
+    69    69     E
+    70    70     F
+    ..    ..     .
+    89    89     Y
+    90    90     Z
+````
+*(Notice that no duplicate values in columns ID and TAG, the numerical values are merely switched with one another)*
+
+- Thus, we have encrypted version of letter 'A' as letter 'C' (i.e. current ID of value 'A').
+- Similarly we encrypt next letter 'B' to get letter 'Y' by following same process as above.
+- The third letter is again 'B'. Although previously we determined encrypted value for 'B' as 'Y' but we **MUST** repeat the above process and get a different letter say 'Z'.
+
+*(It is important to repeat the above process for every single character in the plaintext, no matter how many times it is repeated in the word. This will ensure frequency analysis to fail since each letter will have *26^26* substitution possibilities)*
 
 - When all characters are processed in a word, we get encrypted version of the word by using ID and TAG value for each encrypted version of each character, e.g.
 
@@ -78,109 +86,153 @@ Using above ITV Table, suppose we want to encrypt the word "ABBA". The encryptio
 
 Thus, we may have,
 
+````
 	ABBA => 65 67 66 89 89 90 65 70 
+````
 
 OR Simply,
+````
+	ABBA => ACBYYZAF
+````
+*(by converting integers to letters according to standard ASCII character set)*
 
-	ABBA => ACBYYZAF 
-(by converting integers to letters according to standard ASCII character set)
+- If there exist any character that is not present in ITV Table, then it will not be encrypted and thus transmitted as is. Therefore, it is important that ITV Table has all the characters and symbols that expected to be used in plaintext, i.e. even "space" and "full-stop" characters are important, if they are not included in ITV table then one can identify end of word and end of sentence marks in encrypted text.
 
-### Security Note
-- The strength of encryption heavily depends on quality of random number generator used by the implementation.
+For improved security it is highly recommended to randomly shuffle ID column values in ITV Table before sharing it with the receiver. The simplest way to do that is to encrypt a plaintext that contains all characters present in ITV Table and discard the output.
 
-- You should properly initialize ITV table before production use. To achieve this, encrypt a word / sentence which has all letters of ITV table Values, e.g. for ITV table mentioned above, one can encrypt below sentense and discard its output.
-<pre>
-	A QUICK BROWN FOX JUMPS OVER THE LAZY DOG.
-</pre>
-- Length of encrypted word would be exactly double the length of actual word. You should randomly add a random letter (within same range) at the end of words in each sentence, so that some words has even and others have odd length. (optional)
+Additionally the generated encrypted text can be broken into two pieces, one consisting only of **ID** values (odd characters in encrypted text) and other consisting only of **Tag** values (even characters in encrypted text) and sent over two different transactions (or even two different communication mediums).
 
-- Space between words and unrecognized letters / symbols / punctuation marks etc. (which are not present in ITV table) should remain as-is in the encrypted sentence. If you want them to be encrypted too, then add them to ITV table as well.
-
-- For two (or more way) communication, it is recommended that each sender has its own ITV Table. Using single table on all sides may cause synchronization issues, though they can be resolve by using advance RPC techniques.
+Also note that since **ID** has no direct relationship with **Value** column, so **ANY** numeric range can be used in it. Thus, we can e.g. use Hebrew character set range (UTF8 0x500 - 0x5FF) to represent **ID** data that corresponds to **Value** in Arabic character set (UTF8 0x600 - 0x6FF), in which case the plain text would be in Arabic but encrypted text would appear as Hebrew. (see example usage below).
 
 ### How Decryption Works?
-For decryption, one MUST have same version of ITV table, that was used to encrypt the original text. This should be transmitted to receiver through different secure medium or channel.
+For decryption, the receiver **MUST** have exact same ITV Table, that was used to encrypt the original text. Thus, we can say the ITV Table is the **Key** in cryptographic term that is required to decrypt the data. However, the beauty of this algorithm is that the ITV Table constantly changes as it encrypts more data on sender side, while the receiver side keeps its ITV Table synchronised as it decrypts the received that. The receiver will have exact same ITV Table after decryption as the ITV Table on sender side after encryption. Therefore, for next communicate session the sender does not need to send the ITV Table again to the receiver.
 
-- Take first pair of characters in the encrypted word. Convert both to integers (according to standard ASCII character set).
+This however, has two consequences,
 
-- Find ITV record matching first integer as ID in ITV table. Save ID to TAG and use second integer as new ID. The VALUE of this record is unencrypted character.
+1. The communication is half-duplex, i.e. sender can only send data and receiver can only receive data. It receiver wants to send data as well, then it should create a separate ITV Table and use it for encryption same way as sender side is doing. Thus in such case, each side will have two ITV Tables, one that is used to encrypt data that it wants to send and the other to decrypt that it receives from the other side.
 
-- Find ITV table record matching second integer as ID, Save ID to TAG and use first integer as new ID.
+2. Communication **Must** be synchronous, that is the receiver must decrypt the data received in first transaction to be able to decrypt data in second transaction and so on. If any data is lost in transmission then decryption will fail (i.e. produce garbage text). This mechanism ensures communication integrity.
 
-- Run through pairs of character in the word to determine unencrypted characters. Letters / symbols / punctuation marks etc. that are not matched in ITV table should be present in encrypted word.
+Here is how to the decryption works,
 
-- Any unpaired character at the end of word should be discarded.
+- Take first pair of characters in the encrypted word. Convert both to integers (according to standard character set).
 
-### Misc. Notes
-- After decryption completes states of ITV table each side (the send who sent the encrypted text and receiver how decrypted the text) would be identical.
+- Find ITV Table record matching first integer as **ID**. Save ID to TAG and use second integer as new ID. The VALUE of this record is the unencrypted character. If there is no matching record then convert it back to character and use it as is (this character is not encrypted and thus no need to be decrypted).
 
-- In practice TAG is drived from ID and both ID and TAG have no direct relation with VALUE in ITV table neither for encryption nor for decryption. So we can use ANY distinct set of integers as ID (they don't even need to be consecutive). For TAG we will generate an integer within range of 0 to number of records in the table, say N and use ID of that Nth record as TAG. This way it is even possible e.g. to encrypt message in German that looks like Russian in encrypted form OR message in Chinesse decrypts to Korean etc. etc.
+- Find ITV Table record matching second integer as **ID**. Save ID to Tag column and use the first integer as new ID.
 
-- To further enhance security it is possible to break encrypted message into two, i.e. first consists of all IDs (first integers of each character pair) and second consists of all TAGs (second integers of each character pair). Each part is transmitted using different medium or communication channel. However recipient would need both parts merged together before it can attempt to decrypt it.
+- Run through all pairs of character in the word to determine unencrypted characters and so on.
 
 ## Word Based ITV
 It works almost exactly same as Character Based ITV. The only difference is that in character based ITV, we have well-defined character sets which both us and computers understand.
 
-If we have complete list of words of any language then we can define our own ITV table consisting of words as VALUE. For ID and TAG we can use any integer range.
-
-The encryption and decryption will work the same way as for character based ITV algorithm. However encrypted sentence will be merely a space separated list of integers which can be transmitted in binary format. The recipient will take pairs of integers and decrypt them accordingly.
-
-### Misc. Notes
-- A human language consists of hundreds of thousands of words however an average human being merely uses 2,000 - 3,000 words of it in daily life. So ITV table can be shorten down significantly. However if plain text consists of any words that are not present in ITV table, they will be skiped in encrypted form and will be missing in after decryption.
-
-- Like character based ITV, ID can be any integer range and does not need to be consecutive.
-
-- Transmitting encrypted data as integer is recommended rather then string i.e. '65536'=> 5 bytes, comparing to integer 65536, which only takes 2 bytes. This may save some bandwidth. 
-
-- Though preserving bandwidth is not the aim of this algorithm but one can zip the encrypted string to compensate for bandwidth.
+If we have a dictionary of words that both sender and receiver agree upon and do all the communication according to it then we can use each word in the dictionary as value for **Value** column and assign each word its own unique numeric value in **ID** column then we can construct *Word Based ITV Table*, which would encrypt plaintext word-wise and produce numeric encrypted text following same encryption / decryption rules as *Character Based ITV Table*.
 
 ## Using The Sample Code
-Sample code is provide as proof of concept in C++ using STL library. 
+Sample code provided as proof of concept in C++ using STL library. You must have fairly recent compiler to build it since it heavily used C++ 11 specification.
 
-To compile the code using GNU C++ compiler,
+To compile the code using GNU C++ compiler (v4.7 or better),
 
-	g++ -o itv -Os *.cpp
-
-OR simply,
-
+````
 	make clean
 	make all
+````
 
-To run the code,
-	
-	./itv
+This will produce itv.so library, which can be installed along with all headers files by,
 
-From v2.0 onwards there is a C wrapper, which exports basic functionality to applications written in C.
+````
+	make install
+````
 
 Sample output of Character Base ITV,
-<pre>
-	Plaintext: a quick brown fox jumps over the lazy dog.
-	Encrypted Text: wF s8yWi6n7dBH omK15WemLQ AgW1ZO9 vn510GHVwcE 5hfR3RWYu 0NE2RL qdFNEcusA AUh3jq.
-	Decrypted Text: a quick brown fox jumps over the lazy dog.
-</pre>
 
-Sample output of Word Base ITV,
-<pre>
-	Plaintext: a quick brown fox jumps over the lazy dog.
-	Encrypted Text: 0XDE11 0X4D4E 0X1442 0X41D1 0X17A7F 0X108A4 0XBA59 0X13ABA 0X145C1 0X3809 0X86C0 0XD8E2 0X8CA0 0XD57D 0X11372 0X11B6B 0XEF3C 0XB715. 
-	Decrypted Text: a quick brown fox jumps over the lazy dog. 
-</pre>
+````
+Original: a quick brown fox jumps over the lazy dog.
+Encrypted: sf6Tl0/=lFS!$&T4m"^;:na`W+4 ZGnM(V jNs=_w2|,zajMjvLO=@;XMbcc}Q@WbAd]f!#y.uA84PvYU&#8
+Decrypted: a quick brown fox jumps over the lazy dog.
+````
+
+Since v3.0, *Word Based ITV* implementation is no longer provided in sample code.
 
 To utilize the code in your own projects, import following files in your project,
 
+````
 	itv.h / itv.cpp => defines an ITV record
 	itv_table.h / itv_table.cpp => defines an ITV Table.
 	itv_utils.h => defines some utility functions (optional).
+````
 
 For reference implementation of Character Based ITV algorithm, include or read through,
 
-	itv_ascii.h / itv_ascii.cpp
+````
+	itv_characters.h / itv_characters.cpp
+````
 
-For reference implementation of Word Based ITV algorithm, include or read through,
+## Example Usage
 
-	itv_word.h / itv_word.cpp
+````c++
+#include <iostream>
+#include <string>
 
-For sample usage read through main.cpp (in C++) or main.c (in C).
+#include "itv_utils.h"
+#include "itv_characters.h"
+
+using namespace std;
+
+int main() {
+	/* create ITV Table,
+     * One can use any text encoding. Here we use UTF8.
+	 * IDs use Hebrew, thus encrypted text will be in Hebrew
+	 * Values use Arabic, thus plain text will be in Arabic
+	 */
+	ITV_Characters sender = ITV_Characters(0x500, 0x600, 0x6FF - 0x600);
+    sender.load(0x20, 0x20, 1);	/* Add space character */
+    
+    /* randomly shuffle IDs */
+    sender.shuffle();
+    
+    /* define a separator for ITV Table dump */
+    std::string seperator = std::string(1, (const char)126); 
+    
+    /* ITV Table that receiver needs to decrypt data */
+    std::string itv_table = sender.dump(seperator);
+    
+	/* sample text to encrypt, we are using UTF8 encoding here */
+	std::string str = u8"أزمة اليمن: الحوثيون يتقدمون في عدن رغم الغارات الجوية";
+    std::list<size_t>* msg = from_utf8(str);
+    
+    cout << "Original: " << str << endl;
+    
+    /* encrypt the text */
+    std::list<size_t> *encrypted_text = sender.encode(*msg);
+    
+    /* convert encrypted text to UTF8 and send it, here we just print it */
+    cout << "Encrypted: " << to_utf8(*encrypted_text) << endl;
+    
+    
+    /* On Receiver side, 
+	 * the ITV Table is initialised with table dump from sender side
+	 */
+    ITV_Characters receiver = ITV_Characters(itv_table, seperator);
+	std::list<size_t> *decrypted_text = receiver.decode(*encrypted_text);
+    std::string plain = to_utf8(*decrypted_text);
+    
+    if (str == plain) {
+    	cout << "Decrypted: " << plain << endl;
+    } else {
+    	cout << "Failure: " << plain << endl;
+    };
+
+	return 0;
+};
+
+````
+
+To compile the program,
+
+````
+g++ -Wall -std=c++11 -L./ -litv -o itv main.cpp
+````
 
 Feel free to add and/or extend given C++ classes (per MPL v2.0 license).
 
