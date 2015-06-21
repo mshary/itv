@@ -12,7 +12,7 @@ int main() {
 
 	CITV_Characters *itv = itv_characters_init(0x100, 0x600, 0x6FF - 0x600);
 	itv_characters_dump(itv, key, sizeof(key));
-	printf("KEY: %s\n", key);
+	/* printf("KEY: %s\n", key); */
 
 	itv_characters_encode(itv, msg, enc, sizeof(enc));
 	printf("MSG: %s\nENC: %s\n", msg, enc);

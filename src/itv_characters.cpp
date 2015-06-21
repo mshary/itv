@@ -20,6 +20,7 @@
  */
 #include <fstream>
 #include <sstream>
+#include <streambuf>
 
 #include "itv_utils.h"
 #include "itv_characters.h"
@@ -77,12 +78,10 @@ size_t ITV_Characters::read(const std::string file) {
 	ifstream ifs(file);
 	if (!ifs.is_open()) { return 0; };
 
-	std::string line = string();
-	while(getline(ifs, line)) {
-		this->load(line);
-	};
-
+	std::string str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+	this->load(str);
 	ifs.close();
+
 	return this->table->size();
 };
 
