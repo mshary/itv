@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <string.h>
 
 #include "itv_utils.h"
 #include "itv_characters.h"
