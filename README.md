@@ -191,11 +191,8 @@ int main() {
     /* randomly shuffle IDs */
     sender.shuffle();
     
-    /* define a separator for ITV Table dump */
-    std::string seperator = std::string(1, (const char)126); 
-    
     /* ITV Table that receiver needs to decrypt data */
-    std::string itv_table = sender.dump(seperator);
+    std::string itv_table = sender.dump();
     
 	/* sample text to encrypt, we are using UTF8 encoding here */
 	std::string str = u8"أزمة اليمن: الحوثيون يتقدمون في عدن رغم الغارات الجوية";
@@ -213,7 +210,7 @@ int main() {
     /* On Receiver side, 
 	 * the ITV Table is initialised with table dump from sender side
 	 */
-    ITV_Characters receiver = ITV_Characters(itv_table, seperator);
+    ITV_Characters receiver = ITV_Characters(itv_table);
 	std::list<size_t> *decrypted_text = receiver.decode(*encrypted_text);
     std::string plain = to_utf8(*decrypted_text);
     
