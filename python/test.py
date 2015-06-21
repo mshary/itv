@@ -8,7 +8,7 @@
 # modification, are permitted per Mozilla Public License v2.0.
 #
 
-import itv
+import pyitv
 
 data = "ﻒﺘﺤﺗ ﻢﻛﺎﺘﺑ ﺍﻼﻘﺗﺭﺎﻋ ﻒﻳ ﺕﻮﻨﺳ ﺎﻠﻳﻮﻣ ﺍﻸﺣﺩ ﺄﻣﺎﻣ ﺎﻠﻧﺎﺨﺒﻴﻧ ﻒﻳ ﺃﻮﻟ ﺎﻨﺘﺧﺎﺑﺎﺗ ﺮﺋﺎﺴﻳﺓ ﺖﻋﺩﺪﻳﺓ ﻢﻧﺫ ﺙﻭﺭﺓ 2011";
 

@@ -6,12 +6,11 @@
 #
 
 all:
-	python setup.py build
-	cp -a build/lib*/*.so .
+	swig -python -c++ -I../src -o _pyitv_module.cc pyitv.i
+	python setup.py build_ext --inplace
 
 install:
 	python setup.py install
 
 clean:
-	rm -fr build
-	rm -fr *.so
+	rm -fr _pyitv_module.cc pyitv.py *.so build
