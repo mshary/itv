@@ -74,7 +74,7 @@ void ITV_Table::set_table(const std::list<ITV> &table) {
 };
 
 bool ITV_Table::add(const ITV &element) {
-	if (&element && !this->exists(element)) {
+	if (element.get_id() && !this->exists(element)) {
 		this->table->push_back(element);
 		return true;
 	};
@@ -82,7 +82,7 @@ bool ITV_Table::add(const ITV &element) {
 };
 
 void ITV_Table::remove(const ITV &element) {
-	if (&element) {
+	if (element.get_id()) {
 		this->table->remove(element);
 	};
 };

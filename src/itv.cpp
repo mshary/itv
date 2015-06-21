@@ -94,7 +94,7 @@ size_t ITV::replace(size_t id) {
 	return retval;
 };
 
-size_t ITV::get_id() {
+size_t ITV::get_id() const {
 	return this->id;
 };
 
@@ -102,7 +102,7 @@ void ITV::set_id(size_t id) {
 	this->id = id;
 };
 
-size_t ITV::get_tag() {
+size_t ITV::get_tag() const {
 	return this->tag;
 };
 
@@ -110,7 +110,7 @@ void ITV::set_tag(size_t tag) {
 	this->tag = tag;
 };
 
-size_t ITV::get_value() {
+size_t ITV::get_value() const {
 	return this->value;
 };
 

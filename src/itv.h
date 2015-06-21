@@ -50,13 +50,13 @@ class ITV {
 		void restore();
 		size_t replace(size_t);
 
-		size_t get_id();
+		size_t get_id() const;
 		void set_id(size_t);
 
-		size_t get_tag();
+		size_t get_tag() const;
 		void set_tag(size_t);
 
-		size_t get_value();
+		size_t get_value() const;
 		void set_value(size_t);
 };
 
