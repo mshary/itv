@@ -1,32 +1,24 @@
 #include <stdlib.h>
 
-typedef void CITV_ASCII;
-typedef void CITV_Words;
+typedef void CITV_Characters;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	CITV_ASCII* itv_ascii_new();
-	CITV_ASCII* itv_ascii_init(const char*);
+	CITV_Characters* itv_characters_init(size_t, size_t, size_t);
+	CITV_Characters* itv_characters_init2(const char*, const char*);
 
-	size_t itv_ascii_load(const CITV_ASCII*, size_t, size_t);
-	const char* itv_ascii_dump(const CITV_ASCII*, char);
+	size_t itv_characters_read(const CITV_Characters*, const char*, const char*);
+	size_t itv_characters_write(const CITV_Characters*, const char*, const char*);
 
-	const char* itv_ascii_encode(const CITV_ASCII*, const char*);
-	const char* itv_ascii_decode(const CITV_ASCII*, const char*);
-	size_t itv_ascii_get_random(const CITV_ASCII*, size_t, size_t);
+	void itv_characters_dump(const CITV_Characters*, const char*, char*, size_t);
+	void itv_characters_encode(const CITV_Characters*, const char*, char*, size_t);
+	void itv_characters_decode(const CITV_Characters*, const char*, char*, size_t);
+	void itv_characters_to_string(const CITV_Characters*, char*, size_t);
 
-	CITV_Words* itv_words_new();
-	CITV_Words* itv_words_init(const char*, size_t);
-
-	size_t itv_words_save(const CITV_Words*, const char*);
-	const char* itv_words_encode(const CITV_Words*, const char*);
-	const char* itv_words_decode(const CITV_Words*, const char*);
-	size_t itv_words_get_expected_length(const CITV_Words*, const char*, int);
-
-	void do_deflate(const char* in, char* out, size_t *out_len);
-	void do_inflate(const char* in, char* out, size_t *out_len);
+	void get_utf8(size_t, char*, size_t);
+	size_t get_random(size_t);
 
 #ifdef __cplusplus
 }

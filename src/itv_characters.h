@@ -37,7 +37,9 @@ class ITV_Characters : public ITV_Table {
 		size_t load(size_t, size_t);
 		size_t load(size_t, size_t, size_t);
 		size_t load(std::string, std::string);
+		size_t load(const std::list<size_t>&);
 
+		const std::list<size_t>* dump();
 		std::string dump(std::string);
 
 		size_t read(const std::string, std::string);

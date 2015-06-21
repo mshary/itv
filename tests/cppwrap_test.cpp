@@ -18,95 +18,57 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#include "itv_config.h"
-#include "itv_ascii.h"
-#include "itv_words.h"
+#include <iostream>
+#include <string>
 
-int use_char_itv(std::string data) {
-	ITV_ASCII *caller = new ITV_ASCII();
-	caller->load(43, 90);
-	caller->load(97, 122);
+#include "itv_utils.h"
+#include "itv_characters.h"
 
-	std::string str = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-
-	//cout << "Sender ITV Table before initialization: " << endl << caller->to_string() << endl;
-	std::string enc = str;
-	caller->encode(enc);
-	//cout << "Sender ITV Table after initialization: " << endl << caller->to_string() << endl;
-
-	//caller->write("/tmp/callee.txt");
-
-	std::string key = caller->dump(':');
-	enc = data;
-	caller->encode(enc, 1);
-
-	//ITV_ASCII *callee = new ITV_ASCII();
-	//callee->read("/tmp/callee.txt");
-
-	cout << "Key: " << key << endl;
-	ITV_ASCII *callee = new ITV_ASCII(key);
-
-	//cout << "Receiver ITV Table after initialization: " << endl << callee->to_string() << endl;
-	std::string dcr = enc;
-	callee->decode(dcr, 1);
-
-	cout << "Plaintext: " << data << endl;
-	cout << "Encrypted Text: " << enc << endl;
-	cout << "Decrypted Text: " << dcr << endl;
-	cout << endl;
-
-	return 0;
-};
-
-int use_word_itv(std::string data) {
-	ITV_Words *caller = new ITV_Words("./wordsEn.txt", 0);
-
-	std::string str = "a quick brown fox jumps over the lazy dog";
-	std::string enc = str;
-	caller->encode(enc);
-
-	caller->write("/tmp/caller.txt");
-	//size_t enc_size = caller->get_expected_length(str, 0);
-	enc = data;
-	caller->encode(enc);
-
-	ITV_Words *callee = new ITV_Words("/tmp/caller.txt", 0);
-	//size_t dcr_size = callee->get_expected_length(enc, 1);
-	std::string dcr = enc;
-	callee->decode(dcr);
-
-	cout << "Plaintext: " << data << endl;
-	cout << "Encrypted Text: " << enc << endl;
-	cout << "Decrypted Text: " << dcr << endl;
-	//cout << "Expected size of encrypted text: " << enc_size << endl;
-	//cout << "Actual size of encrypted text: " << enc.length() << endl;
-	//cout << "Expected size of decrypted text: " << dcr_size << endl;
-	//cout << "Actual size of decrypted text: " << dcr.length() << endl;
-	cout << endl;
-
-	return 0;
-};
-
+using namespace std;
 
 int main() {
-	std::string str = "ﻒﺘﺤﺗ ﻢﻛﺎﺘﺑ ﺍﻼﻘﺗﺭﺎﻋ ﻒﻳ ﺕﻮﻨﺳ ﺎﻠﻳﻮﻣ ﺍﻸﺣﺩ ﺄﻣﺎﻣ ﺎﻠﻧﺎﺨﺒﻴﻧ ﻒﻳ ﺃﻮﻟ ﺎﻨﺘﺧﺎﺑﺎﺗ ﺮﺋﺎﺴﻳﺓ ﺖﻋﺩﺪﻳﺓ ﻢﻧﺫ ﺙﻭﺭﺓ 2011";
-	use_char_itv(str);
+	/* create ITV Table,
+	 * One can use any text encoding. Here we use UTF8.
+	 * IDs use Hebrew, thus encrypted text will be in Hebrew
+	 * Values use Arabic, thus plain text will be in Arabic
+	 */
+	ITV_Characters sender = ITV_Characters(0x500, 0x600, 0x6FF - 0x600);
+	sender.load(0x20, 0x20, 1); /* Add space character */
 
-	str = "a quick brown fox jumps over the lazy dog.";
-	use_word_itv(str);
+	/* randomly shuffle IDs */
+	sender.shuffle();
 
-	std::string def = do_compress(str, 1);
-	std::string inf = do_decompress(def, 1);
-	cout << "Compressed Text: " << def << endl;
-	cout << "Decompressed Text: " << inf << endl;
-	cout << endl;
+	/* define a separator for ITV Table dump */
+	std::string seperator = std::string(1, (const char)126); 
 
-	//cout << "Enter data to encrypt: ";
-	//getline(cin, str);
+	/* ITV Table that receiver needs to decrypt data */
+	std::string itv_table = sender.dump(seperator);
 
-	//cout << endl << endl;
-	//use_char_itv(str);
-	//use_word_itv(str);
+	/* sample text to encrypt, we are using UTF8 encoding here */
+	std::string str = u8"أزمة اليمن: الحوثيون يتقدمون في عدن رغم الغارات الجوية";
+	std::list<size_t>* msg = from_utf8(str);
+
+	cout << "Original: " << str << endl;
+
+	/* encrypt the text */
+	std::list<size_t> *encrypted_text = sender.encode(*msg);
+
+	/* convert encrypted text to UTF8 and send it, here we just print it */
+	cout << "Encrypted: " << to_utf8(*encrypted_text) << endl;
+
+
+	/* On Receiver side, 
+	 * the ITV Table is initialised with table dump from sender side
+	 */
+	ITV_Characters receiver = ITV_Characters(itv_table, seperator);
+	std::list<size_t> *decrypted_text = receiver.decode(*encrypted_text);
+	std::string plain = to_utf8(*decrypted_text);
+
+	if (str == plain) {
+		cout << "Decrypted: " << plain << endl;
+	} else {
+		cout << "Failure: " << plain << endl;
+	};
 
 	return 0;
 };

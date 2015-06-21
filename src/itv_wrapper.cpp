@@ -1,132 +1,79 @@
-#include "itv_config.h"
-#include "itv_ascii.h"
-#include "itv_words.h"
+#include <iostream>
+#include <string>
+
+#include "itv_utils.h"
+#include "itv_characters.h"
 #include "itv_wrapper.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	CITV_ASCII* itv_ascii_new() {
-		ITV_ASCII *itv = new ITV_ASCII();
-		return (CITV_ASCII*) itv;
+	CITV_Characters* itv_characters_init(size_t id, size_t value, size_t len) {
+		ITV_Characters *itv = new ITV_Characters(id, value, len);
+		return (CITV_Characters*) itv;
 	};
 
-	CITV_ASCII* itv_ascii_init(const char* key) {
+	CITV_Characters* itv_characters_init2(const char* key, const char* sep) {
 		std::string str = std::string(key);
-		ITV_ASCII *itv = new ITV_ASCII(str);
-		return (CITV_ASCII*) itv;
+		std::string delimiter = std::string(sep);
+		ITV_Characters *itv = new ITV_Characters(str, delimiter);
+		return (CITV_Characters*) itv;
 	};
 
-	size_t itv_ascii_load(const CITV_ASCII* obj, size_t min, size_t max) {
-		ITV_ASCII *itv = (ITV_ASCII*) obj;
-		return itv->load(min, max);
+	size_t itv_characters_read(const CITV_Characters* obj, const char* path, const char* sep) {
+		ITV_Characters *itv = (ITV_Characters*) obj;
+		std::string file = std::string(path);
+		std::string delimiter = std::string(sep);
+		return itv->read(file, delimiter);
 	};
 
-	const char* itv_ascii_dump(const CITV_ASCII* obj, char sep) {
-		ITV_ASCII *itv = (ITV_ASCII*) obj;
-		std::string str = itv->dump(sep);
-		size_t len = str.size() + 1;
-		char* res = new char[len];
-		memset(res, '\0', len);
-		return strcpy(res, str.c_str());
+	size_t itv_characters_write(const CITV_Characters* obj, const char* path, const char* sep) {
+		ITV_Characters *itv = (ITV_Characters*) obj;
+		std::string file = std::string(path);
+		std::string delimiter = std::string(sep);
+		return itv->write(file, delimiter);
 	};
 
-	const char* itv_ascii_encode(const CITV_ASCII* obj, const char* msg) {
-		ITV_ASCII *itv = (ITV_ASCII*) obj;
+	void itv_characters_dump(const CITV_Characters* obj, const char* sep, char* buf, size_t len) {
+		ITV_Characters *itv = (ITV_Characters*) obj;
+		std::string delimiter = std::string(sep);
+		std::string key = itv->dump(delimiter);
+		strncpy(buf, key.c_str(), len-1);
+		buf[len-1] = '\0';
+	};
+
+    void itv_characters_encode(const CITV_Characters* obj, const char* msg, char* buf, size_t len) {
+		ITV_Characters *itv = (ITV_Characters*) obj;
 		std::string str = std::string(msg);
-		itv->encode(str);
-		size_t len = str.size() + 1;
-		char* res = new char[len];
-		memset(res, '\0', len);
-		return strcpy(res, str.c_str());
+		std::list<size_t>* plain_text = from_utf8(str);
+		std::list<size_t> *encrypted_text = itv->encode(*plain_text);
+		strncpy(buf, to_utf8(*encrypted_text).c_str(), len-1);
+		buf[len-1] = '\0';
 	};
 
-	const char* itv_ascii_decode(const CITV_ASCII* obj, const char* msg) {
-		ITV_ASCII *itv = (ITV_ASCII*) obj;
+    void itv_characters_decode(const CITV_Characters* obj, const char* msg, char* buf, size_t len) {
+		ITV_Characters *itv = (ITV_Characters*) obj;
 		std::string str = std::string(msg);
-		itv->decode(str);
-		size_t len = str.size() + 1;
-		char* res = new char[len];
-		memset(res, '\0', len);
-		return strcpy(res, str.c_str());
+		std::list<size_t>* encrypted_text = from_utf8(str);
+		std::list<size_t>* plain_text = itv->decode(*encrypted_text);
+		strncpy(buf, to_utf8(*plain_text).c_str(), len-1);
+		buf[len-1] = '\0';
 	};
 
-	size_t itv_ascii_get_random(const CITV_ASCII* obj, size_t min, size_t max) {
-		ITV_ASCII *itv = (ITV_ASCII*) obj;
-		return itv->get_random(min, max);
+    void itv_characters_to_string(const CITV_Characters* obj, char* buf, size_t len) {
+		ITV_Characters *itv = (ITV_Characters*) obj;
+		strncpy(buf, itv->to_string().c_str(), len-1);
+		buf[len-1] = '\0';
 	};
 
-	CITV_Words* itv_words_new() {
-		ITV_Words *itv = new ITV_Words();
-		return (CITV_Words*) itv;
+    void get_utf8(size_t cp, char* buf, size_t len) {
+		strncpy(buf, to_utf8(cp).c_str(), len-1);
+		buf[len-1] = '\0';
 	};
-
-	CITV_Words* itv_words_init(const char* file, size_t min_id) {
-		ITV_Words *itv = new ITV_Words(file, min_id);
-		return (CITV_Words*) itv;
-	};
-
-	size_t itv_words_save(const CITV_Words* obj, const char* file) {
-		ITV_Words *itv = (ITV_Words*) obj;
-		return itv->write(file);
-	};
-
-	const char* itv_words_encode(const CITV_Words* obj, const char* msg) {
-		ITV_Words *itv = (ITV_Words*) obj;
-		std::string str = std::string(msg);
-		itv->encode(str);
-		size_t len = str.size() + 1;
-		char* res = new char[len];
-		memset(res, '\0', len);
-		return strcpy(res, str.c_str());
-	};
-
-	const char* itv_words_decode(const CITV_Words* obj, const char* msg) {
-		ITV_Words *itv = (ITV_Words*) obj;
-		std::string str = std::string(msg);
-		itv->decode(str);
-		size_t len = str.size() + 1;
-		char* res = new char[len];
-		memset(res, '\0', len);
-		return strcpy(res, str.c_str());
-	};
-
-	size_t itv_words_get_expected_length(const CITV_Words* obj, const char* msg, int decrypt) {
-		ITV_Words *itv = (ITV_Words*) obj;
-		return itv->get_expected_length(msg, decrypt);
-	};
-
-	void do_deflate(const char* in, char* out, size_t *out_len) {
-		z_stream defstream;
-		defstream.zalloc = Z_NULL;
-		defstream.zfree = Z_NULL;
-		defstream.opaque = Z_NULL;
-		defstream.avail_in = (uInt)strlen(in)+1;
-		defstream.next_in = (Bytef *)in;
-		defstream.avail_out = (uInt)*out_len;
-		defstream.next_out = (Bytef *)out;
-
-		deflateInit(&defstream, Z_BEST_COMPRESSION);
-		deflate(&defstream, Z_FINISH);
-		deflateEnd(&defstream);
-		*out_len = defstream.total_out;
-	};
-
-	void do_inflate(const char* in, char* out, size_t *out_len) {
-		z_stream infstream;
-		infstream.zalloc = Z_NULL;
-		infstream.zfree = Z_NULL;
-		infstream.opaque = Z_NULL;
-		infstream.avail_in = (uInt)strlen(in)+1;
-		infstream.next_in = (Bytef *)in;
-		infstream.avail_out = (uInt)*out_len;
-		infstream.next_out = (Bytef *)out;
-
-		inflateInit(&infstream);
-		inflate(&infstream, Z_NO_FLUSH);
-		inflateEnd(&infstream);
-		*out_len = infstream.total_out;
+    
+    size_t get_random(size_t max) {
+		return generate_random(max);
 	};
 
 #ifdef __cplusplus
