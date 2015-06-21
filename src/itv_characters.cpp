@@ -32,6 +32,11 @@ ITV_Characters::~ITV_Characters() {
 	// nothing todo here
 };
 
+ITV_Characters::ITV_Characters(std::string str) {
+	table = new list<ITV>();
+	this->load(str);
+};
+
 ITV_Characters::ITV_Characters(size_t min, size_t max) {
 	table = new list<ITV>();
 	this->load(min, max);
@@ -42,9 +47,13 @@ ITV_Characters::ITV_Characters(size_t id, size_t value, size_t len) {
 	this->load(id, value, len);
 };
 
-ITV_Characters::ITV_Characters(std::string str, std::string delimiter) {
-	table = new list<ITV>();
-	this->load(str, delimiter);
+size_t ITV_Characters::load(std::string str) {
+	const std::list<size_t>* key = from_utf8(str);
+	if ((key->size() % 2) != 0) { return 0; };
+	for (auto i=key->begin(); i!=key->end(); i++) {
+		this->add(ITV(*i++, *i));
+	};
+	return this->table->size();
 };
 
 size_t ITV_Characters::load(size_t min, size_t max) {
@@ -64,73 +73,46 @@ size_t ITV_Characters::load(size_t id, size_t value, size_t len) {
 	return len;
 };
 
-size_t ITV_Characters::load(std::string str, std::string delimiter) {
-	std::deque<std::string> *data = split(str, delimiter);
-	if ((data->size() % 2) != 0) { return 0; };
-
-	for (auto i=data->begin(); i!=data->end(); i++) {
-		std::list<size_t>* id = from_utf8(*i++);
-		std::list<size_t>* value = from_utf8(*i);
-		this->add(ITV(id->front(), value->front()));
-	};
-
-	return this->table->size();
-};
-
-size_t ITV_Characters::load(const std::list<size_t>& key) {
-	if ((key.size() % 2) != 0) { return 0; };
-	for (auto i=key.begin(); i!=key.end(); i++) {
-		this->add(ITV(*i++, *i));
-	};
-	return this->table->size();
-};
-
-const std::list<size_t>* ITV_Characters::dump() {
-	std::list<size_t>* key = new std::list<size_t>();
-	this->table->sort(compare_tags);
-	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
-		key->push_back((*i).get_id());
-		key->push_back((*i).get_value());
-	};
-	return key;
-};
-
-std::string ITV_Characters::dump(std::string delimiter) {
-	std::stringstream ss;
-	const std::list<size_t>* key = this->dump();
-	for (auto i=key->begin(); i!=key->end(); i++) {
-		ss << to_utf8(*i) << delimiter;
-	};
-	std::string str = ss.str();
-	return str.substr(0, str.length() - delimiter.length());
-};
-
-size_t ITV_Characters::read(const std::string file, std::string delimiter) {
+size_t ITV_Characters::read(const std::string file) {
 	ifstream ifs(file);
 	if (!ifs.is_open()) { return 0; };
 
 	std::string line = string();
 	while(getline(ifs, line)) {
-		this->load(line, delimiter);
+		this->load(line);
 	};
 
 	ifs.close();
 	return this->table->size();
 };
 
-size_t ITV_Characters::write(const std::string file, std::string delimiter) {
+size_t ITV_Characters::write(const std::string file) {
 	ofstream ofs(file);
 	if (!ofs.is_open()) { return 0; };
 	this->table->sort(compare_tags);
 
-	ofs << this->dump(delimiter);
+	ofs << this->dump();
 	ofs.close();
 
 	return this->table->size();
 };
 
-const std::string ITV_Characters::to_string() {
-	return this->dump(std::string(1, (const char)126));
+const std::string ITV_Characters::dump() {
+	std::list<size_t>* key = new std::list<size_t>();
+	this->table->sort(compare_tags);
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
+		key->push_back((*i).get_id());
+		key->push_back((*i).get_value());
+	};
+
+	std::stringstream ss;
+	for (auto i=key->begin(); i!=key->end(); i++) {
+		ss << to_utf8(*i);
+	};
+	return ss.str();
 };
 
+const std::string ITV_Characters::to_string() {
+	return this->dump();
+};
 

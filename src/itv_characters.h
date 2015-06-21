@@ -30,21 +30,18 @@ class ITV_Characters : public ITV_Table {
 		ITV_Characters();
 		~ITV_Characters();
 
+		ITV_Characters(std::string);
 		ITV_Characters(size_t, size_t);
 		ITV_Characters(size_t, size_t, size_t);
-		ITV_Characters(std::string, std::string);
 
+		size_t load(std::string);
 		size_t load(size_t, size_t);
 		size_t load(size_t, size_t, size_t);
-		size_t load(std::string, std::string);
-		size_t load(const std::list<size_t>&);
 
-		const std::list<size_t>* dump();
-		std::string dump(std::string);
+		size_t read(const std::string);
+		size_t write(const std::string);
 
-		size_t read(const std::string, std::string);
-		size_t write(const std::string, std::string);
-
+		const std::string dump();
 		const std::string to_string();
 };
 

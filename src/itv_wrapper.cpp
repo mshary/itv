@@ -14,31 +14,27 @@ extern "C" {
 		return (CITV_Characters*) itv;
 	};
 
-	CITV_Characters* itv_characters_init2(const char* key, const char* sep) {
+	CITV_Characters* itv_characters_init2(const char* key) {
 		std::string str = std::string(key);
-		std::string delimiter = std::string(sep);
-		ITV_Characters *itv = new ITV_Characters(str, delimiter);
+		ITV_Characters *itv = new ITV_Characters(str);
 		return (CITV_Characters*) itv;
 	};
 
-	size_t itv_characters_read(const CITV_Characters* obj, const char* path, const char* sep) {
+	size_t itv_characters_read(const CITV_Characters* obj, const char* path) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
 		std::string file = std::string(path);
-		std::string delimiter = std::string(sep);
-		return itv->read(file, delimiter);
+		return itv->read(file);
 	};
 
-	size_t itv_characters_write(const CITV_Characters* obj, const char* path, const char* sep) {
+	size_t itv_characters_write(const CITV_Characters* obj, const char* path) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
 		std::string file = std::string(path);
-		std::string delimiter = std::string(sep);
-		return itv->write(file, delimiter);
+		return itv->write(file);
 	};
 
-	void itv_characters_dump(const CITV_Characters* obj, const char* sep, char* buf, size_t len) {
+	void itv_characters_dump(const CITV_Characters* obj, char* buf, size_t len) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
-		std::string delimiter = std::string(sep);
-		std::string key = itv->dump(delimiter);
+		std::string key = itv->dump();
 		strncpy(buf, key.c_str(), len-1);
 		buf[len-1] = '\0';
 	};

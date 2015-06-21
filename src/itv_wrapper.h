@@ -7,12 +7,12 @@ extern "C" {
 #endif
 
 	CITV_Characters* itv_characters_init(size_t, size_t, size_t);
-	CITV_Characters* itv_characters_init2(const char*, const char*);
+	CITV_Characters* itv_characters_init2(const char*);
 
-	size_t itv_characters_read(const CITV_Characters*, const char*, const char*);
-	size_t itv_characters_write(const CITV_Characters*, const char*, const char*);
+	size_t itv_characters_read(const CITV_Characters*, const char*);
+	size_t itv_characters_write(const CITV_Characters*, const char*);
 
-	void itv_characters_dump(const CITV_Characters*, const char*, char*, size_t);
+	void itv_characters_dump(const CITV_Characters*, char*, size_t);
 	void itv_characters_encode(const CITV_Characters*, const char*, char*, size_t);
 	void itv_characters_decode(const CITV_Characters*, const char*, char*, size_t);
 	void itv_characters_to_string(const CITV_Characters*, char*, size_t);
