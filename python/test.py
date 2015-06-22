@@ -10,13 +10,84 @@
 
 import pyitv
 
-data = "ﻒﺘﺤﺗ ﻢﻛﺎﺘﺑ ﺍﻼﻘﺗﺭﺎﻋ ﻒﻳ ﺕﻮﻨﺳ ﺎﻠﻳﻮﻣ ﺍﻸﺣﺩ ﺄﻣﺎﻣ ﺎﻠﻧﺎﺨﺒﻴﻧ ﻒﻳ ﺃﻮﻟ ﺎﻨﺘﺧﺎﺑﺎﺗ ﺮﺋﺎﺴﻳﺓ ﺖﻋﺩﺪﻳﺓ ﻢﻧﺫ ﺙﻭﺭﺓ 2011";
+# id starts with ASCII code 97 i.e. 'a'
+ii = 97
 
-ret = itv.ascii_encode("", ':', data, 1)
-if ret != None:
-    print "Current Key: %s\n\nNext Key: %s\n\nResult: %s\n" % (ret[0], ret[1], ret[2])
+# value also starts with ASCII code 97, i.e. 'a', 
+# thus encrypted and decrypted text will have same character encoding
+vv = 97
 
-ret = itv.ascii_decode(ret[0], ':', ret[2], 1)
-if ret != None:
-    print "Current Key: %s\n\nNext Key: %s\n\nResult: %s\n" % (ret[0], ret[1], ret[2])
+# how many characters with take part in encryption / decryption, 
+# here all small letters of English language, i.e. a - z
+ss = 26
+
+# message to test encryption
+msg = "a quick brown fox jumps over the lazy dog"
+
+# another message for next round of encryption / decryption,
+# notice the capital latters and symbols in message,
+# these will not be encrypted, 
+# -- the ITV Table should include them too --
+next_msg = "Those who would give up essential Liberty, to purchase a little temporary Safety, deserve neither Liberty nor Safety - Benjamin Franklin"
+
+#### Sender Side ####
+
+# initialize the ITV Table on sender side
+src = pyitv.itv_characters_init(ii, vv, ss)
+
+# save the key before encryption, 
+# receiver will need this key for decryption only the first time, 
+# notice how key length is calculated
+key_len = ss * 2 + 1
+key = '\0'*key_len
+pyitv.itv_characters_dump(src, key, len(key))
+
+# create a char buffer to store encrypted text, 
+# notice how the size of encrypted message is calculated
+enc_len = len(msg) * 2 + 1
+enc = '\0'*enc_len
+
+# do the actual ecnryption
+pyitv.itv_characters_encode(src, msg, enc, enc_len)
+
+# save the next key, 
+# this will be used to encrypt next message, 
+# the sender does NOT need to send this key to receiver,
+# notice the length of next key will be same as last key
+next_key = '\0'*key_len
+pyitv.itv_characters_dump(src, next_key, len(next_key))
+
+# create a char buffer to store encrypted text, 
+next_enc_len = len(next_msg) * 2 + 1
+next_enc = '\0'*next_enc_len
+
+# do the actual ecnryption
+pyitv.itv_characters_encode(src, next_msg, next_enc, next_enc_len)
+
+
+#### Receiver Side ####
+
+# initialize the ITV Table from key received from sender side
+dst = pyitv.itv_characters_init2(key)
+
+# create char buffer to store decrypted text, 
+# notice how the size of decrypted message is calculated
+dec_len = len(enc) / 2 + 1
+dec = '\0'*dec_len
+
+# do the actual decryption
+pyitv.itv_characters_decode(dst, enc, dec, dec_len)
+
+# create char buffer to store next decrypted text, 
+next_dec_len = len(next_enc) / 2 + 1
+next_dec = '\0'*next_dec_len
+
+# decrypt next message
+pyitv.itv_characters_decode(dst, next_enc, next_dec, next_dec_len)
+
+
+# print it all
+print "Original: %s\nEncrypted: %s\nDecrypted: %s\n\n" % (msg, enc, dec)
+print "Original: %s\nEncrypted: %s\nDecrypted: %s\n\n" % (next_msg, next_enc, next_dec)
+
 

@@ -13,4 +13,4 @@ install:
 	python setup.py install
 
 clean:
-	rm -fr _pyitv_module.cc pyitv.py *.so build
+	rm -fr _pyitv_module.cc pyitv.py* *.so build
