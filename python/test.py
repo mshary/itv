@@ -35,12 +35,19 @@ next_msg = "Those who would give up essential Liberty, to purchase a little temp
 # initialize the ITV Table on sender side
 src = pyitv.itv_characters_init(ii, vv, ss)
 
+# randomly shuffle the ids in ITV Table,
+# this is highly recommended before saving key that will be sent to receiver
+pyitv.itv_characters_shuffle(src);
+
 # save the key before encryption, 
 # receiver will need this key for decryption only the first time, 
 # notice how key length is calculated
 key_len = ss * 2 + 1
 key = '\0'*key_len
 pyitv.itv_characters_dump(src, key, len(key))
+
+# print the key
+print "Key:\t\t%s" % (key)
 
 # create a char buffer to store encrypted text, 
 # notice how the size of encrypted message is calculated
@@ -51,11 +58,14 @@ enc = '\0'*enc_len
 pyitv.itv_characters_encode(src, msg, enc, enc_len)
 
 # save the next key, 
-# this will be used to encrypt next message, 
-# the sender does NOT need to send this key to receiver,
+# neither sender nor receiver need to do anything with it,
+# we are saving it here ONLY to print and demonstrate how key changes dynamically.
 # notice the length of next key will be same as last key
 next_key = '\0'*key_len
 pyitv.itv_characters_dump(src, next_key, len(next_key))
+
+# print the next key
+print "Next Key:\t%s\n" % (next_key)
 
 # create a char buffer to store encrypted text, 
 next_enc_len = len(next_msg) * 2 + 1
@@ -82,7 +92,9 @@ pyitv.itv_characters_decode(dst, enc, dec, dec_len)
 next_dec_len = len(next_enc) / 2 + 1
 next_dec = '\0'*next_dec_len
 
-# decrypt next message
+# decrypt next message,
+# notice if you save / print the key before decrypting next message,
+# then it will be identical to next_key
 pyitv.itv_characters_decode(dst, next_enc, next_dec, next_dec_len)
 
 

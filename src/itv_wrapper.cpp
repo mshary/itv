@@ -32,6 +32,11 @@ extern "C" {
 		return itv->write(file);
 	};
 
+	void itv_characters_shuffle(const CITV_Characters* obj) {
+		ITV_Characters *itv = (ITV_Characters*) obj;
+		itv->shuffle();
+	};
+
 	void itv_characters_dump(const CITV_Characters* obj, char* buf, size_t len) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
 		std::string key = itv->dump();
