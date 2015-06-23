@@ -52,7 +52,8 @@ size_t ITV_Characters::load(std::string str) {
 	const std::list<size_t>* key = from_utf8(str);
 	if ((key->size() % 2) != 0) { return 0; };
 	for (auto i=key->begin(); i!=key->end(); i++) {
-		this->add(ITV(*i++, *i));
+		size_t x = *i++, y = *i;
+		this->add(ITV(x, y));
 	};
 	return this->table->size();
 };
