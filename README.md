@@ -4,7 +4,7 @@ A fast, simple yet effective encryption algorithm for data communication over co
 ### History
 This algorithm has its roots in *Caesar Cipher*. The original cipher suggests that each letter in plain text is replaced by some fixed number of positions down the alphabet. For example, with left shift of 3, 'D' would be replaced by 'A', 'E' would become 'B' and so on.
 
-The *Caesar Cipher* was first cracked by an Arab scientist Al-Kindi in 9th century through discovery of frequency analysis (some letters are used more frequently in a language then others, the analysis can easily determine shift value and direction). In 15th century, the *Polyalphabetic Cipher* was introduce, which suggested to use a secret word, each letter in the word was used as shift for plaintext letters (like *Caesar Cipher*). However in late 19th century, this too was broken down. 
+The *Caesar Cipher* was first cracked by an Arab scientist Al-Kindi in 9th century through discovery of frequency analysis (some letters are used more frequently in a language then others, the analysis can easily determine shift value and direction). In 15th century, the *Polyalphabetic Cipher* was introduce, which suggested to use a secret word, each letter in the word was used as shift for plaintext letters (like *Caesar Cipher*). However in late 19th century, this too was broken down.
 
 On Sept. 1, 1945, Claude Shannon proved mathematically a further enhancement to the cipher, which proposes random shift to each letter of plaintext, as the perfect solution for the encryption. It is now known as *One-Time Pad Encryption*. The ITV algorithm is intends to extend and apply this *One-Time Pad Encryption* using some basic Computer Science concepts.
 
@@ -39,7 +39,7 @@ Thus we have ITV Table with ID, Tag and Value for each letter in English charact
 Using above ITV Table, suppose we want to encrypt the word "ABBA". The encryption is done as follows,
 
 - Take the first letter, in this case 'A', and find the corresponding row in ITV Table which has this letter in *Value* column. Lets call it ITV Table record X.
-- Generate a random number; say 67, within range 65 - 90. 
+- Generate a random number; say 67, within range 65 - 90.
 - Determine ITV table row which has *ID* = 67. Let call it ITV record Y.
 - In ITV Table record Y, save current ID as TAG and ID of ITV record X as new ID. ITV table becomes,
 
@@ -87,7 +87,7 @@ Using above ITV Table, suppose we want to encrypt the word "ABBA". The encryptio
 Thus, we may have,
 
 ````
-	ABBA => 65 67 66 89 89 90 65 70 
+	ABBA => 65 67 66 89 89 90 65 70
 ````
 
 OR Simply,
@@ -124,9 +124,32 @@ Here is how to the decryption works,
 - Run through all pairs of character in the word to determine unencrypted characters and so on.
 
 ## Word Based ITV
-It works almost exactly same as Character Based ITV. The only difference is that in character based ITV, we have well-defined character sets which both us and computers understand.
+All existing encryption algorithms today have one common flaw, that is, they all have clear encryption / decryption semantics. This means any human or AI capable machine could easily identify if any text is encrypted or not. If this person or thing has the capability to interrogate the data sender or receiver, it may force them to reveal the original message or at minimum, block their communication channel so that no further encrypted transmission is possible between them.
 
-If we have a dictionary of words that both sender and receiver agree upon and do all the communication according to it then we can use each word in the dictionary as value for **Value** column and assign each word its own unique numeric value in **ID** column then we can construct *Word Based ITV Table*, which would encrypt plaintext word-wise and produce numeric encrypted text following same encryption / decryption rules as *Character Based ITV Table*.
+This poses a great threat to encryption users. Many countries in the world, even the so called champions of freedom of expression and civil liberties are indulge in crimes of mass surveillance of not only the foreigners but also their own citizens. These ordinary Internet users on the other hand, have no way to protect their privacy without being spotted and possibly being condemned by the authorities in their country.
+
+The aim of word based ITV encryption algorithm is to encrypt data metaphorically. That is, neither the computer nor a human should be able to identify if any given data is encrypted or not. It should appear as ordinary plain-text with casual meaning, only a computer program designed specifically to decrypt the data should be able to identify and process it.
+
+The base implementation idea is similar to Character Based ITV. The main difference is the use of language dictionary instead of character set and instead of mapping them to integers, map them to words from another language (or the same language for simpler implementations). For example, an encrypted text may look like,
+
+```
+Then I said I love you.
+```
+
+This may decrypt to,
+
+```
+Du Scheiße Kopf!
+```
+
+As you can see both encrypted and decrypted texts have completely different meaning, though they both look plain-text to their speaks.
+
+The main challenge here is to make encrypted text somewhat meaningful, so it makes some sense as a sentence. This requires the implementation program to have some knowledge of both languages and their basic grammar.
+
+**Edit:**
+*In this age of social media, people no longer care for correct spelling and grammar in their writings, which significantly simplifies the implementation of this algorithm, all we need is a big pool of slang words in respective languages and the knowledge of their grammatical classification e.g. whether it is a noun, verb or adjective etc. etc.*
+
+This is a work in progress and currently no sample code is available in this public repository.
 
 ## Using The Sample Code
 Sample code provided as proof of concept in C++ using STL library. You must have fairly recent compiler to build it since it heavily used C++ 11 specification.
@@ -187,33 +210,33 @@ int main() {
 	 */
 	ITV_Characters sender = ITV_Characters(0x500, 0x600, 0x6FF - 0x600);
     sender.load(0x20, 0x20, 1);	/* Add space character */
-    
+
     /* randomly shuffle IDs */
     sender.shuffle();
-    
+
     /* ITV Table that receiver needs to decrypt data */
     std::string itv_table = sender.dump();
-    
+
 	/* sample text to encrypt, we are using UTF8 encoding here */
 	std::string str = u8"أزمة اليمن: الحوثيون يتقدمون في عدن رغم الغارات الجوية";
     std::list<size_t>* msg = from_utf8(str);
-    
+
     cout << "Original: " << str << endl;
-    
+
     /* encrypt the text */
     std::list<size_t> *encrypted_text = sender.encode(*msg);
-    
+
     /* convert encrypted text to UTF8 and send it, here we just print it */
     cout << "Encrypted: " << to_utf8(*encrypted_text) << endl;
-    
-    
-    /* On Receiver side, 
+
+
+    /* On Receiver side,
 	 * the ITV Table is initialised with table dump from sender side
 	 */
     ITV_Characters receiver = ITV_Characters(itv_table);
 	std::list<size_t> *decrypted_text = receiver.decode(*encrypted_text);
     std::string plain = to_utf8(*decrypted_text);
-    
+
     if (str == plain) {
     	cout << "Decrypted: " << plain << endl;
     } else {
