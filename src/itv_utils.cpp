@@ -87,10 +87,10 @@ std::string to_utf8(std::list<size_t>& msg) {
 // converts utf8 string to codepoint list
 std::list<size_t>* from_utf8(std::string& msg) {
 	std::list<size_t> *ret = new std::list<size_t>();
-	size_t len = msg.length();
+	std::string::size_type len = msg.length();
 	if (len < 1) return ret;
 
-	for(auto i=0; i<len; i++) {
+	for(std::string::size_type i=0; i<len; i++) {
 		unsigned char u0 = msg[i+0], u1 = msg[i+1], u2 = msg[i+2], u3 = msg[i+3];
 		if (u0>=0 && u0<=127)	{ ret->push_back(u0); continue; };
 		if (u0>=192 && u0<=223)	{ ret->push_back((u0-192)*64 + (u1-128)); i++; continue; };
