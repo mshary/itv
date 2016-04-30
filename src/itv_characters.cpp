@@ -98,11 +98,22 @@ size_t ITV_Characters::write(const std::string file) {
 };
 
 const std::string ITV_Characters::dump() {
+	return this->to_string(0, 0);
+};
+
+const std::string ITV_Characters::to_string() {
+	return this->to_string(0, 0);
+};
+
+const std::string ITV_Characters::to_string(size_t inner, size_t outer) {
 	std::list<size_t>* key = new std::list<size_t>();
 	this->table->sort(compare_tags);
+
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
 		key->push_back((*i).get_id());
+		if (inner > 0) key->push_back(inner);
 		key->push_back((*i).get_value());
+		if (outer > 0) key->push_back(outer);
 	};
 
 	std::stringstream ss;
@@ -110,9 +121,5 @@ const std::string ITV_Characters::dump() {
 		ss << to_utf8(*i);
 	};
 	return ss.str();
-};
-
-const std::string ITV_Characters::to_string() {
-	return this->dump();
 };
 

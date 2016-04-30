@@ -43,6 +43,7 @@ class ITV_Characters : public ITV_Table {
 
 		const std::string dump();
 		const std::string to_string();
+		const std::string to_string(size_t, size_t);
 };
 
 #endif
