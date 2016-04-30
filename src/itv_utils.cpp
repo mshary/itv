@@ -23,8 +23,6 @@
 
 #include "itv_utils.h"
 
-#define IS_IN_RANGE(c, f, l)    (((c) >= (f)) && ((c) <= (l)))
-
 using namespace::std;
 
 // trim string from start
@@ -70,111 +68,36 @@ std::deque<std::string>* split(std::string& s, std::string& delimiter) {
 
 // convert codepoint to utf8 char
 std::string to_utf8(size_t cp) {
-	std::string str = std::string();
-
-	if (cp <= 0x7f) {
-		str.append(1, static_cast<char>(cp));
-	} else if (cp <= 0x7ff) {
-		str.append(1, static_cast<char>(0xc0 | ((cp >> 6) & 0x1f)));
-		str.append(1, static_cast<char>(0x80 | (cp & 0x3f)));
-	} else if (cp <= 0xffff) {
-		str.append(1, static_cast<char>(0xe0 | ((cp >> 12) & 0x0f)));
-		str.append(1, static_cast<char>(0x80 | ((cp >> 6) & 0x3f)));
-		str.append(1, static_cast<char>(0x80 | (cp & 0x3f)));
-	} else {
-		str.append(1, static_cast<char>(0xf0 | ((cp >> 18) & 0x07)));
-		str.append(1, static_cast<char>(0x80 | ((cp >> 12) & 0x3f)));
-		str.append(1, static_cast<char>(0x80 | ((cp >> 6) & 0x3f)));
-		str.append(1, static_cast<char>(0x80 | (cp & 0x3f)));
-	};
-
-	return str;
-};
+	char c[5]={ 0x00,0x00,0x00,0x00,0x00 };
+	if		(cp<=0x7F)		{ c[0] = cp;  }
+	else if	(cp<=0x7FF)		{ c[0] = (cp>>6)+192; c[1] = (cp&63)+128; }
+	else if	(0xd800<=cp && cp<=0xdfff) { } //invalid block of utf8
+	else if	(cp<=0xFFFF)	{ c[0] = (cp>>12)+224; c[1]= ((cp>>6)&63)+128; c[2]=(cp&63)+128; }
+	else if	(cp<=0x10FFFF)	{ c[0] = (cp>>18)+240; c[1] = ((cp>>12)&63)+128; c[2] = ((cp>>6)&63)+128; c[3]=(cp&63)+128; }
+	return std::string(c);
+}
 
 // convert codepoints to utf8 string
 std::string to_utf8(std::list<size_t>& msg) {
 	std::string str = std::string();
-
-	for (auto i=msg.begin(); i!=msg.end(); i++) {
-		str += to_utf8(*i);
-	};
-
+	for (auto i=msg.begin(); i!=msg.end(); i++) { str += to_utf8(*i); };
     return str;
 };
 
-// convert utf8 string to codepoints
+// converts utf8 string to codepoint list
 std::list<size_t>* from_utf8(std::string& msg) {
-	unsigned char c1, c2, *ptr = (unsigned char*) msg.c_str();
 	std::list<size_t> *ret = new std::list<size_t>();
 	size_t len = msg.length();
+	if (len < 1) return ret;
 
-	while (len) {
-		size_t uc = 0, seqlen = 0;
-		if (len < 1) { return ret; };
-		c1 = ptr[0];
-
-		if ((c1 & 0x80) == 0) {
-			uc = (size_t) (c1 & 0x7F);
-			seqlen = 1;
-		} else if ((c1 & 0xE0) == 0xC0) {
-			uc = (size_t) (c1 & 0x1F);
-			seqlen = 2;
-		} else if ((c1 & 0xF0) == 0xE0) {
-			uc = (size_t) (c1 & 0x0F);
-			seqlen = 3;
-		} else if ((c1 & 0xF8) == 0xF0) {
-			uc = (size_t) (c1 & 0x07);
-			seqlen = 4;
-		} else {
-			break;
-		};
-
-		if (seqlen > len) { return ret; };
-
-		for (size_t i = 1; i < seqlen; ++i) {
-			c1 = ptr[i];
-			if ((c1 & 0xC0) != 0x80) { return ret; };
-		};
-
-		switch (seqlen) {
-			case 2: {
-				c1 = ptr[0];
-				if (!IS_IN_RANGE(c1, 0xC2, 0xDF)) { return ret; };
-				break;
-			};
-
-			case 3: {
-				c1 = ptr[0];
-				c2 = ptr[1];
-
-				if (((c1 == 0xE0) && !IS_IN_RANGE(c2, 0xA0, 0xBF)) ||
-					((c1 == 0xED) && !IS_IN_RANGE(c2, 0x80, 0x9F)) ||
-					(!IS_IN_RANGE(c1, 0xE1, 0xEC) && !IS_IN_RANGE(c1, 0xEE, 0xEF))) {
-					return ret;
-				};
-
-				break;
-			};
-
-			case 4: {
-				c1 = ptr[0];
-				c2 = ptr[1];
-
-				if (((c1 == 0xF0) && !IS_IN_RANGE(c2, 0x90, 0xBF)) ||
-					((c1 == 0xF4) && !IS_IN_RANGE(c2, 0x80, 0x8F)) ||
-					(!IS_IN_RANGE(c1, 0xF1, 0xF3))) {
-					return ret;
-				};
-
-				break;
-			};
-		};
-
-		for (size_t i = 1; i < seqlen; ++i) { uc = ((uc << 6) | (size_t)(ptr[i] & 0x3F)); };
-		ret->push_back(uc);
-
-		ptr += seqlen;
-		len -= seqlen;
+	for(auto i=0; i<len; i++) {
+		unsigned char u0 = msg[i+0], u1 = msg[i+1], u2 = msg[i+2], u3 = msg[i+3];
+		if (u0>=0 && u0<=127)	{ ret->push_back(u0); continue; };
+		if (u0>=192 && u0<=223)	{ ret->push_back((u0-192)*64 + (u1-128)); i++; continue; };
+		if (u0==0xed && (u1 & 0xa0) == 0xa0) { i++; continue; }; //codepoints 0xd800 to 0xdfff are not valid
+		if (u0>=224 && u0<=239)	{ ret->push_back((u0-224)*4096 + (u1-128)*64 + (u2-128)); i++; i++; continue; };
+		if (u0>=240 && u0<=247)	{ ret->push_back((u0-240)*262144 + (u1-128)*4096 + (u2-128)*64 + (u3-128)); i++; i++; i++; continue; };
+		i++; i++; i++;
 	};
 
 	return ret;
