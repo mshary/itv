@@ -41,6 +41,7 @@ class ITV_Characters : public ITV_Table {
 		size_t read(const std::string);
 		size_t write(const std::string);
 
+		size_t checksum();
 		const std::string dump();
 		const std::string to_string();
 		const std::string to_string(size_t, size_t);

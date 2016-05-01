@@ -97,6 +97,14 @@ size_t ITV_Characters::write(const std::string file) {
 	return this->table->size();
 };
 
+size_t ITV_Characters::checksum() {
+	size_t ret = 0;
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
+		ret += (*i).get_id() ^ (*i).get_value();
+	};
+	return ret;
+};
+
 const std::string ITV_Characters::dump() {
 	return this->to_string(0, 0);
 };

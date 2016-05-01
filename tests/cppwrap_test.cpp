@@ -41,6 +41,11 @@ int main() {
 	/* ITV Table that receiver needs to decrypt data */
 	std::string itv_table = sender.dump();
 
+	/* ITV Table checksum, the receiver can check it to ensure 
+	 * whether or not decryption will be successful before actual decryption 
+	 */
+	size_t sender_checksum = sender.checksum();
+
 	/* sample text to encrypt, we are using UTF8 encoding here */
 	std::string str = u8"أزمة اليمن: الحوثيون يتقدمون في عدن رغم الغارات الجوية";
 	std::list<size_t>* msg = from_utf8(str);
@@ -51,13 +56,28 @@ int main() {
 	std::list<size_t> *encrypted_text = sender.encode(*msg);
 
 	/* convert encrypted text to UTF8 and send it, here we just print it */
-	cout << "Encrypted: " << to_utf8(*encrypted_text) << endl;
+	cout << "Encrypted: " << to_utf8(*encrypted_text) << endl << endl;
 
 
 	/* On Receiver side, 
 	 * the ITV Table is initialised with table dump from sender side
 	 */
 	ITV_Characters receiver = ITV_Characters(itv_table);
+
+	/* ITV Table checksum, if this match's sender checksum then ITV Table integrity is verified 
+	 * and decryption will be successful
+	 */
+	size_t receiver_checksum = receiver.checksum();
+
+	if (receiver_checksum != sender_checksum) {
+		cout << "Error: checksum mismatch" << endl;
+		cout << "Local: 0x" << std::hex << receiver_checksum << endl;
+		cout << "Remote: 0x" << std::hex << sender_checksum << endl;
+		return 0;
+	} else {
+		cout << "ITV Table Integrity Verified: 0x" << std::hex << sender_checksum << endl;
+	};
+
 	std::list<size_t> *decrypted_text = receiver.decode(*encrypted_text);
 	std::string plain = to_utf8(*decrypted_text);
 
