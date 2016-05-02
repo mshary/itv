@@ -114,19 +114,13 @@ const std::string ITV_Characters::to_string() {
 };
 
 const std::string ITV_Characters::to_string(size_t inner, size_t outer) {
-	std::list<size_t>* key = new std::list<size_t>();
-	this->table->sort(compare_tags);
-
-	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
-		key->push_back((*i).get_id());
-		if (inner > 0) key->push_back(inner);
-		key->push_back((*i).get_value());
-		if (outer > 0) key->push_back(outer);
-	};
-
 	std::stringstream ss;
-	for (auto i=key->begin(); i!=key->end(); i++) {
-		ss << to_utf8(*i);
+	this->table->sort(compare_tags);
+	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
+		ss << to_utf8((*i).get_id());
+		if (inner > 0) ss << to_utf8(inner);
+		ss << to_utf8((*i).get_value());
+		if (outer > 0) ss << to_utf8(outer);
 	};
 	return ss.str();
 };
