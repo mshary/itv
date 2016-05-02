@@ -93,13 +93,21 @@ std::list<size_t>* from_utf8(std::string& msg) {
 	if (len < 1) return ret;
 
 	for(std::string::size_type i=0; i<len; i++) {
-		unsigned char u0 = msg[i+0], u1 = msg[i+1], u2 = msg[i+2], u3 = msg[i+3];
+		unsigned char u0 = msg[i+0];
 		if (u0>=0 && u0<=127)	{ ret->push_back(u0); continue; };
-		if (u0>=192 && u0<=223)	{ ret->push_back((u0-192)*64 + (u1-128)); i++; continue; };
-		if (u0==0xed && (u1 & 0xa0) == 0xa0) { i++; continue; }; //codepoints 0xd800 to 0xdfff are not valid
-		if (u0>=224 && u0<=239)	{ ret->push_back((u0-224)*4096 + (u1-128)*64 + (u2-128)); i++; i++; continue; };
-		if (u0>=240 && u0<=247)	{ ret->push_back((u0-240)*262144 + (u1-128)*4096 + (u2-128)*64 + (u3-128)); i++; i++; i++; continue; };
-		i++; i++; i++;
+		if ((i+1) < len) {
+			unsigned char u1 = msg[i+1];
+			if (u0>=192 && u0<=223)	{ ret->push_back((u0-192)*64 + (u1-128)); i++; continue; };
+			if (u0==0xed && (u1 & 0xa0) == 0xa0) { i++; continue; }; //codepoints 0xd800 to 0xdfff are not valid
+			if ((i+2) < len) {
+				unsigned char u2 = msg[i+2];
+				if (u0>=224 && u0<=239)	{ ret->push_back((u0-224)*4096 + (u1-128)*64 + (u2-128)); i++; i++; continue; };
+				if ((i+3) < len) {
+					unsigned char u3 = msg[i+3];
+					if (u0>=240 && u0<=247)	{ ret->push_back((u0-240)*262144 + (u1-128)*4096 + (u2-128)*64 + (u3-128)); i++; i++; i++; continue; };
+				};
+			};
+		};
 	};
 
 	return ret;
