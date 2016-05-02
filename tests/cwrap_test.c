@@ -29,6 +29,7 @@ int main() {
 	char key[4096];
 	char enc[sizeof(msg)*2];
 	char dec[sizeof(msg)];
+	size_t sender_checksum, receiver_checksum;
 
 	CITV_Characters *itv = itv_characters_init(0x100, 0x600, 0x6FF - 0x600);
 
@@ -36,17 +37,25 @@ int main() {
 	itv_characters_shuffle(itv);
 
 	itv_characters_dump(itv, key, sizeof(key));
-	/* printf("KEY: %s\n", key); */
+	printf("KEY: %s\n", key);
+
+	sender_checksum = itv_characters_checksum(itv);
 
 	itv_characters_encode(itv, msg, enc, sizeof(enc));
-	printf("MSG: %s\nENC: %s\n", msg, enc);
+	printf("MSG: %s\nENC: %s\nCS: %lu\n", msg, enc, sender_checksum);
 
 	free(itv);
 	itv = NULL;
 
 	itv = itv_characters_init2(key);
-	itv_characters_decode(itv, enc, dec, sizeof(dec));
-	printf("DEC: %s\nRandom: %lu\n", dec, (unsigned long)get_random(0x6FF - 0x600));
+	receiver_checksum = itv_characters_checksum(itv);
+
+	if (sender_checksum == receiver_checksum) {
+		itv_characters_decode(itv, enc, dec, sizeof(dec));
+		printf("DEC: %s\nRandom: %lu\nCS: %lu\n", dec, (unsigned long)get_random(0x6FF - 0x600), receiver_checksum);
+	} else {
+		printf("Failure: checksum mismatch, %lu != %lu", sender_checksum, receiver_checksum);
+	};
 
 	free(itv);
 	itv = NULL;

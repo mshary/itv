@@ -40,6 +40,11 @@ extern "C" {
 		return (CITV_Characters*) itv;
 	};
 
+	size_t itv_characters_checksum(const CITV_Characters* obj) {
+		ITV_Characters *itv = (ITV_Characters*) obj;
+		return itv->checksum();
+	};
+
 	size_t itv_characters_read(const CITV_Characters* obj, const char* path) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
 		std::string file = std::string(path);
@@ -82,9 +87,9 @@ extern "C" {
 		buf[len-1] = '\0';
 	};
 
-    void itv_characters_to_string(const CITV_Characters* obj, char* buf, size_t len) {
+    void itv_characters_to_string(const CITV_Characters* obj, char* buf, size_t len, size_t inner, size_t outer) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
-		strncpy(buf, itv->to_string().c_str(), len-1);
+		strncpy(buf, itv->to_string(inner, outer).c_str(), len-1);
 		buf[len-1] = '\0';
 	};
 
