@@ -19,7 +19,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #include <fstream>
-#include <sstream>
 #include <streambuf>
 
 #include "itv_utils.h"
@@ -114,14 +113,14 @@ const std::string ITV_Characters::to_string() {
 };
 
 const std::string ITV_Characters::to_string(size_t inner, size_t outer) {
-	std::stringstream ss;
+	std::string str;
 	this->table->sort(compare_tags);
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
-		ss << to_utf8((*i).get_id());
-		if (inner > 0) ss << to_utf8(inner);
-		ss << to_utf8((*i).get_value());
-		if (outer > 0) ss << to_utf8(outer);
+		str += to_utf8((*i).get_id());
+		if (inner > 0) str += to_utf8(inner);
+		str += to_utf8((*i).get_value());
+		if (outer > 0) str += to_utf8(outer);
 	};
-	return ss.str();
+	return str;
 };
 

@@ -31,7 +31,7 @@ int main() {
 	char enc[(strlen(msg) + 1) * 8];
 	char dec[(strlen(msg) + 1) * 4];
 
-	CITV_Characters *itv = itv_characters_init(0x500, 0x600, len);
+	CITV_Characters *itv = itv_characters_init(0xd00, 0x600, len);
 
 	/* randomly shuffle IDs */
 	itv_characters_shuffle(itv);

@@ -19,7 +19,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #include <random>
-#include <sstream>
 #include <algorithm> 
 
 #include "itv_utils.h"
@@ -82,9 +81,9 @@ std::string to_utf8(size_t cp) {
 
 // convert codepoints to utf8 string
 std::string to_utf8(std::list<size_t>& msg) {
-	std::stringstream ss;
-	for (auto i=msg.begin(); i!=msg.end(); i++) { ss << to_utf8(*i); };
-	return ss.str();
+	std::string str;
+	for (auto i=msg.begin(); i!=msg.end(); i++) { str += to_utf8(*i); };
+	return str;
 };
 
 // converts utf8 string to codepoint list
