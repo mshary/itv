@@ -4,7 +4,7 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted per Mozilla Public License v2.0.
 #
-CFLAGS=-Wall -Werror -g -fPIC -ansi -pedantic -std=c89
+CFLAGS=-Wall -Werror -g -fPIC -ansi -pedantic -std=c99
 CCFLAGS=-Wall -Werror -g -fPIC -std=c++11
 LDFLAGS=-g -Wall -lstdc++ -shared
 
