@@ -62,40 +62,64 @@ extern "C" {
 		itv->shuffle();
 	};
 
-	void itv_characters_dump(const CITV_Characters* obj, char* buf, size_t len) {
+	int itv_characters_dump(const CITV_Characters* obj, char* buf, size_t len) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
-		std::string key = itv->dump();
-		strncpy(buf, key.c_str(), len-1);
-		buf[len-1] = '\0';
+		const char* key = itv->dump().c_str();
+		size_t key_len = strlen(key);
+		if ((key_len + 1) > len) return (len - (key_len + 1));
+
+		memcpy(buf, key, key_len);
+		buf[key_len] = '\0';
+		return key_len;
 	};
 
-    void itv_characters_encode(const CITV_Characters* obj, const char* msg, char* buf, size_t len) {
+	int itv_characters_encode(const CITV_Characters* obj, const char* msg, char* buf, size_t len) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
 		std::string str = std::string(msg);
 		std::list<size_t>* plain_text = from_utf8(str);
 		std::list<size_t> *encrypted_text = itv->encode(*plain_text);
-		strncpy(buf, to_utf8(*encrypted_text).c_str(), len-1);
-		buf[len-1] = '\0';
+		const char* ret = to_utf8(*encrypted_text).c_str();
+		size_t ret_len = strlen(ret);
+		if ((ret_len + 1) > len) return (len - (ret_len + 1));
+
+		memcpy(buf, ret, ret_len);
+		buf[ret_len] = '\0';
+		return ret_len;
 	};
 
-    void itv_characters_decode(const CITV_Characters* obj, const char* msg, char* buf, size_t len) {
+    int itv_characters_decode(const CITV_Characters* obj, const char* msg, char* buf, size_t len) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
 		std::string str = std::string(msg);
 		std::list<size_t>* encrypted_text = from_utf8(str);
 		std::list<size_t>* plain_text = itv->decode(*encrypted_text);
-		strncpy(buf, to_utf8(*plain_text).c_str(), len-1);
-		buf[len-1] = '\0';
+		const char* ret = to_utf8(*plain_text).c_str();
+		size_t ret_len = strlen(ret);
+		if ((ret_len + 1) > len) return (len - (ret_len + 1));
+
+		memcpy(buf, ret, ret_len);
+		buf[ret_len] = '\0';
+		return ret_len;
 	};
 
-    void itv_characters_to_string(const CITV_Characters* obj, char* buf, size_t len, size_t inner, size_t outer) {
+    int itv_characters_to_string(const CITV_Characters* obj, char* buf, size_t len, size_t inner, size_t outer) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
-		strncpy(buf, itv->to_string(inner, outer).c_str(), len-1);
-		buf[len-1] = '\0';
+		const char* ret = itv->to_string(inner, outer).c_str();
+		size_t ret_len = strlen(ret);
+		if ((ret_len + 1) > len) return (len - (ret_len + 1));
+
+		memcpy(buf, ret, ret_len);
+		buf[ret_len] = '\0';
+		return ret_len;
 	};
 
-    void get_utf8(size_t cp, char* buf, size_t len) {
-		strncpy(buf, to_utf8(cp).c_str(), len-1);
-		buf[len-1] = '\0';
+    int get_utf8(size_t cp, char* buf, size_t len) {
+		const char* ret = to_utf8(cp).c_str();
+		size_t ret_len = strlen(ret);
+		if ((ret_len + 1) > len) return (len - (ret_len + 1));
+
+		memcpy(buf, ret, ret_len);
+		buf[ret_len] = '\0';
+		return ret_len;
 	};
     
     size_t get_random(size_t max) {

@@ -26,12 +26,12 @@
 
 int main() {
 	char msg[] = "أزمة اليمن: الحوثيون يتقدمون في عدن رغم الغارات الجوية";
-	char key[4096];
-	char enc[sizeof(msg)*2];
-	char dec[sizeof(msg)];
-	size_t sender_checksum, receiver_checksum;
+	size_t sender_checksum, receiver_checksum, len = 0x6FF - 0x600;
+	char key[(len + 1) * 8];
+	char enc[(strlen(msg) + 1) * 8];
+	char dec[(strlen(msg) + 1) * 4];
 
-	CITV_Characters *itv = itv_characters_init(0x100, 0x600, 0x6FF - 0x600);
+	CITV_Characters *itv = itv_characters_init(0x500, 0x600, len);
 
 	/* randomly shuffle IDs */
 	itv_characters_shuffle(itv);
@@ -52,7 +52,7 @@ int main() {
 
 	if (sender_checksum == receiver_checksum) {
 		itv_characters_decode(itv, enc, dec, sizeof(dec));
-		printf("DEC: %s\nRandom: %lu\nCS: %lu\n", dec, (unsigned long)get_random(0x6FF - 0x600), receiver_checksum);
+		printf("DEC: %s\nRandom: %lu\nCS: %lu\n", dec, (unsigned long)get_random(len), receiver_checksum);
 	} else {
 		printf("Failure: checksum mismatch, %lu != %lu", sender_checksum, receiver_checksum);
 	};
