@@ -25,6 +25,7 @@
 
 using namespace::std;
 
+#ifndef _MSC_VER
 // trim string from start
 std::string &ltrim(std::string &s) {
 	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
@@ -42,6 +43,19 @@ std::string &trim(std::string &s) {
 	return ltrim(rtrim(s));
 };
 
+// split string into list according to given delimiter
+std::list<std::string>* split(std::string& s, std::string& delimiter) {
+	size_t last = 0, next = 0;
+	std::list<std::string>* ret = new list<std::string>();
+	while ((next = s.find(delimiter, last)) != string::npos) {
+		ret->push_back(s.substr(last, next-last));
+		last = next + 1;
+	};
+	ret->push_back(s.substr(last));
+	return ret;
+};
+#endif
+
 // generate a random number from 0 to given number
 size_t generate_random(size_t max) {
 	return get_random(0, max);
@@ -52,18 +66,6 @@ size_t get_random(size_t min, size_t max) {
 	std::random_device generator;
 	std::uniform_int_distribution<size_t> distribution(min, max);
 	return distribution(generator);
-};
-
-// split string into deque according to given delimiter
-std::deque<std::string>* split(std::string& s, std::string& delimiter) {
-	size_t last = 0, next = 0;
-	std::deque<std::string>* ret = new deque<std::string>();
-	while ((next = s.find(delimiter, last)) != string::npos) {
-		ret->push_back(s.substr(last, next-last));
-		last = next + 1;
-	};
-	ret->push_back(s.substr(last));
-	return ret;
 };
 
 // convert codepoint to utf8 char

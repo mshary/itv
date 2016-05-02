@@ -21,11 +21,11 @@
 #ifndef ITV_UTILS_H
 #define ITV_UTILS_H
 
-#include <deque>
 #include <list>
 
 using namespace::std;
 
+#ifndef _MSC_VER
 // trim string from start
 std::string &ltrim(std::string&);
 
@@ -35,14 +35,15 @@ std::string &rtrim(std::string&);
 // trim string from both ends
 std::string &trim(std::string&);
 
+// split string into list according to given delimiter
+std::list<std::string>* split(std::string&, std::string&);
+#endif
+
 // generate a random number from 0 to given number
 size_t generate_random(size_t);
 
 // generate a random number within range
 size_t get_random(size_t, size_t);
-
-// split string into deque according to given delimiter
-std::deque<std::string>* split(std::string&, std::string&);
 
 // convert codepoint to utf8 char
 std::string to_utf8(size_t);
