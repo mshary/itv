@@ -98,6 +98,7 @@ size_t ITV_Characters::write(const std::string file) {
 
 size_t ITV_Characters::checksum() {
 	size_t ret = 0;
+	if (this->table->size() == 0) { return ret; };
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
 		ret += (*i).get_id() ^ (*i).get_value();
 	};
@@ -113,7 +114,9 @@ const std::string ITV_Characters::to_string() {
 };
 
 const std::string ITV_Characters::to_string(size_t inner, size_t outer) {
-	std::string str;
+	std::string str = std::string();
+	if (this->table->size() == 0) { return str; };
+
 	this->table->sort(compare_tags);
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
 		str += to_utf8((*i).get_id());
