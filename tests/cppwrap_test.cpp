@@ -47,7 +47,7 @@ int main() {
 	size_t sender_checksum = sender.checksum();
 
 	/* sample text to encrypt, we are using UTF8 encoding here */
-	std::string str = u8"أزمة اليمن: الحوثيون يتقدمون في عدن رغم الغارات الجوية";
+	std::string str = "أزمة اليمن: الحوثيون يتقدمون في عدن رغم الغارات الجوية";
 	std::list<size_t>* msg = from_utf8(str);
 
 	cout << "Original: " << str << endl;

@@ -19,6 +19,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #include <fstream>
+#include <sstream>
 #include <streambuf>
 
 #include "itv_utils.h"
@@ -98,7 +99,7 @@ size_t ITV_Characters::write(const std::string file) {
 
 size_t ITV_Characters::checksum() {
 	size_t ret = 0;
-	if (this->table->size() == 0) { return ret; };
+	if (this->table->empty()) { return ret; };
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
 		ret += (*i).get_id() ^ (*i).get_value();
 	};
@@ -115,7 +116,7 @@ const std::string ITV_Characters::to_string() {
 
 const std::string ITV_Characters::to_string(size_t inner, size_t outer) {
 	std::string str = std::string();
-	if (this->table->size() == 0) { return str; };
+	if (this->table->empty()) { return str; };
 
 	this->table->sort(compare_tags);
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
