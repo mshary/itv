@@ -75,19 +75,13 @@ extern "C" {
 
 	int itv_characters_encode(const CITV_Characters* obj, const char* msg, char* buf, size_t len) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
-		std::string str = std::string(msg);
-		std::list<size_t>* plain_text = from_utf8(str);
-		std::list<size_t> *encrypted_text = itv->encode(*plain_text);
-		std::string ret = to_utf8(*encrypted_text);
+		std::string ret = itv->encode(msg);
 		return snprintf(buf, len, "%s", ret.c_str());
 	};
 
     int itv_characters_decode(const CITV_Characters* obj, const char* msg, char* buf, size_t len) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
-		std::string str = std::string(msg);
-		std::list<size_t>* encrypted_text = from_utf8(str);
-		std::list<size_t>* plain_text = itv->decode(*encrypted_text);
-		std::string ret = to_utf8(*plain_text);
+		std::string ret = itv->decode(msg);
 		return snprintf(buf, len, "%s", ret.c_str());
 	};
 

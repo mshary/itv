@@ -92,6 +92,16 @@ size_t ITV_Characters::write(const std::string file) {
 	return this->table->size();
 };
 
+std::string ITV_Characters::encode(std::string msg) {
+	if (this->table->empty() || msg.empty()) return msg;
+	return to_utf8(*ITV_Table::encode(*from_utf8(msg)));
+};
+
+std::string ITV_Characters::decode(std::string msg) {
+	if (this->table->empty() || msg.empty()) return msg;
+	return to_utf8(*ITV_Table::decode(*from_utf8(msg)));
+};
+
 size_t ITV_Characters::checksum() {
 	size_t ret = 0;
 	if (this->table->empty()) { return ret; };

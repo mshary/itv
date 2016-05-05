@@ -47,16 +47,15 @@ int main() {
 	size_t sender_checksum = sender.checksum();
 
 	/* sample text to encrypt, we are using UTF8 encoding here */
-	std::string str = "أزمة اليمن: الحوثيون يتقدمون في عدن رغم الغارات الجوية";
-	std::list<size_t>* msg = from_utf8(str);
+	std::string msg = "أزمة اليمن: الحوثيون يتقدمون في عدن رغم الغارات الجوية";
 
-	cout << "Original: " << str << endl;
+	cout << "Original: " << msg << endl;
 
 	/* encrypt the text */
-	std::list<size_t> *encrypted_text = sender.encode(*msg);
+	std::string encrypted_text = sender.encode(msg);
 
 	/* convert encrypted text to UTF8 and send it, here we just print it */
-	cout << "Encrypted: " << to_utf8(*encrypted_text) << endl << endl;
+	cout << "Encrypted: " << encrypted_text << endl << endl;
 
 
 	/* On Receiver side, 
@@ -78,13 +77,12 @@ int main() {
 		cout << "ITV Table Integrity Verified: 0x" << std::hex << sender_checksum << endl;
 	};
 
-	std::list<size_t> *decrypted_text = receiver.decode(*encrypted_text);
-	std::string plain = to_utf8(*decrypted_text);
+	std::string decrypted_text = receiver.decode(encrypted_text);
 
-	if (str == plain) {
-		cout << "Decrypted: " << plain << endl;
+	if (msg == decrypted_text) {
+		cout << "Decrypted: " << decrypted_text << endl;
 	} else {
-		cout << "Failure: " << plain << endl;
+		cout << "Failure: " << decrypted_text << endl;
 	};
 
 	return 0;
