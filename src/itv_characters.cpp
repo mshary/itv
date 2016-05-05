@@ -26,7 +26,7 @@
 #include "itv_characters.h"
 
 ITV_Characters::ITV_Characters() {
-	table = new list<ITV>();
+	// nothing todo here
 };
 
 ITV_Characters::~ITV_Characters() {
@@ -34,17 +34,14 @@ ITV_Characters::~ITV_Characters() {
 };
 
 ITV_Characters::ITV_Characters(std::string str) {
-	table = new list<ITV>();
 	this->load(str);
 };
 
 ITV_Characters::ITV_Characters(size_t min, size_t max) {
-	table = new list<ITV>();
 	this->load(min, max);
 };
 
 ITV_Characters::ITV_Characters(size_t id, size_t value, size_t len) {
-	table = new list<ITV>();
 	this->load(id, value, len);
 };
 
@@ -60,11 +57,9 @@ size_t ITV_Characters::load(std::string str) {
 
 size_t ITV_Characters::load(size_t min, size_t max) {
 	if (min > max) { return 0; };
-
 	for(size_t x=min; x<=max; x++) {
 		this->add(ITV(min + (max - x), x));
 	};
-
 	return max - min;
 };
 

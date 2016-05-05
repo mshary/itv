@@ -33,7 +33,6 @@ ITV_Table::ITV_Table(std::list<ITV> &table) {
 
 ITV_Table::~ITV_Table() {
 	// nothing todo here
-	if (this->table) { delete this->table; }
 };
 
 ITV_Table& ITV_Table::operator=(const ITV_Table &rhs) {
