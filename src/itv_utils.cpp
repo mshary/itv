@@ -81,7 +81,7 @@ std::string to_utf8(size_t cp) {
 
 // convert codepoints to utf8 string
 std::string to_utf8(std::list<size_t>& msg) {
-	std::string str;
+	std::string str = std::string();
 	for (auto i=msg.begin(); i!=msg.end(); i++) { str += to_utf8(*i); };
 	return str;
 };
@@ -99,10 +99,10 @@ std::list<size_t>* from_utf8(std::string& msg) {
 			unsigned char u1 = msg[++i];
 			if (u0>=192 && u0<=223)	{ ret->push_back((u0-192)*64 + (u1-128)); continue; };
 			if (u0==0xed && (u1 & 0xa0) == 0xa0) { continue; }; //codepoints 0xd800 to 0xdfff are not valid
-			if ((i+2) < len) {
+			if ((i+1) < len) {
 				unsigned char u2 = msg[++i];
 				if (u0>=224 && u0<=239)	{ ret->push_back((u0-224)*4096 + (u1-128)*64 + (u2-128)); continue; };
-				if ((i+3) < len) {
+				if ((i+1) < len) {
 					unsigned char u3 = msg[++i];
 					if (u0>=240 && u0<=247)	{ ret->push_back((u0-240)*262144 + (u1-128)*4096 + (u2-128)*64 + (u3-128)); continue; };
 				};
