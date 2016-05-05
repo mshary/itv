@@ -53,8 +53,12 @@ key_len = (ss + 1) * 8
 key = '\0'*key_len
 pyitv.itv_characters_dump(src, key, len(key))
 
+# key checksum, the dst obj can check it to verify if it has correct key
+# and thus able to decrypt the message
+enc_cs1 = pyitv.itv_characters_checksum(src)
+
 # print the key
-print "Key:\t\t%s" % (key)
+print "Key:\t\t%s, CS:\t%d" % (key, enc_cs1)
 
 # create a char buffer to store encrypted text, 
 # notice how the size of encrypted message is calculated
@@ -70,9 +74,10 @@ pyitv.itv_characters_encode(src, msg, enc, enc_len)
 # notice the length of next key will be same as last key
 next_key = '\0'*key_len
 pyitv.itv_characters_dump(src, next_key, len(next_key))
+enc_cs2 = pyitv.itv_characters_checksum(src)
 
 # print the next key
-print "Next Key:\t%s\n" % (next_key)
+print "Next Key:\t%s, CS:\t%d\n" % (next_key, enc_cs2)
 
 # create a char buffer to store encrypted text, 
 next_enc_len = (len(next_msg) + 1) * 8
@@ -92,12 +97,26 @@ dst = pyitv.itv_characters_init2(key)
 dec_len = enc_len / 2
 dec = '\0'*dec_len
 
+dec_cs1 = pyitv.itv_characters_checksum(dst)
+
+if enc_cs1 == dec_cs1:
+	print "Checksum OK: %d\n" % (enc_cs1)
+else:
+	print "Checksum Mismatch: %d != %d" % (enc_cs1, dec_cs1)
+
 # do the actual decryption
 pyitv.itv_characters_decode(dst, enc, dec, dec_len)
 
 # create char buffer to store next decrypted text, 
 next_dec_len = next_enc_len / 2
 next_dec = '\0'*next_dec_len
+
+dec_cs2 = pyitv.itv_characters_checksum(dst)
+
+if enc_cs2 == dec_cs2:
+	print "Checksum OK: %d\n" % (enc_cs2)
+else:
+	print "Checksum Mismatch: %d != %d" % (enc_cs2, dec_cs2)
 
 # decrypt next message,
 # notice if you save / print the key before decrypting next message,
