@@ -43,7 +43,7 @@ int main() {
 	sender_checksum = itv_characters_checksum(itv);
 
 	itv_characters_encode(itv, msg, enc, sizeof(enc));
-	printf("MSG: %s\nENC: %s\nCS: %zx\n", msg, enc, sender_checksum);
+	printf("MSG: %s\nENC: %s\nCS: 0x%zx\n", msg, enc, sender_checksum);
 
 	free(itv);
 	itv = NULL;
@@ -53,9 +53,9 @@ int main() {
 
 	if (sender_checksum == receiver_checksum) {
 		itv_characters_decode(itv, enc, dec, sizeof(dec));
-		printf("DEC: %s\nRandom: %zx\nCS: %zx\n", dec, get_random(len), receiver_checksum);
+		printf("DEC: %s\nRandom: 0x%zx\nCS: 0x%zx\n", dec, get_random(len), receiver_checksum);
 	} else {
-		printf("Failure: checksum mismatch, %zx != %zx", sender_checksum, receiver_checksum);
+		printf("Failure: checksum mismatch, 0x%zx != 0x%zx", sender_checksum, receiver_checksum);
 	};
 
 	free(itv);
