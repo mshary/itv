@@ -8,9 +8,8 @@ $len = 122 - 33;
 $src = new ITV_Characters(33, 33, $len);
 $len += $src->load(32, 32, 1);
 
-$src->shuffle();
-$key = $src->dump();
-$src_cs = $src->checksum();
+$src_cs = $src->shuffle();
+$key = $src->dump_table();
 
 echo "Key: " . $key . "\nChecksum: " . $src_cs . "\n";
 
@@ -21,7 +20,7 @@ echo "Encrypted: " . $enc . "\n";
 $src = NULL;
 
 $dst = new ITV_Characters($key);
-$key = $dst->dump();
+$key = $dst->dump_table();
 $dst_cs = $dst->checksum();
 
 if ($src_cs == $dst_cs) {
@@ -31,6 +30,5 @@ if ($src_cs == $dst_cs) {
 $dec = $dst->decode($enc);
 
 echo "Decrypted: " . $dec . "\n";
-
 
 ?>

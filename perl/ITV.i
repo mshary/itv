@@ -23,9 +23,15 @@
 %{
 #include <stdlib.h>
 #include <string.h>
+#include "itv.h"
+#include "itv_table.h"
 #include "itv_utils.h"
 #include "itv_characters.h"
-#include "itv_wrapper.h"
 %}
 
-%include "itv_wrapper.h"
+%include "std_string.i"
+
+%include "itv.h"
+%include "itv_table.h"
+%include "itv_utils.h"
+%include "itv_characters.h"
