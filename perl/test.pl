@@ -6,7 +6,7 @@ use ITV;
 
 my $len = 126 - 65;
 my $sender = ITV::itv_characters_init(65, 65, $len);
-ITV::itv_characters_load($sender, 32, 32, 1);
+$len += ITV::itv_characters_load($sender, 32, 32, 1);
 
 ITV::itv_characters_shuffle($sender);
 my $sender_cs = ITV::itv_characters_checksum($sender);

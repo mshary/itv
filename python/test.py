@@ -39,8 +39,8 @@ src = pyitv.itv_characters_init(ii, vv, ss)
 
 # optionally add more ACSII codes, e.g. a space character
 # format: itv_characters_load(<itv-obj>, <id>, <value>, <sequence-length>)
-# return: new size of ITV table after adding given sequence
-pyitv.itv_characters_load(src, 32, 32, 1)
+# return: ASCII codes actually added after removing duplicates if any
+ss += pyitv.itv_characters_load(src, 32, 32, 1)
 
 # randomly shuffle the ids in ITV Table,
 # this is highly recommended before saving key that will be sent to receiver
