@@ -18,26 +18,20 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef ITV_UTILS_H
-#define ITV_UTILS_H
+%module ITVC
 
-#include <list>
+%{
+#include <stdlib.h>
+#include <string.h>
+#include "itv.h"
+#include "itv_table.h"
+#include "itv_utils.h"
+#include "itv_characters.h"
+%}
 
-using namespace::std;
+%include "std_string.i"
 
-// generate a random number from 0 to given number
-size_t generate_random(size_t);
-
-// generate a random number within range
-size_t get_random(size_t, size_t);
-
-// convert codepoint to utf8 char
-std::string to_utf8(size_t);
-
-// convert codepoints to utf8 string
-std::string to_utf8(std::list<size_t>&);
-
-// convert utf8 string to codepoints
-std::list<size_t>* from_utf8(std::string&);
-
-#endif
+%include "itv.h"
+%include "itv_table.h"
+%include "itv_utils.h"
+%include "itv_characters.h"

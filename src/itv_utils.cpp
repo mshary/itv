@@ -25,37 +25,6 @@
 
 using namespace::std;
 
-#ifndef _MSC_VER
-// trim string from start
-std::string &ltrim(std::string &s) {
-	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
-	return s;
-};
-
-// trim string from end
-std::string &rtrim(std::string &s) {
-	s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
-	return s;
-};
-
-// trim string from both ends
-std::string &trim(std::string &s) {
-	return ltrim(rtrim(s));
-};
-
-// split string into list according to given delimiter
-std::list<std::string>* split(std::string& s, std::string& delimiter) {
-	size_t last = 0, next = 0;
-	std::list<std::string>* ret = new list<std::string>();
-	while ((next = s.find(delimiter, last)) != string::npos) {
-		ret->push_back(s.substr(last, next-last));
-		last = next + 1;
-	};
-	ret->push_back(s.substr(last));
-	return ret;
-};
-#endif
-
 // generate a random number from 0 to given number
 size_t generate_random(size_t max) {
 	return get_random(0, max);
