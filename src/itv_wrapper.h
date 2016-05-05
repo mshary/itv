@@ -32,6 +32,7 @@ extern "C" {
 	size_t itv_characters_checksum(const CITV_Characters*);
 	size_t itv_characters_read(const CITV_Characters*, const char*);
 	size_t itv_characters_write(const CITV_Characters*, const char*);
+	size_t itv_characters_load(const CITV_Characters*, size_t, size_t, size_t);
 
 	void itv_characters_shuffle(const CITV_Characters*);
 	int itv_characters_dump(const CITV_Characters*, char*, size_t);

@@ -57,6 +57,11 @@ extern "C" {
 		return itv->write(file);
 	};
 
+	size_t itv_characters_load(const CITV_Characters* obj, size_t id, size_t value, size_t len) {
+		ITV_Characters *itv = (ITV_Characters*) obj;
+		return itv->load(id, value, len);
+	};
+
 	void itv_characters_shuffle(const CITV_Characters* obj) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
 		itv->shuffle();

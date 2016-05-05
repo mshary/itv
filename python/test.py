@@ -33,7 +33,14 @@ next_msg = "Those who would give up essential Liberty, to purchase a little temp
 #### Sender Side ####
 
 # initialize the ITV Table on sender side
+# format: itv_characters_init(<id>, <value>, <sequence-length>)
+# return: ITV object
 src = pyitv.itv_characters_init(ii, vv, ss)
+
+# optionally add more ACSII codes, e.g. a space character
+# format: itv_characters_load(<itv-obj>, <id>, <value>, <sequence-length>)
+# return: new size of ITV table after adding given sequence
+pyitv.itv_characters_load(src, 32, 32, 1)
 
 # randomly shuffle the ids in ITV Table,
 # this is highly recommended before saving key that will be sent to receiver
@@ -42,7 +49,7 @@ pyitv.itv_characters_shuffle(src);
 # save the key before encryption, 
 # receiver will need this key for decryption only the first time, 
 # notice how key length is calculated
-key_len = ss * 2 + 1
+key_len = (ss + 1) * 8
 key = '\0'*key_len
 pyitv.itv_characters_dump(src, key, len(key))
 
@@ -51,7 +58,7 @@ print "Key:\t\t%s" % (key)
 
 # create a char buffer to store encrypted text, 
 # notice how the size of encrypted message is calculated
-enc_len = len(msg) * 2 + 1
+enc_len = (len(msg) + 1) * 8
 enc = '\0'*enc_len
 
 # do the actual ecnryption
@@ -68,7 +75,7 @@ pyitv.itv_characters_dump(src, next_key, len(next_key))
 print "Next Key:\t%s\n" % (next_key)
 
 # create a char buffer to store encrypted text, 
-next_enc_len = len(next_msg) * 2 + 1
+next_enc_len = (len(next_msg) + 1) * 8
 next_enc = '\0'*next_enc_len
 
 # do the actual ecnryption
@@ -82,14 +89,14 @@ dst = pyitv.itv_characters_init2(key)
 
 # create char buffer to store decrypted text, 
 # notice how the size of decrypted message is calculated
-dec_len = len(enc) / 2 + 1
+dec_len = enc_len / 2
 dec = '\0'*dec_len
 
 # do the actual decryption
 pyitv.itv_characters_decode(dst, enc, dec, dec_len)
 
 # create char buffer to store next decrypted text, 
-next_dec_len = len(next_enc) / 2 + 1
+next_dec_len = next_enc_len / 2
 next_dec = '\0'*next_dec_len
 
 # decrypt next message,
