@@ -37,7 +37,7 @@ int main() {
 	/* randomly shuffle IDs */
 	itv_characters_shuffle(itv);
 
-	itv_characters_dump(itv, key, sizeof(key));
+	itv_characters_dump_table(itv, key, sizeof(key));
 	printf("KEY: %s\n", key);
 
 	sender_checksum = itv_characters_checksum(itv);

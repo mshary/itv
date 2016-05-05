@@ -29,13 +29,13 @@ extern "C" {
 	CITV_Characters* itv_characters_init(size_t, size_t, size_t);
 	CITV_Characters* itv_characters_init2(const char*);
 
+	size_t itv_characters_shuffle(const CITV_Characters*);
 	size_t itv_characters_checksum(const CITV_Characters*);
 	size_t itv_characters_read(const CITV_Characters*, const char*);
 	size_t itv_characters_write(const CITV_Characters*, const char*);
 	size_t itv_characters_load(const CITV_Characters*, size_t, size_t, size_t);
 
-	void itv_characters_shuffle(const CITV_Characters*);
-	int itv_characters_dump(const CITV_Characters*, char*, size_t);
+	int itv_characters_dump_table(const CITV_Characters*, char*, size_t);
 	int itv_characters_encode(const CITV_Characters*, const char*, char*, size_t);
 	int itv_characters_decode(const CITV_Characters*, const char*, char*, size_t);
 	int itv_characters_to_string(const CITV_Characters*, char*, size_t, size_t, size_t);

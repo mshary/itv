@@ -86,7 +86,7 @@ size_t ITV_Characters::write(const std::string file) {
 	if (!ofs.is_open()) { return 0; };
 	this->table->sort(compare_tags);
 
-	ofs << this->dump();
+	ofs << this->dump_table();
 	ofs.close();
 
 	return this->table->size();
@@ -102,6 +102,11 @@ std::string ITV_Characters::decode(std::string msg) {
 	return to_utf8(*ITV_Table::decode(*from_utf8(msg)));
 };
 
+size_t ITV_Characters::shuffle() {
+	ITV_Table::shuffle();
+	return this->checksum();
+};
+
 size_t ITV_Characters::checksum() {
 	size_t ret = 0;
 	if (this->table->empty()) { return ret; };
@@ -111,7 +116,7 @@ size_t ITV_Characters::checksum() {
 	return ret;
 };
 
-const std::string ITV_Characters::dump() {
+const std::string ITV_Characters::dump_table() {
 	return this->to_string(0, 0);
 };
 

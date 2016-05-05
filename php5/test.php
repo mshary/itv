@@ -14,9 +14,9 @@ $src_cs = $src->checksum();
 
 echo "Key: " . $key . "\nChecksum: " . $src_cs . "\n";
 
-$enc = $src->encode(ITVC::from_utf8($msg));
+$enc = $src->encode($msg);
 
-echo "Encrypted: " . ITVC::to_utf8($enc) . "\n";
+echo "Encrypted: " . $enc . "\n";
 
 $src = NULL;
 
@@ -30,7 +30,7 @@ if ($src_cs == $dst_cs) {
 
 $dec = $dst->decode($enc);
 
-echo "Decrypted: " . ITVC::to_utf8($dec) . "\n";
+echo "Decrypted: " . $dec . "\n";
 
 
 ?>

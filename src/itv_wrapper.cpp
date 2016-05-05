@@ -40,6 +40,11 @@ extern "C" {
 		return (CITV_Characters*) itv;
 	};
 
+	size_t itv_characters_shuffle(const CITV_Characters* obj) {
+		ITV_Characters *itv = (ITV_Characters*) obj;
+		return itv->shuffle();
+	};
+
 	size_t itv_characters_checksum(const CITV_Characters* obj) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
 		return itv->checksum();
@@ -62,14 +67,9 @@ extern "C" {
 		return itv->load(id, value, len);
 	};
 
-	void itv_characters_shuffle(const CITV_Characters* obj) {
+	int itv_characters_dump_table(const CITV_Characters* obj, char* buf, size_t len) {
 		ITV_Characters *itv = (ITV_Characters*) obj;
-		itv->shuffle();
-	};
-
-	int itv_characters_dump(const CITV_Characters* obj, char* buf, size_t len) {
-		ITV_Characters *itv = (ITV_Characters*) obj;
-		std::string key = itv->dump();
+		std::string key = itv->dump_table();
 		return snprintf(buf, len, "%s", key.c_str());
 	};
 

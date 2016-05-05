@@ -39,7 +39,7 @@ int main() {
 	sender.shuffle();
 
 	/* ITV Table that receiver needs to decrypt data */
-	std::string itv_table = sender.dump();
+	std::string itv_table = sender.dump_table();
 
 	/* ITV Table checksum, the receiver can check it to ensure 
 	 * whether or not decryption will be successful before actual decryption 

@@ -44,8 +44,10 @@ class ITV_Characters : public ITV_Table {
 		std::string encode(std::string);
 		std::string decode(std::string);
 
+		size_t shuffle();
 		size_t checksum();
-		const std::string dump();
+		const std::string dump_table();
+
 		const std::string to_string();
 		const std::string to_string(size_t, size_t);
 };
