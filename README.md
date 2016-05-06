@@ -242,6 +242,9 @@ For reference implementation of Character Based ITV algorithm, include or read t
 ````
 
 ## Example Usage
+Examples are available in various programming languages including C, C++, Perl, Python and PHP5.
+
+### C++
 
 ````c++
 #include <iostream>
@@ -326,6 +329,102 @@ Decrypted: حفلة في مدينة تدمُر يحييها الموسيقي ا�
 ````
 
 Feel free to add and/or extend given C++ classes (per MPL v2.0 license).
+
+### Perl
+````perl
+use strict;
+use warnings;
+
+use ITV;
+
+my $msg = "پناہ گزینوں کے کیمپ پر حملہ جنگی جرم کے مترادف";
+
+my $sender = ITV::ITV_Characters->new(0x100, 0x600, 0x1FF - 0x100);
+
+my $sender_cs = $sender->shuffle();
+my $key = $sender->dump_table();
+my $enc = $sender->encode($msg);
+
+print "Key: $key\nCS: $sender_cs\n\n";
+print "MSG: $msg\nENC: $enc\n\n";
+
+my $receiver = ITV::ITV_Characters->new($key);
+my $receiver_cs = $receiver->checksum();
+
+if ($sender_cs eq $receiver_cs) {
+    print "Checksum OK: $receiver_cs\n";
+} else {
+    print "ERROR: Checksum Mismatch: $sender_cs != $receiver_cs\n";
+    exit;
+};
+
+my $dec = $receiver->decode($enc);
+print "DEC: $dec\n";
+
+exit;
+````
+
+Running program gives something like,
+
+````
+MSG: پناہ گزینوں کے کیمپ پر حملہ جنگی جرم کے مترادف
+ENC: ƍēƮŠǼŧƓƧ ęĺĵǉǛƉŠĖƎŧƳŅ ƘǙǲǟ ǙǻƉƵǂƷēŲ Ųƈƌƒ ƚǔƷǽœƘƧƝ ƂũĖƍĺŕƵņ ũŌƒƺǽǥ ǻĆǟĿ ǥŮưĎƺŵƎƤħƣǎƀ
+
+Checksum OK: 489314
+DEC: پناہ گزینوں کے کیمپ پر حملہ جنگی جرم کے مترادف
+````
+
+### Python
+````python
+import pyitv
+
+# message to test encryption
+msg = "A Quick Brown Fox Jumps Over The Lazy Dog.";
+
+# sender object - initialized with all printable ASCII
+src = pyitv.ITV_Characters(32, 32, 126 - 32)
+
+# shuffle the table and get its checksum, the receiver can
+# match it to confirm it has correct itv table for decryption
+src_cs = src.shuffle()
+
+# get the table, this will be required by receiver for decryption
+key = src.dump_table()
+
+# encrypt the message
+enc = src.encode(msg)
+
+# print it out
+print "Key: %s\nCS: 0x%x\n\nMSG: %s\nENC: %s\n" % (key, src_cs, msg, enc)
+
+
+# initialize receiver object with itv table sent by sender
+dst = pyitv.ITV_Characters(key)
+
+# verify we have correct table for decrpytion
+dst_cs = dst.checksum()
+
+if src_cs == dst_cs:
+    print "Checksum OK: 0x%x" % (dst_cs)
+else:
+    print "ERROR: Checksum Mismatch: 0x%x != 0x%x" % (src_cs, dst_cs)
+
+# decrypt the message
+dec = dst.decode(enc)
+
+# print it out
+print "DEC: %s" % (dec)
+````
+
+Running program gives something like,
+````
+MSG: A Quick Brown Fox Jumps Over The Lazy Dog.
+ENC: %jVvRQL\<SN?oBv!i%7u}Jf)Y2!1zHJt/w1mWq\R70{Q5=mCJ2eI|2utCs@<]r2!s`sH+.8|iL`uf;`U(*Fj
+
+Checksum OK: 0x13b4
+DEC: A Quick Brown Fox Jumps Over The Lazy Dog.
+````
+
 
 ## About Author
 The concept and sample code was developed by Muhammad Shahzad Shafi (shahzad at voip-demos dot com). The sample code is released under MPL v2.0 license.
