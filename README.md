@@ -9,12 +9,12 @@ The *Caesar Cipher* was first cracked by an Arab scientist Al-Kindi in 9th centu
 On Sept. 1, 1945, Claude Shannon proved mathematically a further enhancement to the cipher, which proposes random shift to each letter of plaintext, as the perfect solution for the encryption. It is now known as *One-Time Pad Encryption*. The ITV algorithm is intends to extend this *One-Time Pad Encryption* using some basic Computer Science concepts.
 
 ### What is it?
-ITV stands for **ID**, **Tag** and **Value**. The was originally designed for secure network comminication over public Internet however it can also be used for permanent data storage on disk. It has two variants, character based ITV and word based ITV. Let us understand character based ITV (since it is easier to understand for anyone already familiar with *One-Time Pad Encryption*).
+ITV stands for **ID**, **Tag** and **Value**. It was originally designed for secure network comminication over public Internet however it can also be used for permanent data storage on disk. It has two variants, character based ITV and word based ITV. Let us understand character based ITV.
 
 ## Character Based ITV
 When using character sets in computer, each letter is basically assigned an integer value, which is actually used and understood by computers for internal use. For example, using ASCII character set, letter 'A' is represented by integer 65, 'B' is 66 and so on.
 
-In ITV algorithm, we define a table with three columns. The first column represents the numeric value of characters, this column is known as the **ID** of each character. The second column also holds numeric value randomly generated within range of **ID** column, this column is known as the **Tag**. The third column contains the actual character, which we call the **Value** column. This table is called *ITV Table* acts as *encryption key* for this algorithm.
+In ITV algorithm, we define a table with three columns. The first column represents the numeric value of characters, this column is known as the **ID** of each character. The second column also holds numeric value randomly generated within range of **ID** column, this column is known as the **Tag**. The third column contains the actual character, which we call the **Value** column. This table is called *ITV Table* and acts as *encryption key* for this algorithm.
 
 ### ITV Table
 So considering, numeric values *65, 66, 67 ... 90* as **ID** and letter *A, B, C ... Z* as respective **Value**, we can define **ITV Table** over ASCII character set. As for **Tag** column, it should be random but non-repeated number within range *65 - 90* but for simplicity lets assume it is same as **ID** column for now.
@@ -105,9 +105,9 @@ Additionally the generated encrypted text can be broken into two pieces, one con
 Also note that since **ID** has no direct relationship with **Value** column, so **ANY** numeric range can be used in it. Thus, we can e.g. use Hebrew character set range (UTF8 0x500 - 0x5FF) to represent **ID** data that corresponds to **Value** in Arabic character set (UTF8 0x600 - 0x6FF), in which case the plain text would be in Arabic but encrypted text would appear as Hebrew. (see example usage below).
 
 ### How Decryption Works?
-For decryption, the receiver **MUST** have exact same ITV Table, that was used to encrypt the original text. Thus, we can say the ITV Table is the **Key** in cryptographic term that is required to decrypt the data. However, the beauty of this algorithm is that the ITV Table constantly changes as it encrypts more data on sender side, while the receiver side keeps its ITV Table synchronised as it decrypts the received that. The receiver will have exact same ITV Table after decryption as the ITV Table on sender side after encryption. Therefore, for next communication session the sender does not need to send the ITV Table again to the receiver.
+For decryption, the receiver **MUST** have exact same ITV Table, that was used to encrypt the original text. Thus, we can say the ITV Table is the **Key** in cryptographic term that is required to decrypt the data. However, the beauty of this algorithm is that the ITV Table constantly changes as it encrypts more data on sender side, while the receiver side keeps its ITV Table synchronised as it decrypts the received data. The receiver will have exact same ITV Table after decryption as the ITV Table on sender side after encryption. Therefore, for next communication session the sender does not need to send the ITV Table again to the receiver.
 
-This however, has two consequences,
+This however, has some consequences,
 
 1. The communication is half-duplex, i.e. sender can only send data and receiver can only receive data. It receiver wants to send data as well, then it should create a separate ITV Table and use it for encryption same way as sender side is doing. Thus in such case, each side will have two ITV Tables, one that is used to encrypt data that it wants to send and the other to decrypt that it receives from the other side.
 
@@ -313,6 +313,16 @@ int main() {
 
     return 0;
 };
+````
+
+Running the program gives something like,
+
+````
+Original: حفلة في مدينة تدمُر يحييها الموسيقي الروسي فاليري غيرغييف
+Encrypted: քժՒדց׊գԭԐ֯דԉղ֯ղׯקՑԛת֯ה֏ԽԭԎׯԑյַתԅՑ֥ԶדռՍԑ֜הԇժԘԇ֚֚טֳԤԏԚ֜ԡԚՃ׊Ԍ֥֏Ԑם֫Դטԓ׋֋ԓբԡׯՃՋԌԭՍՙםԵԴ֫բԠׯգԉֿՋԋԭղԠ״ՙԷ״Ըգ֖Օ׷Ը׆Է՟׷ԋ׆ייւֿմ
+
+ITV Table Integrity Verified: 0x38442
+Decrypted: حفلة في مدينة تدمُر يحييها الموسيقي الروسي فاليري غيرغييف
 ````
 
 Feel free to add and/or extend given C++ classes (per MPL v2.0 license).
