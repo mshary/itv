@@ -1,131 +1,45 @@
 #!/usr/bin/python
-# -*- coding: utf8 -*-
-
 # Copyright (c) 2013-2015, Muhammad Shahzad Shafi <shahzad at voip-demos dot com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted per Mozilla Public License v2.0.
 #
-
 import pyitv
 
-# id starts with ASCII code 97 i.e. 'a'
-ii = 97
-
-# value also starts with ASCII code 97, i.e. 'a', 
-# thus encrypted and decrypted text will have same character encoding
-vv = 97
-
-# how many characters with take part in encryption / decryption, 
-# here all small letters of English language, i.e. a - z
-ss = 26
-
 # message to test encryption
-msg = "a quick brown fox jumps over the lazy dog"
+msg = "A Quick Brown Fox Jumps Over The Lazy Dog.";
 
-# another message for next round of encryption / decryption,
-# notice the capital latters and symbols in message,
-# these will not be encrypted, 
-# -- the ITV Table should include them too --
-next_msg = "Those who would give up essential Liberty, to purchase a little temporary Safety, deserve neither Liberty nor Safety - Benjamin Franklin"
+# sender object - initialized with all printable ASCII
+src = pyitv.ITV_Characters(32, 32, 126 - 32)
 
-#### Sender Side ####
+# shuffle the table and get its checksum, the receiver can
+# match it to confirm it has correct itv table for decryption
+src_cs = src.shuffle()
 
-# initialize the ITV Table on sender side
-# format: itv_characters_init(<id>, <value>, <sequence-length>)
-# return: ITV object
-src = pyitv.itv_characters_init(ii, vv, ss)
+# get the table, this will be required by receiver for decryption
+key = src.dump_table()
 
-# optionally add more ACSII codes, e.g. a space character
-# format: itv_characters_load(<itv-obj>, <id>, <value>, <sequence-length>)
-# return: ASCII codes actually added after removing duplicates if any
-ss += pyitv.itv_characters_load(src, 32, 32, 1)
+# encrypt the message
+enc = src.encode(msg)
 
-# randomly shuffle the ids in ITV Table,
-# this is highly recommended before saving key that will be sent to receiver
-pyitv.itv_characters_shuffle(src);
-
-# save the key before encryption, 
-# receiver will need this key for decryption only the first time, 
-# notice how key length is calculated
-key_len = (ss + 1) * 8
-key = '\0'*key_len
-pyitv.itv_characters_dump(src, key, len(key))
-
-# key checksum, the dst obj can check it to verify if it has correct key
-# and thus able to decrypt the message
-enc_cs1 = pyitv.itv_characters_checksum(src)
-
-# print the key
-print "Key:\t\t%s, CS:\t%d" % (key, enc_cs1)
-
-# create a char buffer to store encrypted text, 
-# notice how the size of encrypted message is calculated
-enc_len = (len(msg) + 1) * 8
-enc = '\0'*enc_len
-
-# do the actual ecnryption
-pyitv.itv_characters_encode(src, msg, enc, enc_len)
-
-# save the next key, 
-# neither sender nor receiver need to do anything with it,
-# we are saving it here ONLY to print and demonstrate how key changes dynamically.
-# notice the length of next key will be same as last key
-next_key = '\0'*key_len
-pyitv.itv_characters_dump(src, next_key, len(next_key))
-enc_cs2 = pyitv.itv_characters_checksum(src)
-
-# print the next key
-print "Next Key:\t%s, CS:\t%d\n" % (next_key, enc_cs2)
-
-# create a char buffer to store encrypted text, 
-next_enc_len = (len(next_msg) + 1) * 8
-next_enc = '\0'*next_enc_len
-
-# do the actual ecnryption
-pyitv.itv_characters_encode(src, next_msg, next_enc, next_enc_len)
+# print it out
+print "Key: %s\nCS: 0x%x\n\nMSG: %s\nENC: %s\n" % (key, src_cs, msg, enc)
 
 
-#### Receiver Side ####
+# initialize receiver object with itv table sent by sender
+dst = pyitv.ITV_Characters(key)
 
-# initialize the ITV Table from key received from sender side
-dst = pyitv.itv_characters_init2(key)
+# verify we have correct table for decrpytion
+dst_cs = dst.checksum()
 
-# create char buffer to store decrypted text, 
-# notice how the size of decrypted message is calculated
-dec_len = enc_len / 2
-dec = '\0'*dec_len
-
-dec_cs1 = pyitv.itv_characters_checksum(dst)
-
-if enc_cs1 == dec_cs1:
-	print "Checksum OK: %d\n" % (enc_cs1)
+if src_cs == dst_cs:
+	print "Checksum OK: 0x%x" % (dst_cs)
 else:
-	print "Checksum Mismatch: %d != %d" % (enc_cs1, dec_cs1)
+	print "ERROR: Checksum Mismatch: 0x%x != 0x%x" % (src_cs, dst_cs)
 
-# do the actual decryption
-pyitv.itv_characters_decode(dst, enc, dec, dec_len)
+# decrypt the message
+dec = dst.decode(enc)
 
-# create char buffer to store next decrypted text, 
-next_dec_len = next_enc_len / 2
-next_dec = '\0'*next_dec_len
-
-dec_cs2 = pyitv.itv_characters_checksum(dst)
-
-if enc_cs2 == dec_cs2:
-	print "Checksum OK: %d\n" % (enc_cs2)
-else:
-	print "Checksum Mismatch: %d != %d" % (enc_cs2, dec_cs2)
-
-# decrypt next message,
-# notice if you save / print the key before decrypting next message,
-# then it will be identical to next_key
-pyitv.itv_characters_decode(dst, next_enc, next_dec, next_dec_len)
-
-
-# print it all
-print "Original: %s\nEncrypted: %s\nDecrypted: %s\n\n" % (msg, enc, dec)
-print "Original: %s\nEncrypted: %s\nDecrypted: %s\n\n" % (next_msg, next_enc, next_dec)
-
-
+# print it out
+print "DEC: %s" % (dec)
