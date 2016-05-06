@@ -6,20 +6,20 @@ This algorithm has its roots in *Caesar Cipher*. The original cipher suggests th
 
 The *Caesar Cipher* was first cracked by an Arab scientist Al-Kindi in 9th century through discovery of frequency analysis (some letters are used more frequently in a language then others, the analysis can easily determine shift value and direction). In 15th century, the *Polyalphabetic Cipher* was introduce, which suggested to use a secret word, each letter in the word was used as shift for plaintext letters (like *Caesar Cipher*). However in late 19th century, this too was broken down.
 
-On Sept. 1, 1945, Claude Shannon proved mathematically a further enhancement to the cipher, which proposes random shift to each letter of plaintext, as the perfect solution for the encryption. It is now known as *One-Time Pad Encryption*. The ITV algorithm is intends to extend and apply this *One-Time Pad Encryption* using some basic Computer Science concepts.
+On Sept. 1, 1945, Claude Shannon proved mathematically a further enhancement to the cipher, which proposes random shift to each letter of plaintext, as the perfect solution for the encryption. It is now known as *One-Time Pad Encryption*. The ITV algorithm is intends to extend this *One-Time Pad Encryption* using some basic Computer Science concepts.
 
 ### What is it?
-ITV stands for **ID**, **Tag** and **Value**. It has two variants character based ITV and word based ITV. Let us understand character based ITV (since it is easier to understand for anyone already familiar with *One-Time Pad Encryption*).
+ITV stands for **ID**, **Tag** and **Value**. The was originally designed for secure network comminication over public Internet however it can also be used for permanent data storage on disk. It has two variants, character based ITV and word based ITV. Let us understand character based ITV (since it is easier to understand for anyone already familiar with *One-Time Pad Encryption*).
 
 ## Character Based ITV
 When using character sets in computer, each letter is basically assigned an integer value, which is actually used and understood by computers for internal use. For example, using ASCII character set, letter 'A' is represented by integer 65, 'B' is 66 and so on.
 
-In ITV algorithm, we define a table with three columns. The first column represents the numeric value of characters, this column is known as the **ID** of each character. The second column also holds numeric value randomly generated within range of **ID** column, this column is known as the **Tag**. The third column contains the actual character, which we call the **Value** column.
+In ITV algorithm, we define a table with three columns. The first column represents the numeric value of characters, this column is known as the **ID** of each character. The second column also holds numeric value randomly generated within range of **ID** column, this column is known as the **Tag**. The third column contains the actual character, which we call the **Value** column. This table is called *ITV Table* acts as *encryption key* for this algorithm.
 
 ### ITV Table
 So considering, numeric values *65, 66, 67 ... 90* as **ID** and letter *A, B, C ... Z* as respective **Value**, we can define **ITV Table** over ASCII character set. As for **Tag** column, it should be random but non-repeated number within range *65 - 90* but for simplicity lets assume it is same as **ID** column for now.
 
-Thus we have ITV Table with ID, Tag and Value for each letter in English character set. This would look something like this,
+Thus we have ITV Table with ID, Tag and Value for each letter in English aphabets. This would look something like this,
 
 ````
     ID    TAG    Value
@@ -105,7 +105,7 @@ Additionally the generated encrypted text can be broken into two pieces, one con
 Also note that since **ID** has no direct relationship with **Value** column, so **ANY** numeric range can be used in it. Thus, we can e.g. use Hebrew character set range (UTF8 0x500 - 0x5FF) to represent **ID** data that corresponds to **Value** in Arabic character set (UTF8 0x600 - 0x6FF), in which case the plain text would be in Arabic but encrypted text would appear as Hebrew. (see example usage below).
 
 ### How Decryption Works?
-For decryption, the receiver **MUST** have exact same ITV Table, that was used to encrypt the original text. Thus, we can say the ITV Table is the **Key** in cryptographic term that is required to decrypt the data. However, the beauty of this algorithm is that the ITV Table constantly changes as it encrypts more data on sender side, while the receiver side keeps its ITV Table synchronised as it decrypts the received that. The receiver will have exact same ITV Table after decryption as the ITV Table on sender side after encryption. Therefore, for next communicate session the sender does not need to send the ITV Table again to the receiver.
+For decryption, the receiver **MUST** have exact same ITV Table, that was used to encrypt the original text. Thus, we can say the ITV Table is the **Key** in cryptographic term that is required to decrypt the data. However, the beauty of this algorithm is that the ITV Table constantly changes as it encrypts more data on sender side, while the receiver side keeps its ITV Table synchronised as it decrypts the received that. The receiver will have exact same ITV Table after decryption as the ITV Table on sender side after encryption. Therefore, for next communication session the sender does not need to send the ITV Table again to the receiver.
 
 This however, has two consequences,
 
@@ -113,7 +113,9 @@ This however, has two consequences,
 
 2. Communication **Must** be synchronous, that is the receiver must decrypt the data received in first transaction to be able to decrypt data in second transaction and so on. If any data is lost in transmission then decryption will fail (i.e. produce garbage text). This mechanism ensures communication integrity.
 
-Here is how to the decryption works,
+3. The checksum of ITV Table can be send with encrypted data by sender which receiver may check against its own ITV Table checksum to verify its integrity **before** doing actual decryption. This helps identifing data loss e.g. over network and allow key re-negotitation or to terminate the session.
+
+Anyways, here is how to the decryption works,
 
 - Take first pair of characters in the encrypted word. Convert both to integers (according to standard character set).
 
@@ -151,6 +153,38 @@ The main challenge here is to make encrypted text somewhat meaningful, so it mak
 
 This is a work in progress and currently no sample code is available in this public repository.
 
+## Algorithm Features
+1.	A new type of encryption algorithm which is stronger than both traditional algorithm types, i.e. block encryption algorithms and stream encryption algorithms. The encryption strength is input plaintext length multiplied by key length raise to power of key length, i.e. N x K ^ K (where N = length of input plaintext and K = key length).
+
+
+2.	Once initialized the encryption key dynamically changes as more and more data is encrypted. The key at decryption party end remains synced as it decrypts data received from encryption party end.
+
+3.	This dynamically changing key behaviour is depended on following three aspects, which ensure different non-deterministic encryption output even if any two of below three dependencies have been compromised.
+	- A Random Number Generation (RNG) source.
+	- Input data for encryption.
+	- Current key fingerprint.
+
+4.	Support for checksum, 
+	- The encryption party may generate key checksum before encryption and send it with encryption output, which destination may check against its key’s checksum to determine if it would be able to decrypt the received data or not.
+
+	- The decryption party may also generate key checksum after doing decryption and send it, which encryption party may check against its key’s checksum to determine if destination’s key is in sync and would be able to decrypt data any further.
+
+	- This checksum is numeric value unique to the key and is not generated using any existing hashing algorithms.
+
+5.	Encryption key length can be of,
+	- Any arbitrary length, which can be defined at initialization time and then remains fixed for rest of the session.
+	- Encryption and decryption parties may save the key or re-negotiate it for next sessions.
+	- As the encryption strength increases with key length so a longer key is better.
+
+## Implementation Features
+1.	Usually the encryption output of any algorithm is in binary format, which any router / firewall in network path may detect and block. However, encryption output of this algorithm produces fully qualified UTF8 strings (encoding can be decided at key initialization time), which can be transmitted (over computer network) and / or stored (in files) electronically.
+
+
+2.	Very low and fixed size memory and processing overhead. 
+
+
+3.	Works on any computer architecture and operating system that supports C++/STL. It has been successfully tested on Intel 32bit, 64bit, ARM, ARM64, Linux, Microsoft Windows and Apple Mac OSX.
+
 ## Using The Sample Code
 Sample code provided as proof of concept in C++ using STL library. You must have fairly recent compiler to build it since it heavily used C++ 11 specification.
 
@@ -177,12 +211,28 @@ Decrypted: a quick brown fox jumps over the lazy dog.
 
 Since v3.0, *Word Based ITV* implementation is no longer provided in sample code.
 
-To utilize the code in your own projects, import following files in your project,
+To utilize the code in your own projects,
+
+- include itv_character.h header file in your project,
+- link it against itv.so. 
+
+Example Makefile,
+
+````
+all:
+    g++ -Wall -Werror -g -std=c++11 -c main.cpp
+    g++ main.o -g -Wall -lstdc++ -lz -litv -o main
+
+clean:
+    rm -fr main main.o
+````
+Description of sources,
 
 ````
 	itv.h / itv.cpp => defines an ITV record
 	itv_table.h / itv_table.cpp => defines an ITV Table.
-	itv_utils.h => defines some utility functions (optional).
+    itv_characters.h / itv_characters.cpp => implementation of Character Based ITV.
+	itv_utils.h => defines some utility functions.
 ````
 
 For reference implementation of Character Based ITV algorithm, include or read through,
@@ -203,55 +253,66 @@ For reference implementation of Character Based ITV algorithm, include or read t
 using namespace std;
 
 int main() {
-	/* create ITV Table,
+    /* create ITV Table,
      * One can use any text encoding. Here we use UTF8.
-	 * IDs use Hebrew, thus encrypted text will be in Hebrew
-	 * Values use Arabic, thus plain text will be in Arabic
-	 */
-	ITV_Characters sender = ITV_Characters(0x500, 0x600, 0x6FF - 0x600);
-    sender.load(0x20, 0x20, 1);	/* Add space character */
+     * IDs use Hebrew, thus encrypted text will be in Hebrew
+     * Values use Arabic, thus plain text will be in Arabic
+     */
+    ITV_Characters sender = ITV_Characters(0x500, 0x600, 0x6FF - 0x600);
+    sender.load(0x20, 0x20, 1); /* Add space character */
 
     /* randomly shuffle IDs */
     sender.shuffle();
 
     /* ITV Table that receiver needs to decrypt data */
-    std::string itv_table = sender.dump();
+    std::string itv_table = sender.dump_table();
 
-	/* sample text to encrypt, we are using UTF8 encoding here */
-	std::string str = u8"أزمة اليمن: الحوثيون يتقدمون في عدن رغم الغارات الجوية";
-    std::list<size_t>* msg = from_utf8(str);
+    /* ITV Table checksum, the receiver can check it to ensure
+     * whether or not decryption will be successful before actual decryption
+     */
+    size_t sender_checksum = sender.checksum();
 
-    cout << "Original: " << str << endl;
+    /* sample text to encrypt, we are using UTF8 encoding here */
+    std::string msg = "حفلة في مدينة تدمُر يحييها الموسيقي الروسي فاليري غيرغييف";
+
+    cout << "Original: " << msg << endl;
 
     /* encrypt the text */
-    std::list<size_t> *encrypted_text = sender.encode(*msg);
+    std::string encrypted_text = sender.encode(msg);
 
     /* convert encrypted text to UTF8 and send it, here we just print it */
-    cout << "Encrypted: " << to_utf8(*encrypted_text) << endl;
+    cout << "Encrypted: " << encrypted_text << endl << endl;
 
 
     /* On Receiver side,
-	 * the ITV Table is initialised with table dump from sender side
-	 */
+     * the ITV Table is initialised with table dump from sender side
+     */
     ITV_Characters receiver = ITV_Characters(itv_table);
-	std::list<size_t> *decrypted_text = receiver.decode(*encrypted_text);
-    std::string plain = to_utf8(*decrypted_text);
 
-    if (str == plain) {
-    	cout << "Decrypted: " << plain << endl;
+    /* ITV Table checksum, if this match's sender checksum then ITV Table integrity is verified
+     * and decryption will be successful
+     */
+    size_t receiver_checksum = receiver.checksum();
+
+    if (receiver_checksum != sender_checksum) {
+        cout << "Error: checksum mismatch" << endl;
+        cout << "Local: 0x" << std::hex << receiver_checksum << endl;
+        cout << "Remote: 0x" << std::hex << sender_checksum << endl;
+        return 0;
     } else {
-    	cout << "Failure: " << plain << endl;
+        cout << "ITV Table Integrity Verified: 0x" << std::hex << sender_checksum << endl;
     };
 
-	return 0;
+    std::string decrypted_text = receiver.decode(encrypted_text);
+
+    if (msg == decrypted_text) {
+        cout << "Decrypted: " << decrypted_text << endl;
+    } else {
+        cout << "Failure: " << decrypted_text << endl;
+    };
+
+    return 0;
 };
-
-````
-
-To compile the program,
-
-````
-g++ -Wall -std=c++11 -L./ -litv -o itv main.cpp
 ````
 
 Feel free to add and/or extend given C++ classes (per MPL v2.0 license).
