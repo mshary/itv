@@ -4,8 +4,8 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted per Mozilla Public License v2.0.
 #
-CFLAGS=-Wall -Werror -g -fPIC -ansi -pedantic -std=c99
-CCFLAGS=-Wall -Werror -g -fPIC -std=c++11
+CFLAGS=-Wall -g -fPIC -ansi -pedantic -std=c99
+CCFLAGS=-Wall -g -fPIC -std=c++11
 LDFLAGS=-g -Wall -lstdc++ -shared
 
 #OBJS=itv.o itv_ascii.o itv_table.o itv_words.o itv_wrapper.o itv_utils.o

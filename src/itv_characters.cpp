@@ -27,23 +27,23 @@
 
 ITV_Characters::ITV_Characters() {
 	// nothing todo here
-};
+}
 
 ITV_Characters::~ITV_Characters() {
 	// nothing todo here
-};
+}
 
 ITV_Characters::ITV_Characters(std::string str) {
 	this->load(str);
-};
+}
 
 ITV_Characters::ITV_Characters(size_t min, size_t max) {
 	this->load(min, max);
-};
+}
 
 ITV_Characters::ITV_Characters(size_t id, size_t value, size_t len) {
 	this->load(id, value, len);
-};
+}
 
 size_t ITV_Characters::load(std::string str) {
 	const std::list<size_t>* key = from_utf8(str);
@@ -53,7 +53,7 @@ size_t ITV_Characters::load(std::string str) {
 		this->add(ITV(x, y));
 	};
 	return this->table->size();
-};
+}
 
 size_t ITV_Characters::load(size_t min, size_t max) {
 	if (min > max) { return 0; };
@@ -61,14 +61,14 @@ size_t ITV_Characters::load(size_t min, size_t max) {
 		this->add(ITV(min + (max - x), x));
 	};
 	return max - min;
-};
+}
 
 size_t ITV_Characters::load(size_t id, size_t value, size_t len) {
 	for (size_t i=0; i<len; i++) {
 		this->add(ITV(id + i, value + i));
 	};
 	return len;
-};
+}
 
 size_t ITV_Characters::read(const std::string file) {
 	ifstream ifs(file);
@@ -79,7 +79,7 @@ size_t ITV_Characters::read(const std::string file) {
 	ifs.close();
 
 	return this->table->size();
-};
+}
 
 size_t ITV_Characters::write(const std::string file) {
 	ofstream ofs(file);
@@ -90,22 +90,22 @@ size_t ITV_Characters::write(const std::string file) {
 	ofs.close();
 
 	return this->table->size();
-};
+}
 
 std::string ITV_Characters::encode(std::string msg) {
 	if (this->table->empty() || msg.empty()) return msg;
 	return to_utf8(*ITV_Table::encode(*from_utf8(msg)));
-};
+}
 
 std::string ITV_Characters::decode(std::string msg) {
 	if (this->table->empty() || msg.empty()) return msg;
 	return to_utf8(*ITV_Table::decode(*from_utf8(msg)));
-};
+}
 
 size_t ITV_Characters::shuffle() {
 	ITV_Table::shuffle();
 	return this->checksum();
-};
+}
 
 size_t ITV_Characters::checksum() {
 	size_t ret = 0;
@@ -114,15 +114,15 @@ size_t ITV_Characters::checksum() {
 		ret += (*i).get_id() ^ (*i).get_value();
 	};
 	return ret;
-};
+}
 
 const std::string ITV_Characters::dump_table() {
 	return this->to_string(0, 0);
-};
+}
 
 const std::string ITV_Characters::to_string() {
 	return this->to_string(0, 0);
-};
+}
 
 const std::string ITV_Characters::to_string(size_t inner, size_t outer) {
 	std::string str = std::string();
@@ -136,5 +136,5 @@ const std::string ITV_Characters::to_string(size_t inner, size_t outer) {
 		if (outer > 0) str += to_utf8(outer);
 	};
 	return str;
-};
+}
 

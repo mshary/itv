@@ -28,14 +28,14 @@ using namespace::std;
 // generate a random number from 0 to given number
 size_t generate_random(size_t max) {
 	return get_random(0, max);
-};
+}
 
 // generate a random number within range
 size_t get_random(size_t min, size_t max) {
 	std::random_device generator;
 	std::uniform_int_distribution<size_t> distribution(min, max);
 	return distribution(generator);
-};
+}
 
 // convert codepoint to utf8 char
 std::string to_utf8(size_t cp) {
@@ -53,7 +53,7 @@ std::string to_utf8(std::list<size_t>& msg) {
 	std::string str = std::string();
 	for (auto i=msg.begin(); i!=msg.end(); i++) { str += to_utf8(*i); };
 	return str;
-};
+}
 
 // converts utf8 string to codepoint list
 std::list<size_t>* from_utf8(std::string& msg) {
@@ -80,5 +80,5 @@ std::list<size_t>* from_utf8(std::string& msg) {
 	};
 
 	return ret;
-};
+}
 

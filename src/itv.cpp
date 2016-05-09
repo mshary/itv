@@ -24,105 +24,105 @@ ITV::ITV() {
 	id = 0;
 	tag = 0;
 	value = 0;
-};
+}
 
 ITV::ITV(const ITV &src) {
 	id = src.id;
 	tag = src.tag;
 	value = src.value;
-};
+}
 
 ITV::ITV(size_t id, size_t value) {
 	this->id = id;
 	this->tag = id;
 	this->value = value;
-};
+}
 
 ITV::ITV(size_t id, size_t tag, size_t value) {
 	this->id = id;
 	this->tag = tag;
 	this->value = value;
-};
+}
 
 ITV::~ITV() {
 	// nothing todo here
-};
+}
 
 ITV& ITV::operator=(const ITV &rhs) {
 	this->id = rhs.id;
 	this->tag = rhs.tag;
 	this->value = rhs.value;
 	return *this;
-};
+}
 
 bool ITV::operator==(const ITV &rhs) const {
 	return (this->value == rhs.value);
-};
+}
 
 bool ITV::operator!=(const ITV &rhs) const {
 	return (this->value != rhs.value);
-};
+}
 
 bool ITV::operator<=(const ITV &rhs) const {
 	return (this->value <= rhs.value);
-};
+}
 
 bool ITV::operator>=(const ITV &rhs) const {
 	return (this->value >= rhs.value);
-};
+}
 
 bool ITV::operator<(const ITV &rhs) const {
 	return (this->value < rhs.value);
-};
+}
 
 bool ITV::operator>(const ITV &rhs) const {
 	return (this->value > rhs.value);
-};
+}
 
 void ITV::clear() {
 	this->tag = this->id;
-};
+}
 
 void ITV::restore() {
 	this->id = this->tag;
-};
+}
 
 size_t ITV::replace(size_t id) {
 	size_t retval = this->tag;
 	this->tag = this->id;
 	this->id = id;
 	return retval;
-};
+}
 
 size_t ITV::get_id() const {
 	return this->id;
-};
+}
 
 void ITV::set_id(size_t id) {
 	this->id = id;
-};
+}
 
 size_t ITV::get_tag() const {
 	return this->tag;
-};
+}
 
 void ITV::set_tag(size_t tag) {
 	this->tag = tag;
-};
+}
 
 size_t ITV::get_value() const {
 	return this->value;
-};
+}
 
 void ITV::set_value(size_t value) {
 	this->value = value;
-};
+}
 
 bool compare_ids(ITV &first, ITV &second) {
 	return (first.get_id() <  second.get_id());
-};
+}
 
 bool compare_tags(ITV &first, ITV &second) {
 	return (first.get_tag() <  second.get_tag());
-};
+}
 

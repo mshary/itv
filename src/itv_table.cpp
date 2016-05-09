@@ -25,52 +25,52 @@
 
 ITV_Table::ITV_Table() {
 	this->table = new std::list<ITV>();
-};
+}
 
 ITV_Table::ITV_Table(std::list<ITV> &table) {
 	this->table = &table;
-};
+}
 
 ITV_Table::~ITV_Table() {
 	// nothing todo here
-};
+}
 
 ITV_Table& ITV_Table::operator=(const ITV_Table &rhs) {
 	this->table = rhs.table;
 	return *this;
-};
+}
 
 bool ITV_Table::operator==(const ITV_Table &rhs) const {
 	return (this->table == rhs.table);
-};
+}
 
 bool ITV_Table::operator!=(const ITV_Table &rhs) const {
 	return (this->table != rhs.table);
-};
+}
 
 bool ITV_Table::operator<=(const ITV_Table &rhs) const {
 	return (this->table <= rhs.table);
-};
+}
 
 bool ITV_Table::operator>=(const ITV_Table &rhs) const {
 	return (this->table >= rhs.table);
-};
+}
 
 bool ITV_Table::operator<(const ITV_Table &rhs) const {
 	return (this->table < rhs.table);
-};
+}
 
 bool ITV_Table::operator>(const ITV_Table &rhs) const {
 	return (this->table > rhs.table);
-};
+}
 
 const std::list<ITV>* ITV_Table::get_table() {
 	return this->table;
-};
+}
 
 void ITV_Table::set_table(const std::list<ITV> &table) {
 	this->table = (std::list<ITV>*)&table;
-};
+}
 
 bool ITV_Table::add(const ITV &element) {
 	if (element.get_id() && !this->exists(element)) {
@@ -78,20 +78,20 @@ bool ITV_Table::add(const ITV &element) {
 		return true;
 	};
 	return false;
-};
+}
 
 void ITV_Table::remove(const ITV &element) {
 	if (element.get_id()) {
 		this->table->remove(element);
 	};
-};
+}
 
 bool ITV_Table::exists(const ITV &element) {
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
 		if ((*i) == element) { return true; };
 	};
 	return false;
-};
+}
 
 ITV* ITV_Table::find_by_id(size_t id) {
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
@@ -100,7 +100,7 @@ ITV* ITV_Table::find_by_id(size_t id) {
 		};
 	};
 	return NULL;
-};
+}
 
 ITV* ITV_Table::find_by_tag(size_t tag) {
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
@@ -109,7 +109,7 @@ ITV* ITV_Table::find_by_tag(size_t tag) {
 		};
 	};
 	return NULL;
-};
+}
 
 ITV* ITV_Table::find_by_value(size_t value) {
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
@@ -137,7 +137,7 @@ size_t* ITV_Table::convert(size_t value, size_t next) {
 	retval[0] = itv_current->get_tag();
 	retval[1] = itv_next->get_tag();
 	return retval;
-};
+}
 
 size_t* ITV_Table::revert(size_t current, size_t next) {
 	ITV *itv_current = NULL, *itv_next = NULL;
@@ -161,13 +161,13 @@ void ITV_Table::clear() {
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
 		(*i).clear();
 	};
-};
+}
 
 void ITV_Table::restore() {
 	for (auto i=this->table->begin(); i!=this->table->end(); i++) {
 		(*i).restore();
 	};
-};
+}
 
 void ITV_Table::shuffle() {
 	std::list<size_t>* msg = new std::list<size_t>();
@@ -175,7 +175,7 @@ void ITV_Table::shuffle() {
 		msg->push_back((*i).get_value());
 	};
 	this->encode(*msg);
-};
+}
 
 size_t ITV_Table::get_random_id() {
 	if (this->table->empty()) { return 0; };
@@ -184,7 +184,7 @@ size_t ITV_Table::get_random_id() {
 	auto i = this->table->begin();
 	std::advance(i, id);
 	return (*i).get_id();
-};
+}
 
 std::list<size_t>* ITV_Table::encode(std::list<size_t>& msg) {
 	std::list<size_t> *ret = new std::list<size_t>();
@@ -201,7 +201,7 @@ std::list<size_t>* ITV_Table::encode(std::list<size_t>& msg) {
 	};
 
 	return ret;
-};
+}
 
 std::list<size_t>* ITV_Table::decode(std::list<size_t>& msg) {
 	std::list<size_t> *ret = new std::list<size_t>();
@@ -218,6 +218,6 @@ std::list<size_t>* ITV_Table::decode(std::list<size_t>& msg) {
 	};
 
 	return ret;
-};
+}
 
 

@@ -4,8 +4,8 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted per Mozilla Public License v2.0.
 #
-CCFLAGS=-Wall -fpic -g -std=c++11 -I../src $(shell php-config --includes)
-LDFLAGS=-g -Wall -lstdc++ -shared -litv -L../src
+CCFLAGS=-Wall -g -std=c++11 -fPIC -I../src $(shell php-config --includes)
+LDFLAGS=-Wall -g -lstdc++ -shared -litv -L../src
 
 all:
 	cd ../src; make all
