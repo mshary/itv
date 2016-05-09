@@ -183,7 +183,7 @@ This is a work in progress and currently no sample code is available in this pub
 2.	Very low and fixed size memory and processing overhead. 
 
 
-3.	Works on any computer architecture and operating system that supports C++/STL. It has been successfully tested on Intel 32bit, 64bit, ARM, ARM64, Linux, Microsoft Windows and Apple Mac OSX.
+3.	Works on any computer architecture and operating system that supports C++/STL. It has been successfully tested on Intel 32bit, 64bit, ARM, ARM64, Linux, FreeBSD, Microsoft Windows and Apple Mac OSX.
 
 ## Using The Sample Code
 Sample code provided as proof of concept in C++ using STL library. You must have fairly recent compiler to build it since it heavily used C++ 11 specification.
